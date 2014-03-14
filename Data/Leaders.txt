@@ -1,0 +1,65 @@
+1. Abstract Badge- Bug-------Jenny(Bugsy)     ~Lvl 12
+@ Stringville
+2. Native Badge- Grass-------Jimmy (Falkner)  ~Lvl 18
+@ Args Harbor
+3. Static Badge- Electric----Jace (Morty)     ~Lvl 24
+@ Joe's Villa
+4. Super Badge- Fighting-----Jin (Chuck)      ~Lvl 32
+@ Mount Java
+5. Null Badge- Normal--------Jordan (Whitney) ~Lvl 39
+@ Streamreader Hotel
+6. Transient Badge- Ice----Joy (Jasmine)      ~Lvl 43
+@ Recursive Hot Springs
+7. Interface Badge- Psychic--James (Pryce)    ~Lvl 48
+@ Polymorph Town
+8. Final Badge- Ghost--------Jessica (Clair)  ~Lvl 50
+@ Binary City
+
+HMs and Key Items
+-----------------
+Bicycle- 3 Badges in Joe's House
+
+Surf-Recursive Hot Springs
+
+Strength-Streamreader Hotel
+
+Cut-Nested Village
+
+Fly-Mount Java
+
+Flash-Route 1
+
+Rival
+-----
+Stringville before Gym-Pikachu
+
+Nested Village before you leave-Pikachu, Ivysaur
+
+Right before Mount Java-Pikachu, Venusaur, Charmeleon
+
+Before Recursive Gym-Pikachu, Venusaur, Charizard, Wartortle
+
+Diglett Cave before Binary-Pikachu, Venusaur, Charizard, Blastoise, Lapras
+
+Victory Road-Pikachu, Venusaur, Charizard, Blastoise, Lapras, Snorlax
+
+Hall of Champions
+-----------------
+
+Elite Four
+
+Camtendo - Water       -LVL 51 - 55
+	Starmie, Slowbro, Cloyster, Vaporeon, Rhydon, Lapras
+
+Wasabi Sause - Psychic -LVL 55 - 60
+	Alakazam,
+
+Patches - Flying       -LVL 60 - 65
+
+Justinian - Dragon     -LVL 65 - 70
+
+Joseph Kalimari Mahn - Any     -LVL 75
+	Alakazam, Starmie, Chansey, Lapras, Exeggutor, Tauros
+
+Babb -Any Lvl 100
+	Mewtwo, Mew, Missingno

@@ -1,0 +1,166 @@
+Rarity- Common(40-50), Uncommon(30-40), Rare(20-30), Elusive(5-20), One(Null)
+* - Recurrent Evo Chain
+^^-Implemented in game
+
+Starters
+-----------------------
+Bulbasaur - One ^^
+Charmander - One ^^
+Squirtle - One ^^
+-----------------------
+
+Stringville
+-----------------------
+Caterpie - Common ^^
+Weedle - Common ^^
+Pidgey - Common ^^
+Rattata - Common ^^
+Spearow - Uncommon ^^
+Magikarp - Common ^^
+------------------------
+
+Args Harbor
+------------------------
+Pikachu - Elusive ^^
+Ekans - Rare (Peaches Only) ^^
+Sandshrew - Uncommon (Cream Only) ^^
+Nidoran M - Common ^^
+Nidoran F - Common ^^
+Drowzee - Common ^^
+Lapras - Elusive ^^
+
+Pidgey*
+Metapod*
+Kakuna*
+Rattata*
+Magikarp*
+-------------------------
+
+Mount Java
+-------------------------
+Clefairy - Uncommon ^^
+Jigglypuff - Uncommon ^^
+Zubat - Common ^^ 
+Diglett - Uncommon ^^
+Machop - Common ^^
+Geodude - Common ^^
+Vulpix - Rare (Cream Only) ^^
+Onix - Rare ^^
+Rhyhorn - Rare ^^
+Magmar - Elusive (Cream Only) ^^
+Articuno - One
+
+Raticate*
+Fearow*
+Sandshrew*
+-------------------------
+
+Joe's Villa
+-------------------------
+Oddish - Common (Peaches Only) ^^
+Paras - Common ^^
+Poliwag - Common ^^
+Ponyta - Uncommon
+Seel - Uncommon ^^
+Tangela - Rare ^^
+Tauros - Rare ^^
+Omanyte - Elusive ^^
+Kabuto - Elusive ^^
+Aerodactyl - Elusive ^^
+
+Pidgeotto*
+Metapod*
+Raticate*
+Magikarp*
+Nidorino*
+--------------------------
+
+Streamreader Hotel
+--------------------------
+Meowth - Common (Cream Only) ^^
+Slowpoke - Common ^^
+Magnemite - Common ^^
+Shellder - Uncommon ^^
+Abra - Elusive ^^
+Mr. Mime - Rare ^^
+Jynx - Elusive
+
+Pidgeotto*
+Raticate*
+Magikarp*
+Nidorino*
+Nidorina*
+--------------------------
+
+Recursive Hot Springs
+--------------------------
+Psyduck - Common ^^
+Growlithe - Uncommon (Peaches Only) ^^
+Krabby - Common ^^
+Cubone - Uncommon ^^
+Horsea - Rare ^^
+Goldeen - Common ^^
+Snorlax - Two
+Moltres - One
+
+Magikarp*
+Poliwhirl*
+Slowpoke*
+Pidgeotto*
+Parasect*
+--------------------------
+
+Polymorph Town
+--------------------------
+Mankey - Common (Peaches Only) ^^
+Bellsprout - Common (Cream Only) ^^
+Doduo - Rare ^^
+Voltorb - Common ^^
+Koffing - Uncommon ^^ 
+Pinsir - Elusive (Cream Only) ^^
+Ditto - Elusive ^^
+
+Pidgeotto*
+Raticate*
+Graveler*
+Gloom*
+Psyduck*
+--------------------------
+
+Binary City
+--------------------------
+Tentacool - Common ^^
+Farfetch'd - Uncommon ^^
+Grimer - Common ^^
+Exeggcute - Uncommon ^^
+Kangaskhan - Rare ^^
+Electabuzz - Elusive (Peaches Only) ^^
+Eevee - Elusive ^^
+Porygon - Elusive ^^
+Zapdos - One
+
+Machoke*
+Voltorb*
+Parasect*
+Raticate*
+Hypno*
+--------------------------
+
+Hall of Champions
+--------------------------
+Gastly - Common ^^
+Hitmonlee - Elusive ^^
+Hitmonchan - Elusive ^^
+Lickitung - Common ^^
+Chansey - Elusive ^^
+Staryu - Rare ^^
+Scyther - Uncommon (Peaches Only) ^^
+Dratini - Elusive ^^
+Mewtwo - One (Peaches Only)
+Mew - One (Cream Only)
+
+Golbat*
+Graveler*
+Weepinbell*
+Sandslash*
+Kadabra*
