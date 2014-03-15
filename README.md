@@ -17,7 +17,7 @@ Within the project directory:
 javac *.java
 java JokemonDriver
 ```
-CURRENTLY DOESN'T BUILD. I'm fixing it quickly.
+It now builds and runs!
 View the batch file in the project root if you wish to run the project with more heap space.
 
 Controls
