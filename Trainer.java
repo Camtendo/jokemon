@@ -25,7 +25,6 @@ public class Trainer extends javax.swing.JPanel
 	public String name, prebattleMSG, postBattleMSG;
 	//0 for Male, 1 for Female
 	int gender=0;
-	int pokeNum=0;
 	public Point location=new Point(0,0);
 	public int direction=270;
 	public int viewRange=1;
@@ -63,7 +62,6 @@ public class Trainer extends javax.swing.JPanel
     	name=tName;
     	baseLevel=baseLvl;
     	makeTrainer();
-    	pokeNum=1;
 
     	pokeArray[0]=new Pokemon(s1,pickLvl());
     	pokeArray[1]=null;
@@ -79,7 +77,6 @@ public class Trainer extends javax.swing.JPanel
     	name=tName;
     	baseLevel=baseLvl;
     	makeTrainer();
-    	pokeNum=2;
 
     	pokeArray[0]=new Pokemon(s1,pickLvl());
     	pokeArray[1]=new Pokemon(s2,pickLvl());
@@ -96,7 +93,6 @@ public class Trainer extends javax.swing.JPanel
     	name=tName;
     	baseLevel=baseLvl;
     	makeTrainer();
-    	pokeNum=3;
 
     	pokeArray[0]=new Pokemon(s1,pickLvl());
     	pokeArray[1]=new Pokemon(s2,pickLvl());
@@ -113,7 +109,6 @@ public class Trainer extends javax.swing.JPanel
     	name=tName;
     	baseLevel=baseLvl;
     	makeTrainer();
-    	pokeNum=4;
 
     	pokeArray[0]=new Pokemon(s1,pickLvl());
     	pokeArray[1]=new Pokemon(s2,pickLvl());
@@ -130,7 +125,6 @@ public class Trainer extends javax.swing.JPanel
     	name=tName;
     	baseLevel=baseLvl;
     	makeTrainer();
-    	pokeNum=5;
 
     	pokeArray[0]=new Pokemon(s1,pickLvl());
     	pokeArray[1]=new Pokemon(s2,pickLvl());
@@ -147,7 +141,6 @@ public class Trainer extends javax.swing.JPanel
     	name=tName;
     	baseLevel=baseLvl;
     	makeTrainer();
-    	pokeNum=6;
 
     	pokeArray[0]=new Pokemon(s1,pickLvl());
     	pokeArray[1]=new Pokemon(s2,pickLvl());
@@ -443,8 +436,8 @@ public class Trainer extends javax.swing.JPanel
 
     	if(throwAway<5)
     		return 5;
-    	else if(throwAway>200)
-    		return 200;
+    	else if(throwAway>100)
+    		return 100;
     	else
     		return throwAway;
     }

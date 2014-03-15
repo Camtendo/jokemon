@@ -105,12 +105,6 @@ public class PokeSelectWin extends JFrame implements ActionListener
     			poke[i].setText("Party Slot: " + (i+1) +  " " + selectable[i].nickname);
     			poke[i].setEnabled(true);
     		}
-    		
-    		if (selectable[i] != null && (item.type == Item.Type.TM || item.type == Item.Type.HM))
-    		{
-    			if (Mechanics.hasMove(selectable[i],item.moveLearned))
-    				poke[i].setEnabled(false);
-    		}
     		poke[i].setBounds(15,y,260,20);
     		poke[i].setHorizontalAlignment(JLabel.LEFT);
     		if (poke[i].isEnabled())
@@ -195,7 +189,7 @@ public class PokeSelectWin extends JFrame implements ActionListener
     			moves[i].setHorizontalAlignment(JLabel.LEFT);
     			if (pokemon.move[i] == Pokemon.Move.NONE)
     			{
-    				moves[i].setEnabled(false);
+    				//moves[i].setEnabled(false);
     			}
     			cp.add(moves[i]);
     			if (iteme != null && moves[i].isEnabled())
@@ -221,10 +215,7 @@ public class PokeSelectWin extends JFrame implements ActionListener
     public void actionPerformed(ActionEvent e)
     {
     	if (e.getSource() == close)
-    	{
     		closeWindow();
-    		System.out.println(state.toString());
-    	}
     	for (int i = 0; i<poke.length; i++)
     	{
     		if (e.getSource() == poke[i])

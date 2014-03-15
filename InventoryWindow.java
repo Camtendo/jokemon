@@ -289,7 +289,7 @@ public class InventoryWindow extends JFrame implements ActionListener
 			else if (display[i].isEnabled() && state == State.OVERWORLD)
 			{
 				Item item = Inventory.currentDisplay.get(num+i);
-				if (item.pocket == Item.Pocket.BATTLE || item.pocket == Item.Pocket.POKEBALL || item.pocket == Item.Pocket.KEY)
+				if (item.pocket == Item.Pocket.BATTLE || item.pocket == Item.Pocket.POKEBALL)
 				display[i].setEnabled(false);
 			}
 

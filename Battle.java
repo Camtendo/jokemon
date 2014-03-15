@@ -13,9 +13,6 @@
 import java.net.URL;
 import javax.swing.JApplet;
 import java.applet.AudioClip;
-import javax.sound.sampled.*;
-import java.io.File;
-
 
 public final class Battle
 {
@@ -50,15 +47,6 @@ public final class Battle
 	public static int timesHit;
 	public static int turn=0;
 	private static boolean nonPostingCase[]=new boolean[2];
-	private static boolean decPP = false;
-	private static boolean moveWasLocked = false;
-	private static boolean moveWasUnLocked = false;
-	private static Pokemon.Move emetHold = Pokemon.Move.METRONOME;
-	private static Pokemon.Move umetHold = Pokemon.Move.METRONOME;
-	private static int uN = 1;
-	private static int eN = 1;
-	private static boolean timeCancel = false;
-	
 
 	//Music Vars
 	static URL wildURL=Battle.class.getResource("Music/wildBattle.mid");
@@ -68,9 +56,9 @@ public final class Battle
 	static URL rocketURL=Battle.class.getResource("Music/javaBattle.mid");
 	static URL fatefulURL=Battle.class.getResource("Music/fatefulEncounter.mid");
 	static URL battleOverURL=Battle.class.getResource("Music/battleOver.mid");
-
+	
 	static URL eliteURL;
-
+	
 	static AudioClip wildMusic;
 	static AudioClip trainerMusic;
 	static AudioClip gymMusic;
@@ -108,25 +96,20 @@ public final class Battle
     	setSoundEffects();
 
 		b1=b2;
-
-		if(BATTLE_TYPE.equals("SUPER") && !JokemonDriver.mute)
+		
+		if(BATTLE_TYPE.equals("SUPER"))
 		{
-			String path = "";
 			if(b1.trainer.type==Trainer.TrainerType.ELITE)
 			{
 				eliteURL=Battle.class.getResource("Music/PowerTrainers/" + b1.trainer.name + ".mid");
-				//eliteMusic=JApplet.newAudioClip(eliteURL);
+				eliteMusic=JApplet.newAudioClip(eliteURL);
+				System.out.println(eliteMusic.toString());
 			}
 			else
 			{
 				eliteURL=Battle.class.getResource("Music/PowerTrainers/Babb.mid");
-				//eliteMusic=JApplet.newAudioClip(eliteURL);
+				eliteMusic=JApplet.newAudioClip(eliteURL);
 			}
-			eliteMusic = JApplet.newAudioClip(eliteURL);
-			
-			//eliteMusic.loop();
-
-
 		}
 		b1.cursorLock=true;
 		turn=0;
@@ -149,15 +132,10 @@ public final class Battle
 			}
 		}
 
-		if (!JokemonDriver.mute)
 		loopMusic();
 
 		Mechanics.canAttack[0]=true;
 		Mechanics.canAttack[1]=true;
-		Mechanics.isBadlyPoisoned[0]=false;
-		Mechanics.isBadlyPoisoned[1]=false;
-		uN =1;
-		eN =1;
 		userLockedMove=-1;
 		enemyLockedMove=-1;
 
@@ -278,7 +256,6 @@ public final class Battle
 		catch(Exception e){}
 
 		b1.addText("GO! "+user[userIndex].nickname+"!");
-		if (!JokemonDriver.mute)
 		switchPkmn.play();
 
 		System.out.println("Battle Type: "+BATTLE_TYPE);
@@ -287,7 +264,7 @@ public final class Battle
 			turn++;
 
 			if (userLockedMove == -1)
-				userCmd=0;
+			userCmd=0;
 			else
 				userCmd=userLockedMove;
 			if (enemyLockedMove == -1)
@@ -295,27 +272,20 @@ public final class Battle
 			else
 				enemyCmd=enemyLockedMove;
 
-			//fixPPBug();
+			fixPPBug();
 			while(b1.flicker[0] || b1.flicker[1])
 			{
-				try
-				{
-					Thread.sleep(1);
-				}
-				catch(Exception e){}
+
 			}
 
 			for(int i=0; i<userNumOfPokemon; i++)
 			{
-				if (user[i].originalTrainer == null)
-				 user[i].IS_TRADED=false;
-				else if(!user[i].originalTrainer.equals(JokemonDriver.name) || user[i].idNumber!=JokemonDriver.trainerIdNumber)
+				if(user[i].originalTrainer==null||(!user[i].originalTrainer.equals(JokemonDriver.name)&&user[i].idNumber!=JokemonDriver.trainerIdNumber))
 					user[i].IS_TRADED=true;
 			}
 
 			b1.addText("=========================");
 			b1.addText("Turn: "+turn);
-			b1.addText("Enemy remaining Pokemon: " + Mechanics.remainingPokemon(enemy,enemy.length));
 
 			b1.jsb.repaint();
 			b1.text.repaint();
@@ -348,7 +318,6 @@ public final class Battle
 			//Print Current Battle Progress and Choose Command
 			do
 			{
-				timeCancel = false;
 				Pokedex.seen(enemy[enemyIndex].pokedexNumber-1);
 				b1.updateUserPoke(user);
 				if (userCmd==-1&&turn>1)
@@ -404,12 +373,12 @@ public final class Battle
 				{
 					if(Mechanics.hasPPAtAll(user[userIndex]))
 					{
-						if(!Mechanics.hasPP(user[userIndex].TRUE_PP[userCmd])||Mechanics.moveDisabled[0]==userCmd)
+						if(!Mechanics.hasPP(user[userIndex].move[userCmd])||Mechanics.moveDisabled[0]==userCmd)
 						userCmd=5;
 					}
 				}
 			}
-			while((userCmd<-1||userCmd>4));
+			while(userCmd<-1||userCmd>4);
 			System.out.println("User Command Chosen");
 
 			//Chooses enemy command
@@ -424,7 +393,6 @@ public final class Battle
 			if(Inventory.throwingPokeBall)
 				catchPokemon();
 
-			Pokemon.Move move;
 			//Checks who will move first
 			if (!switchCancel&&!BATTLE_OVER)
 			{
@@ -437,53 +405,24 @@ public final class Battle
 						if (!dudeCancel)
 						{
 							checkPreMoveStatus(0);
-							if (userCmd!= -1 && Mechanics.hasPPAtAll(user[userIndex]))
-							move = user[userIndex].move[userCmd];
-							else if (userCmd == -1)
-							{
-								move = Pokemon.Move.NONE;
-							}
-							else
-							move = Pokemon.Move.STRUGGLE;
-							
-							if (userLockedMove != -1 && move==Pokemon.Move.METRONOME)
-								move=umetHold;
-							
 							if(userCmd>=0&&userCmd<4&&Mechanics.canAttack[0]&&!userFainted&&Mechanics.hasRemainingPokemon(user,userNumOfPokemon))
 							{
 
-								if(move.mainEffect==Pokemon.Primary_Effect.RAISE_STAT||
-									move.mainEffect==Pokemon.Primary_Effect.LOWER_STAT&&!nonPostingCase[0])
+								if(user[userIndex].move[userCmd].mainEffect==Pokemon.Primary_Effect.RAISE_STAT||
+									user[userIndex].move[userCmd].mainEffect==Pokemon.Primary_Effect.LOWER_STAT&&!nonPostingCase[0])
 								{
 									if(!Mechanics.awayFromBattle[1])
 									hit=true;
-									postAttackInfo(0,move);
-								}
-								
-								if (move!=Pokemon.Move.NONE)
-								useMove(0,move);
-								if (decPP && Mechanics.hasPPAtAll(user[userIndex]))
-								{
-									user[userIndex].TRUE_PP[userCmd]--;
-									decPP=false;
-								}
-								if (moveWasLocked)
-								{
-									userLockedMove=userCmd;
-									moveWasLocked=false;
-								}
-								if (moveWasUnLocked)
-								{
-									userLockedMove=-1;
-									moveWasUnLocked=false;
+									postAttackInfo(0);
 								}
 
+								useMove(0,userCmd);
 
-								if(move.mainEffect==Pokemon.Primary_Effect.DAMAGE||
-									move.mainEffect==Pokemon.Primary_Effect.INFLICT_STATUS||
-									move.mainEffect==Pokemon.Primary_Effect.SPECIAL&&!nonPostingCase[0])
+								if(user[userIndex].move[userCmd].mainEffect==Pokemon.Primary_Effect.DAMAGE||
+									user[userIndex].move[userCmd].mainEffect==Pokemon.Primary_Effect.INFLICT_STATUS||
+									user[userIndex].move[userCmd].mainEffect==Pokemon.Primary_Effect.SPECIAL&&!nonPostingCase[0])
 								{
-									postAttackInfo(0,move);
+									postAttackInfo(0);
 								}
 							}
 							checkPostMoveStatus(0);
@@ -503,7 +442,6 @@ public final class Battle
 							}
 							catch(Exception e){}
 							b1.addText(user[userIndex].nickname+" fainted!");
-							if (!JokemonDriver.mute)
 							ko.play();
 							userIndex=userSwitchPokemon();
 							b1.addText("GO! "+user[userIndex].nickname+"!");
@@ -525,40 +463,16 @@ public final class Battle
 								b1.addText("");
 							}
 							catch(Exception e){}
-							
 							b1.addText("Enemy "+enemy[enemyIndex].nickname+" fainted!");
-							if (!JokemonDriver.mute)
 							ko.play();
 
 							Mechanics.calcExp(enemy[enemyIndex]);
 							awardExp();
 
-							int i = enemySwitchPokemon(false);
-							ynWin=new YesNoWindow();
-							ynWin.addMessage("" + b1.trainer.name + " is about to send out " + enemy[i].nickname + ". Switch Pokemon?","Switch?");
-							while(ynWin.isVisible())
-							{
-								try
-								{
-									Thread.sleep(15);
-								}
-								catch(Exception e){}
-							}
-							if(ynWin.getYes())
-							{
-								userIndex=userSwitchPokemon();
-								b1.addText("GO! "+user[userIndex].nickname+"!");
-	
-								userFainted=true;
-								Mechanics.canAttack[1]=false;
-							}
-							
-							enemyIndex=i;
-							if (!JokemonDriver.mute)
-							switchPkmn.play();
+							enemyIndex=enemySwitchPokemon();
 							b1.addText(b1.trainer.type+" "+b1.trainer.name+" sent out "+enemy[enemyIndex].nickname);
 							enemyFainted=true;
-							
+
 							try
 							{
 								Thread.sleep(2000);
@@ -566,15 +480,6 @@ public final class Battle
 							catch(Exception e){}
 						}
 
-
-						if (Mechanics.hasPPAtAll(enemy[enemyIndex]))
-							move = enemy[enemyIndex].move[enemyCmd];
-						else
-							move = Pokemon.Move.STRUGGLE;
-							
-							if (enemyLockedMove != -1 && move==Pokemon.Move.METRONOME)
-								move=emetHold;
-							
 						checkPreMoveStatus(1);
 						if(enemyCmd>=0&&enemyCmd<4&&Mechanics.canAttack[1]&&!enemyFainted&&Mechanics.hasRemainingPokemon(enemy,enemyNumOfPokemon))
 						{
@@ -585,38 +490,21 @@ public final class Battle
 							}
 							catch(Exception e){}
 
-							if(hasPP&&move.mainEffect==Pokemon.Primary_Effect.RAISE_STAT||
-								move.mainEffect==Pokemon.Primary_Effect.LOWER_STAT&&!nonPostingCase[1])
+							if(hasPP&&enemy[enemyIndex].move[enemyCmd].mainEffect==Pokemon.Primary_Effect.RAISE_STAT||
+								enemy[enemyIndex].move[enemyCmd].mainEffect==Pokemon.Primary_Effect.LOWER_STAT&&!nonPostingCase[1])
 							{
 								if(!Mechanics.awayFromBattle[0])
 								hit=true;
-								postAttackInfo(1,move);
+								postAttackInfo(1);
 							}
 
-							useMove(1,move);
-							
-							if (decPP && Mechanics.hasPPAtAll(enemy[enemyIndex]))
-							{
-								enemy[enemyIndex].TRUE_PP[enemyCmd]--;
-								decPP=false;
-							}
-							if (moveWasLocked)
-							{
-								enemyLockedMove=enemyCmd;
-								moveWasLocked=false;
-							}
-							if (moveWasUnLocked)
-								{
-									enemyLockedMove=-1;
-									moveWasUnLocked=false;
-								}
-							
+							useMove(1,enemyCmd);
 
-							if(hasPP&&move.mainEffect==Pokemon.Primary_Effect.DAMAGE||
-								move.mainEffect==Pokemon.Primary_Effect.INFLICT_STATUS||
-								move.mainEffect==Pokemon.Primary_Effect.SPECIAL&&!nonPostingCase[1])
+							if(hasPP&&enemy[enemyIndex].move[enemyCmd].mainEffect==Pokemon.Primary_Effect.DAMAGE||
+								enemy[enemyIndex].move[enemyCmd].mainEffect==Pokemon.Primary_Effect.INFLICT_STATUS||
+								enemy[enemyIndex].move[enemyCmd].mainEffect==Pokemon.Primary_Effect.SPECIAL&&!nonPostingCase[1])
 							{
-								postAttackInfo(1,move);
+								postAttackInfo(1);
 							}
 						}
 						checkPostMoveStatus(1);
@@ -629,49 +517,26 @@ public final class Battle
 					//Enemy is first
 					case 1:
 						System.out.println("Enemy outpaced User");
-						if (Mechanics.hasPPAtAll(enemy[enemyIndex]))
-							move = enemy[enemyIndex].move[enemyCmd];
-						else
-							move = Pokemon.Move.STRUGGLE;
-						if (enemyLockedMove != -1 && move==Pokemon.Move.METRONOME)
-								move=emetHold;
-							
 						checkPreMoveStatus(1);
 						if(enemyCmd>=0&&enemyCmd<4&&Mechanics.canAttack[1]&&!enemyFainted&&Mechanics.hasRemainingPokemon(enemy,enemyNumOfPokemon))
 						{
-
-							if(hasPP&&move.mainEffect==Pokemon.Primary_Effect.RAISE_STAT||
-								move.mainEffect==Pokemon.Primary_Effect.LOWER_STAT&&!nonPostingCase[1])
+							if(hasPP&&enemy[enemyIndex].move[enemyCmd].mainEffect==Pokemon.Primary_Effect.RAISE_STAT||
+								enemy[enemyIndex].move[enemyCmd].mainEffect==Pokemon.Primary_Effect.LOWER_STAT&&!nonPostingCase[1])
 							{
 								if(!Mechanics.awayFromBattle[0])
 								hit=true;
-								postAttackInfo(1,move);
+								postAttackInfo(1);
 							}
 
-							useMove(1,move);
-							
-							if (decPP && Mechanics.hasPPAtAll(enemy[enemyIndex]))
+							useMove(1,enemyCmd);
+
+							if(hasPP&&enemy[enemyIndex].move[enemyCmd].mainEffect==Pokemon.Primary_Effect.DAMAGE||
+								enemy[enemyIndex].move[enemyCmd].mainEffect==Pokemon.Primary_Effect.INFLICT_STATUS||
+								enemy[enemyIndex].move[enemyCmd].mainEffect==Pokemon.Primary_Effect.SPECIAL&&!nonPostingCase[1])
 							{
-								enemy[enemyIndex].TRUE_PP[enemyCmd]--;
-								decPP=false;
-							}
-							if (moveWasLocked)
-							{
-								enemyLockedMove=enemyCmd;
-								moveWasLocked=false;
-							}
-							if (moveWasUnLocked)
-							{
-								enemyLockedMove=-1;
-								moveWasUnLocked=false;
+								postAttackInfo(1);
 							}
 
-							if(hasPP&&move.mainEffect==Pokemon.Primary_Effect.DAMAGE||
-								move.mainEffect==Pokemon.Primary_Effect.INFLICT_STATUS||
-								move.mainEffect==Pokemon.Primary_Effect.SPECIAL&&!nonPostingCase[1])
-							{
-								postAttackInfo(1,move);
-							}
 						}
 						checkPostMoveStatus(1);
 
@@ -690,7 +555,6 @@ public final class Battle
 							catch(Exception e){}
 
 							b1.addText(user[userIndex].nickname+" fainted!");
-							if (!JokemonDriver.mute)
 							ko.play();
 							userIndex=userSwitchPokemon();
 							b1.addText("GO! "+user[userIndex].nickname+"!");
@@ -713,34 +577,12 @@ public final class Battle
 							catch(Exception e){}
 
 							b1.addText("Enemy "+enemy[enemyIndex].nickname+" fainted!");
-							if (!JokemonDriver.mute)
 							ko.play();
 
 							Mechanics.calcExp(enemy[enemyIndex]);
 							awardExp();
 
-							int i = enemySwitchPokemon(false);
-							ynWin=new YesNoWindow();
-							ynWin.addMessage(b1.trainer.name + " is about to send out " + enemy[i].nickname + ". Switch Pokemon?","Switch?");
-							while(ynWin.isVisible())
-							{
-								try
-								{
-									Thread.sleep(15);
-								}
-								catch(Exception e){}
-							}
-							if(ynWin.getYes())
-							{
-								userIndex=userSwitchPokemon();
-								b1.addText("GO! "+user[userIndex].nickname+"!");
-	
-								userFainted=true;
-								Mechanics.canAttack[1]=false;
-							}
-							if (!JokemonDriver.mute)
-							switchPkmn.play();
-							enemyIndex=i;
+							enemyIndex=enemySwitchPokemon();
 							b1.addText(b1.trainer.type+" "+b1.trainer.name+" sent out "+enemy[enemyIndex].nickname);
 
 							enemyFainted=true;
@@ -753,65 +595,33 @@ public final class Battle
 							catch(Exception e){}
 
 						}
-						
-						try
+						if (!dudeCancel)
+						{
+							try
 							{
 								Thread.sleep(3000);
 								b1.addText("");
 							}
 							catch(Exception e){}
-							
-						if (!dudeCancel)
-						{
+
 							checkPreMoveStatus(0);
-							if (userCmd != -1 && Mechanics.hasPPAtAll(user[userIndex]))
-							move = user[userIndex].move[userCmd];
-							else if (userCmd == -1)
-							{
-								move = Pokemon.Move.NONE;
-							}
-							else
-							move = Pokemon.Move.STRUGGLE;
-							
-							if (userLockedMove != -1 && move==Pokemon.Move.METRONOME)
-								move=umetHold;
-							
 							if(userCmd>=0&&userCmd<4&&Mechanics.canAttack[0]&&!userFainted&&Mechanics.hasRemainingPokemon(user,userNumOfPokemon))
 							{
-
-								if(move.mainEffect==Pokemon.Primary_Effect.RAISE_STAT||
-									move.mainEffect==Pokemon.Primary_Effect.LOWER_STAT&&!nonPostingCase[0])
+								if(user[userIndex].move[userCmd].mainEffect==Pokemon.Primary_Effect.RAISE_STAT||
+									user[userIndex].move[userCmd].mainEffect==Pokemon.Primary_Effect.LOWER_STAT&&!nonPostingCase[0])
 								{
 									if(!Mechanics.awayFromBattle[1])
 									hit=true;
-									postAttackInfo(0,move);
-								}
-								
-								if (move!=Pokemon.Move.NONE)
-								useMove(0,move);
-								if (decPP && Mechanics.hasPPAtAll(user[userIndex]))
-								{
-									user[userIndex].TRUE_PP[userCmd]--;
-									decPP=false;
-								}
-								if (moveWasLocked)
-								{
-									userLockedMove=userCmd;
-									moveWasLocked=false;
-								}
-								if (moveWasUnLocked)
-								{
-									userLockedMove=-1;
-									moveWasUnLocked=false;
+									postAttackInfo(0);
 								}
 
+								useMove(0,userCmd);
 
-
-								if(move.mainEffect==Pokemon.Primary_Effect.DAMAGE||
-									move.mainEffect==Pokemon.Primary_Effect.INFLICT_STATUS||
-									move.mainEffect==Pokemon.Primary_Effect.SPECIAL&&!nonPostingCase[0])
+								if(user[userIndex].move[userCmd].mainEffect==Pokemon.Primary_Effect.DAMAGE||
+									user[userIndex].move[userCmd].mainEffect==Pokemon.Primary_Effect.INFLICT_STATUS||
+									user[userIndex].move[userCmd].mainEffect==Pokemon.Primary_Effect.SPECIAL&&!nonPostingCase[0])
 								{
-									postAttackInfo(0,move);
+									postAttackInfo(0);
 								}
 							}
 							checkPostMoveStatus(0);
@@ -845,7 +655,6 @@ public final class Battle
 			if(!Mechanics.isAlive(user[userIndex].health)&&Mechanics.hasRemainingPokemon(user,userNumOfPokemon))
 			{
 				b1.addText(user[userIndex].nickname+" fainted!");
-				if (!JokemonDriver.mute)
 				ko.play();
 				userIndex=userSwitchPokemon();
 				b1.addText("GO! "+user[userIndex].nickname+"!");
@@ -862,35 +671,12 @@ public final class Battle
 			if(!Mechanics.isAlive(enemy[enemyIndex].health)&&Mechanics.hasRemainingPokemon(enemy,enemyNumOfPokemon))
 			{
 				b1.addText("Enemy "+enemy[enemyIndex].nickname+" fainted!");
-				if (!JokemonDriver.mute)
 				ko.play();
 
 				Mechanics.calcExp(enemy[enemyIndex]);
 				awardExp();
 
-				int i = enemySwitchPokemon(false);
-				ynWin=new YesNoWindow();
-				ynWin.addMessage(b1.trainer.name + " is about to send out " + enemy[i].nickname + ". Switch Pokemon?","Switch?");
-				while(ynWin.isVisible())
-				{
-					try
-					{
-						Thread.sleep(15);
-					}
-					catch(Exception e){}
-				}
-				if(ynWin.getYes())
-				{
-					userIndex=userSwitchPokemon();
-					b1.addText("GO! "+user[userIndex].nickname+"!");
-
-					userFainted=true;
-					Mechanics.canAttack[1]=false;
-				}
-				
-				if (!JokemonDriver.mute)
-				switchPkmn.play();
-				enemyIndex=i;
+				enemyIndex=enemySwitchPokemon();
 				b1.addText(b1.trainer.type+" "+b1.trainer.name+" sent out "+enemy[enemyIndex].nickname);
 
 				enemyFainted=true;
@@ -930,7 +716,6 @@ public final class Battle
 			if(Mechanics.hasRemainingPokemon(user,userNumOfPokemon))
 			{
 				b1.addText("Enemy "+enemy[enemyIndex].nickname+" fainted!");
-				if (!JokemonDriver.mute)
 				ko.play();
 				try
 				{
@@ -952,7 +737,6 @@ public final class Battle
 			else
 			{
 				b1.addText(user[userIndex].nickname+" fainted!");
-				if (!JokemonDriver.mute)
 				ko.play();
 				b1.addText("You have no usable Pokemon!");
 				try
@@ -968,7 +752,6 @@ public final class Battle
 				catch(Exception e){}
 
 				b1.addText("Warped to last Pokemon Center!");
-				if (!JokemonDriver.mute)
 				gameOver.play();
 
 				stopMusic();
@@ -987,13 +770,13 @@ public final class Battle
 
 		b1.allowedToPaintExp=true;
 		b1.updateUserPoke(user);
-		//fixPPBug();
+		fixPPBug();
 		//stopLoopLowHP();
 
 		if(!BATTLE_OVER)
 		{
 			stopMusic();
-	    	if(Mechanics.hasRemainingPokemon(user,userNumOfPokemon)&&!JokemonDriver.mute)
+	    	if(Mechanics.hasRemainingPokemon(user,userNumOfPokemon))
 	    	battleOver.loop();
 	    	BATTLE_OVER=true;
 	    	lowHP.stop();
@@ -1018,7 +801,7 @@ public final class Battle
 				System.out.println(user[i]);
 			}
 		}
-
+		
 		for(int i=0; i<6; i++)
 		{
 			if(user[i]!=null)
@@ -1028,7 +811,7 @@ public final class Battle
 				user[i].speedStage=0;
 				user[i].spclStage=0;
 				user[i].evaStage=0;
-
+				
 				user[i].atk=Mechanics.calcOtherStat(user[i].baseATK,user[i].ATK_IV,user[i].ATK_EV,user[i].level);
 				user[i].def=Mechanics.calcOtherStat(user[i].baseDEF,user[i].DEF_IV, user[i].DEF_EV,user[i].level);
 				user[i].spcl=Mechanics.calcOtherStat(user[i].baseSPCL,user[i].SPCL_IV,user[i].SPCL_EV,user[i].level);
@@ -1063,14 +846,10 @@ public final class Battle
 	{
 		int temp=0;
 		b1.cursorLock=false;
-		Mechanics.isBadlyPoisoned[0]=false;
-		uN=1;
-		
-		
+
 		System.out.println("User Initiated Pokemon Switch");
 		b1.updateUserPoke(user);
 		b1.menuSetting = BattleWindow.MenuSetting.SWITCH;
-		b1.repaint();
 		for(int i=0; i<userNumOfPokemon; i++)
 		{
 			if(i!=userIndex)
@@ -1079,12 +858,9 @@ public final class Battle
 
 		do
 		{
-			b1.repaint();
 			System.out.print("Switch to:");
 			while (!superDuperBoolean)
-			{	
-				b1.repaint();
-				try
+			{	try
 				{
 					Thread.sleep(15);
 				}
@@ -1099,7 +875,6 @@ public final class Battle
 				System.out.println("Cancelling switch...");
 				switchCancel = true;
 				userCmd=4;
-				if (!JokemonDriver.mute)
 				switchPkmn.play();
 				temp = userCmd;
 				return userIndex;
@@ -1110,7 +885,6 @@ public final class Battle
 			}
 			else
 			{
-				if (!JokemonDriver.mute)
 				switchPkmn.play();
 				temp = userCmd;
 			}
@@ -1159,13 +933,10 @@ public final class Battle
 	}
 
 	//Method to change Pokemon
-	public static int enemySwitchPokemon(boolean play)
+	public static int enemySwitchPokemon()
 	{
 		System.out.println("Enemy Initiated Pokemon Switch");
 		int temp=0;
-		Mechanics.isBadlyPoisoned[1]=false;
-		eN=1;
-
 
 		do
 		{
@@ -1206,7 +977,6 @@ public final class Battle
 		Mechanics.charging[1]=false;
 		b1.enemySelected = enemyIndex;
 
-		if (!JokemonDriver.mute && play)
 		switchPkmn.play();
 		b1.stopFlicker(1);
 		return temp;
@@ -1254,11 +1024,6 @@ public final class Battle
 		{
 			if(Mechanics.participatedInBattle[i]&&user[i].health>0)
 			{
-				if (user[i].IS_TRADED)
-					Mechanics.expYield*=1.5;
-				if (user[i].level>=100)
-				user[i].exp+=Mechanics.expYield*2;
-				else
 				user[i].exp+=Mechanics.expYield;
 				//Awards Effort Values
 				user[i].HP_EV+=enemy[enemyIndex].baseHP;
@@ -1280,17 +1045,16 @@ public final class Battle
 
 				if(user[i].IS_TRADED)
 				{
+					Mechanics.expYield*=1.5;
 					b1.addText(user[i].nickname+" gained a boosted "+(int)Mechanics.expYield+" Exp. Points!");
 					Mechanics.expYield/=1.5;
 				}
-				else if (user[i].level>=100)
-				b1.addText(user[i].nickname+" gained an enormous "+(int)(Mechanics.expYield*2)+" Exp. Points!");
 				else
 				b1.addText(user[i].nickname+" gained "+(int)Mechanics.expYield+" Exp. Points!");
 
 				try
 				{
-					Thread.sleep(500);
+					Thread.sleep(3000);
 				}
 				catch(Exception e){}
 
@@ -1339,11 +1103,10 @@ public final class Battle
 
 		for(int i=0; i<userNumOfPokemon; i++)
 		{
-			if(user[i].level<200&&Mechanics.participatedInBattle[i])
+			if(user[i].level<100&&Mechanics.participatedInBattle[i])
 			{
-				while(user[i].exp>=user[i].level*user[i].level*user[i].level&&user[i].level<200)
+				while(user[i].exp>=user[i].level*user[i].level*user[i].level&&user[i].level<100)
 				{
-					if (!JokemonDriver.mute)
 					levelUp.play();
 					user[i].level++;
 					int hpGain=user[i].healthMax;
@@ -1384,9 +1147,9 @@ public final class Battle
 					catch(Exception e){}
 				}
 			}
-			else if(user[i].level>=200)
+			else if(user[i].level>=100)
 			{
-				user[i].level=200;
+				user[i].level=100;
 				int hpGain=user[i].healthMax;
 				user[i].healthMax=Mechanics.calcHPStat(user[i].baseHP,user[i].HP_IV,user[i].HP_EV,user[i].level);
 				hpGain=user[i].healthMax-hpGain;
@@ -1407,9 +1170,7 @@ public final class Battle
 	{
 		for(int i=0; i<userNumOfPokemon; i++)
 		{
-			if(user[i].status!=Pokemon.Status.FNT&&Mechanics.participatedInBattle[i]
-			&& (user[i].evolve(user[i])!=user[i].species||user[i].evolve(user[i],JokemonDriver.trainerIdNumber)!=user[i].species)
-			&& user[i].species == revertSpecies[i])
+			if(user[i].status!=Pokemon.Status.FNT&&Mechanics.participatedInBattle[i]&&(user[i].evolve(user[i])!=user[i].species||user[i].evolve(user[i],JokemonDriver.trainerIdNumber)!=user[i].species))
 			{
 				ynWin=new YesNoWindow();
 				ynWin.addMessage("What? "+user[i].nickname+" is evolving!","Allow Evolution?");
@@ -1542,7 +1303,7 @@ public final class Battle
 
 		for(int i=0; i<4; i++)
 		{
-			if(enemy[enemyIndex].move[i]!=Pokemon.Move.NONE&&i!=Mechanics.moveDisabled[1]&&enemy[enemyIndex].TRUE_PP[i]>0)
+			if(enemy[enemyIndex].move[i]!=Pokemon.Move.NONE&&i!=Mechanics.moveDisabled[1])
 			{
 				if(enemy[enemyIndex].move[i].mainEffect==Pokemon.Primary_Effect.DAMAGE&&
 					Mechanics.typeMultiplier(enemy[enemyIndex].move[i].moveType,user[userIndex].type1,user[userIndex].type2)>=2)
@@ -1577,7 +1338,7 @@ public final class Battle
 
 			bestMove=(int)(Math.random()*4);
 
-			while(enemy[enemyIndex].move[bestMove]==Pokemon.Move.NONE||enemy[enemyIndex].TRUE_PP[bestMove]<0)
+			while((bestMove<0||bestMove>3)||enemy[enemyIndex].move[bestMove]==Pokemon.Move.NONE)
 			{
 				bestMove=(int)(Math.random()*4);
 
@@ -1635,8 +1396,8 @@ public final class Battle
 			//if(enemy[enemyIndex].move[enemyCmd]==user[userIndex].move[i]&&user[userIndex].move[i].pp<user[userIndex].move[i].ppMax)
 				//user[userIndex].move[i].pp++;
 
-			//user[userIndex].move[i].pp=user[userIndex].TRUE_PP[i];
-			//user[userIndex].move[i].ppMax=user[userIndex].TRUE_PPMAX[i];
+			user[userIndex].move[i].pp=user[userIndex].TRUE_PP[i];
+			user[userIndex].move[i].ppMax=user[userIndex].TRUE_PPMAX[i];
 
 			if(user[userIndex].TRUE_PP[i]<0)
 				user[userIndex].TRUE_PP[i]=0;
@@ -1646,8 +1407,6 @@ public final class Battle
 	//Loops correct music
 	public static void loopMusic()
 	{
-		if (JokemonDriver.mute)
-		return;
 		if(BATTLE_TYPE.equals("WILD"))
 		{
 			if(!Mechanics.isLegendary(enemy[0]))
@@ -1691,7 +1450,7 @@ public final class Battle
 	    	else
 	    		trainerMusic.stop();
 	    }
-	    else if(BATTLE_TYPE.equals("SUPER")&&!JokemonDriver.mute)
+	    else if(BATTLE_TYPE.equals("SUPER"))
 	    {
 	    	eliteMusic.stop();
 	    }
@@ -1704,9 +1463,6 @@ public final class Battle
 	//Loops the low HP tone
 	public static void loopLowHP()
 	{
-		if (JokemonDriver.mute)
-		return;
-
 		stopMusic();
 		lowHP.loop();
 		b1.loopLowHealthTone=true;
@@ -1717,7 +1473,7 @@ public final class Battle
 	{
 		lowHP.stop();
 		b1.loopLowHealthTone=false;
-		if(!BATTLE_OVER&&!JokemonDriver.mute)
+		if(!BATTLE_OVER)
 		loopMusic();
 	}
 
@@ -1746,7 +1502,6 @@ public final class Battle
 					else
 					{
 						b1.addText(user[userIndex].nickname+" is fast asleep!");
-						if (!JokemonDriver.mute)
 						slp.play();
 						return;
 					}
@@ -1757,7 +1512,6 @@ public final class Battle
 					if(randy==0)
 					{
 						b1.addText(user[userIndex].nickname+" is fully paralyzed!");
-						if (!JokemonDriver.mute)
 						par.play();
 						Mechanics.canAttack[0]=false;
 						return;
@@ -1767,7 +1521,6 @@ public final class Battle
 					System.out.println("Frozen.");
 					b1.addText(user[userIndex].nickname+" is frozen rock solid!");
 					Mechanics.canAttack[0]=false;
-					if (!JokemonDriver.mute)
 					frz.play();
 					return;
 				default:
@@ -1797,7 +1550,6 @@ public final class Battle
 							b1.addText("It hurt itself in its confusion!");
 							user[userIndex].health-=user[userIndex].healthMax/8;
 							Mechanics.canAttack[0]=false;
-							if (!JokemonDriver.mute)
 							userHit.play();
 							b1.setFlicker(0);
 							userLockedMove=-1;
@@ -1841,7 +1593,6 @@ public final class Battle
 					else
 					{
 						b1.addText("Enemy "+enemy[enemyIndex].nickname+" is fast asleep!");
-						if (!JokemonDriver.mute)
 						slp.play();
 						return;
 					}
@@ -1853,7 +1604,6 @@ public final class Battle
 					{
 						b1.addText("Enemy "+enemy[enemyIndex].nickname+" is fully paralyzed!");
 						Mechanics.canAttack[1]=false;
-						if (!JokemonDriver.mute)
 						par.play();
 						return;
 					}
@@ -1862,7 +1612,6 @@ public final class Battle
 					System.out.println("Frozen.");
 					b1.addText("Enemy "+enemy[enemyIndex].nickname+" is frozen rock solid!");
 					Mechanics.canAttack[1]=false;
-					if (!JokemonDriver.mute)
 					frz.play();
 					return;
 				default:
@@ -1892,7 +1641,6 @@ public final class Battle
 							b1.addText("It hurt itself in its confusion!");
 							enemy[enemyIndex].health-=enemy[enemyIndex].healthMax/8;
 							Mechanics.canAttack[1]=false;
-							if (!JokemonDriver.mute)
 							enemyHit.play();
 							b1.setFlicker(1);
 							return;
@@ -1976,9 +1724,9 @@ public final class Battle
 					catch(Exception e){}
 
 					b1.addText(user[userIndex].nickname+"'s health was sapped by LEECH SEED!");
-					Mechanics.damage=(int)((double)user[userIndex].healthMax/16.0 +.5);
+					Mechanics.damage=(user[userIndex].healthMax/16)+1;
 					user[userIndex].health-=Mechanics.damage;
-					enemy[enemyIndex].health=Mechanics.recover(enemy[enemyIndex],(Mechanics.damage/2)+1);
+					enemy[enemyIndex].health=Mechanics.recover(enemy[enemyIndex],Mechanics.damage/2);
 					try
 					{
 						Thread.sleep(2000);
@@ -1993,51 +1741,24 @@ public final class Battle
 			{
 				case PSN:
 					System.out.println("User Poisoned.");
-					
-					if (!Mechanics.isBadlyPoisoned[0])
+
+					try
 					{
-						try
-						{
-							Thread.sleep(2000);
-							b1.addText("");
-						}
-						catch(Exception e){}
-	
-						b1.addText(user[userIndex].nickname+" suffers from poison!");
-						Mechanics.damage=(user[userIndex].healthMax/16)+1;
-						user[userIndex].health-=Mechanics.damage;
-						if (!JokemonDriver.mute)
-						psn.play();
-	
-						try
-						{
-							Thread.sleep(2000);
-						}
-						catch(Exception e){}
+						Thread.sleep(2000);
+						b1.addText("");
 					}
-					else
+					catch(Exception e){}
+
+					b1.addText(user[userIndex].nickname+" suffers from poison!");
+					Mechanics.damage=(user[userIndex].healthMax/16)+1;
+					user[userIndex].health-=Mechanics.damage;
+					psn.play();
+
+					try
 					{
-						try
-						{
-							Thread.sleep(2000);
-							b1.addText("");
-						}
-						catch(Exception e){}
-	
-						b1.addText(user[userIndex].nickname+" suffers from bad poison!");
-						Mechanics.damage=((user[userIndex].healthMax/16)+1)*uN;
-						uN++;
-						user[userIndex].health-=Mechanics.damage;
-						if (!JokemonDriver.mute)
-						psn.play();
-	
-						try
-						{
-							Thread.sleep(2000);
-						}
-						catch(Exception e){}
+						Thread.sleep(2000);
 					}
-					
+					catch(Exception e){}
 
 					break;
 				case BRN:
@@ -2053,7 +1774,6 @@ public final class Battle
 					b1.addText(user[userIndex].nickname+" is hurt from its burn!");
 					Mechanics.damage=user[userIndex].healthMax/16;
 					user[userIndex].health-=Mechanics.damage;
-					if (!JokemonDriver.mute)
 					brn.play();
 
 					try
@@ -2082,9 +1802,9 @@ public final class Battle
 					catch(Exception e){}
 
 					b1.addText("Enemy "+enemy[enemyIndex].nickname+"'s health was sapped by LEECH SEED!");
-					Mechanics.damage=(int)((double)(enemy[enemyIndex].healthMax)/16.0 +.5);
+					Mechanics.damage=enemy[enemyIndex].healthMax/16;
 					enemy[enemyIndex].health-=Mechanics.damage;
-					user[userIndex].health=Mechanics.recover(user[userIndex],(Mechanics.damage/2)+1);
+					user[userIndex].health=Mechanics.recover(user[userIndex],Mechanics.damage/2);
 
 					try
 					{
@@ -2100,56 +1820,17 @@ public final class Battle
 			switch(enemy[enemyIndex].status)
 			{
 				case PSN:
-					if (!Mechanics.isBadlyPoisoned[1])
-					{
-						try
-						{
-							Thread.sleep(2000);
-							b1.addText("");
-						}
-						catch(Exception e){}
-	
-						b1.addText(enemy[enemyIndex].nickname+" suffers from poison!");
-						Mechanics.damage=(enemy[enemyIndex].healthMax/16)+1;
-						enemy[enemyIndex].health-=Mechanics.damage;
-						if (!JokemonDriver.mute)
-						psn.play();
-	
-						try
-						{
-							Thread.sleep(2000);
-						}
-						catch(Exception e){}
-					}
-					else
-					{
-						try
-						{
-							Thread.sleep(2000);
-							b1.addText("");
-						}
-						catch(Exception e){}
-	
-						b1.addText(enemy[enemyIndex].nickname+" suffers from bad poison!");
-						Mechanics.damage=((enemy[enemyIndex].healthMax/16)+1)*eN;
-						eN++;
-						enemy[enemyIndex].health-=Mechanics.damage;
-						if (!JokemonDriver.mute)
-						psn.play();
-	
-						try
-						{
-							Thread.sleep(2000);
-						}
-						catch(Exception e){}
-					}
+					System.out.println("Enemy Poisoned.");
+					b1.addText("Enemy "+enemy[enemyIndex].nickname+" suffers from poison!");
+					Mechanics.damage=enemy[enemyIndex].healthMax/16;
+					enemy[enemyIndex].health-=Mechanics.damage;
+					psn.play();
 					break;
 				case BRN:
 					System.out.println("Enemy Burned.");
 					b1.addText("Enemy "+enemy[enemyIndex].nickname+" is hurt from its burn!");
 					Mechanics.damage=enemy[enemyIndex].healthMax/16;
 					enemy[enemyIndex].health-=Mechanics.damage;
-					if (!JokemonDriver.mute)
 					brn.play();
 					break;
 			}
@@ -2194,44 +1875,44 @@ public final class Battle
 	{
 		return user[index];
 	}
-	
-	//Doesn't matter if the pokemon has it or not, it WILL use it. Decrements PP in run battle
-	public static void useMove(int theUser, Pokemon.Move move)
+
+	//Uses a move. Needs Pokemon using the move and index of move
+	//0 for user, 1 for CPU
+	public static void useMove(int theUser, int index)
 	{
-		Pokemon.createAllMoves();
-		
-		if (!Mechanics.canAttack[theUser])
-			return;
 		if(theUser==0)
-			System.out.println("Move used: "+move);
+			System.out.println("Move used: "+user[userIndex].move[index]);
 		else
-			System.out.println("Move used: "+move);
-			
-		if (theUser == 0)
+			System.out.println("Move used: "+enemy[enemyIndex].move[index]);
+
+		//User Set
+		if(theUser==0)
 		{
-			switch (move.mainEffect)
+			switch(user[userIndex].move[index].mainEffect)
 			{
 				case DAMAGE:
-				{
-					//Checks if move is Special or not, then uses correct formula to calculate
+					if(user[userIndex].move[index].pp>0)
+					{
+						hasPP=true;
+						//Checks if move is Special or not, then uses correct formula to calculate
 						//damage.
-						if(Mechanics.isSpecial(move.moveType))
-							Mechanics.calcDamage(move.basePower,
+						if(Mechanics.isSpecial(user[userIndex].move[index].moveType))
+							Mechanics.calcDamage(user[userIndex].move[index].basePower,
 							user[userIndex].level,user[userIndex].spcl,enemy[enemyIndex].spcl,1);
 						else
-							Mechanics.calcDamage(move.basePower,
+							Mechanics.calcDamage(user[userIndex].move[index].basePower,
 							user[userIndex].level,user[userIndex].atk,enemy[enemyIndex].def,1);
 
 						//Adds type multiplier to damage
-						Mechanics.damage*=Mechanics.typeMultiplier(move.moveType,
+						Mechanics.damage*=Mechanics.typeMultiplier(user[userIndex].move[index].moveType,
 						enemy[enemyIndex].type1,enemy[enemyIndex].type2);
 
 						//Multiplies damage by 1.5 for Same Type Attack Bonus
-						if(Mechanics.isSTAB(user[userIndex].type1,user[userIndex].type2,move.moveType))
+						if(Mechanics.isSTAB(user[userIndex].type1,user[userIndex].type2,user[userIndex].move[index].moveType))
 							Mechanics.damage*=1.5;
 
 						//Multiplies damage by 2 for critical hit
-						if(move.sideEffect==Pokemon.Side_Effect.HIGH_CRIT)
+						if(user[userIndex].move[index].sideEffect==Pokemon.Side_Effect.HIGH_CRIT)
 							Mechanics.isHighCritical[0]=true;
 						if(Mechanics.checkCritical(user[userIndex].baseSPEED,1)&&Mechanics.effective!=Mechanics.Effective.NONE)
 						{
@@ -2240,25 +1921,25 @@ public final class Battle
 						}
 
 						//Reduces physical damage due to burn
-						if(!Mechanics.isSpecial(move.moveType)&&
+						if(!Mechanics.isSpecial(user[userIndex].move[index].moveType)&&
 							user[userIndex].status==Pokemon.Status.BRN)
 							{
 								Mechanics.damage*=0.75;
 							}
 
 						//Reduces damage when Light Screen or Reflect are up
-						if(!Mechanics.isSpecial(move.moveType)&&Mechanics.turnsReflect[1]>0)
+						if(!Mechanics.isSpecial(user[userIndex].move[index].moveType)&&Mechanics.turnsReflect[1]>0)
 						{
 							Mechanics.damage/=2;
 						}
-						else if(Mechanics.isSpecial(move.moveType)&&Mechanics.turnsLightScreen[1]>0)
+						else if(Mechanics.isSpecial(user[userIndex].move[index].moveType)&&Mechanics.turnsLightScreen[1]>0)
 						{
 							Mechanics.damage/=2;
 						}
 
 						//Checks if move hit or not
-						if(!Mechanics.checkHit(user[userIndex],move,enemy[enemyIndex].eva)||
-							(Mechanics.awayFromBattle[1]&&move!=Pokemon.Move.SWIFT)&&Mechanics.turnsMultiTurn[0]<1)
+						if(!Mechanics.checkHit(user[userIndex],index,enemy[enemyIndex].eva)||
+							(Mechanics.awayFromBattle[1]&&user[userIndex].move[index]!=Pokemon.Move.SWIFT)&&Mechanics.turnsMultiTurn[0]<1)
 						{
 							Mechanics.damage=0;
 							hit=false;
@@ -2280,17 +1961,17 @@ public final class Battle
 							Mechanics.damage = enemy[enemyIndex].health;
 						}
 
-						switch(move.sideEffect)
+						switch(user[userIndex].move[index].sideEffect)
 						{
 							case HIGH_CRIT:
 							case QUICK_ATTACK:
 							case SWIFT:
 							case NONE:
 								enemy[enemyIndex].health-=Mechanics.damage;
-								  decPP=true;
+								  user[userIndex].TRUE_PP[index]--;
 								break;
 							case ABSORB:
-								if(move==Pokemon.Move.DREAM_EATER)
+								if(user[userIndex].move[index]==Pokemon.Move.DREAM_EATER)
 								{
 									if(enemy[enemyIndex].status!=Pokemon.Status.SLP)
 									{
@@ -2300,14 +1981,14 @@ public final class Battle
 								}
 								user[userIndex].health=Mechanics.recover(user[userIndex],Mechanics.damage/2);
 								enemy[enemyIndex].health-=Mechanics.damage;
-								  decPP=true;
+								  user[userIndex].TRUE_PP[index]--;
 								break;
 							case STAT:
-								if(Mechanics.checkSideEffect(move)&&Mechanics.damage>0)
+								if(Mechanics.checkSideEffect(user[userIndex].move[index])&&Mechanics.damage>0)
 									sideHit=true;
 								if(sideHit)
 								{
-									switch(move)
+									switch(user[userIndex].move[index])
 									{
 										case ACID:
 											enemy[enemyIndex].defStage--;
@@ -2329,51 +2010,50 @@ public final class Battle
 									}
 								}
 								enemy[enemyIndex].health-=Mechanics.damage;
-								  decPP=true;
+								  user[userIndex].TRUE_PP[index]--;
 								break;
 							case STATUS:
-								if(Mechanics.checkSideEffect(move)
+								if(Mechanics.checkSideEffect(user[userIndex].move[index])
 									&&enemy[enemyIndex].status==Pokemon.Status.OK&&Mechanics.damage>0
 										&&!Mechanics.awayFromBattle[1])
 									{
-										enemy[enemyIndex].status=move.status;
+										enemy[enemyIndex].status=user[userIndex].move[index].status;
 										sideHit=true;
 									}
 								enemy[enemyIndex].health-=Mechanics.damage;
-								  decPP=true;
+								  user[userIndex].TRUE_PP[index]--;
 								break;
 							case SUBSTATUS:
-								if(Mechanics.checkSideEffect(move)
+								if(Mechanics.checkSideEffect(user[userIndex].move[index])
 									&&enemy[enemyIndex].substatus==Pokemon.Substatus.OK&&Mechanics.damage>0
 										&&!Mechanics.awayFromBattle[1])
 								{
-									enemy[enemyIndex].substatus=move.substatus;
+									enemy[enemyIndex].substatus=user[userIndex].move[index].substatus;
 									sideHit=true;
 								}
 								enemy[enemyIndex].health-=Mechanics.damage;
-								  decPP=true;
+								  user[userIndex].TRUE_PP[index]--;
 								break;
 							case MULTI_HIT:
-								int rand=(int)((Math.random()*3)+2);
+								int rand=(int)(Math.random()*3)+2;
 								Mechanics.damage*=rand;
 								timesHit=rand;
 								enemy[enemyIndex].health-=Mechanics.damage;
-								  decPP=true;
+								  user[userIndex].TRUE_PP[index]--;
 								break;
 							case MULTI_TURN:
 								if(Mechanics.turnsMultiTurn[0]==0&&hit)
 								{
-									int rand2=(int)((Math.random()*4)+2);
+									int rand2=(int)(Math.random()*4)+2;
 									Mechanics.turnsMultiTurn[0]=rand2;
 									enemy[enemyIndex].health-=Mechanics.damage;
 									Mechanics.canAttack[1]=false;
-									moveWasLocked = true;
-									  decPP=true;
+									userLockedMove=index;
+									  user[userIndex].TRUE_PP[index]--;
 								}
 								else if(Mechanics.turnsMultiTurn[0]==1)
 								{
 									enemy[enemyIndex].health-=Mechanics.damage;
-									System.out.println("Damage Done: " + Mechanics.damage);
 									Mechanics.turnsMultiTurn[0]=0;
 									Mechanics.canAttack[1]=true;
 									userLockedMove=-1;
@@ -2402,10 +2082,10 @@ public final class Battle
 									}
 								}
 								enemy[enemyIndex].health-=Mechanics.damage;
-								  decPP=true;
+								  user[userIndex].TRUE_PP[index]--;
 								break;
 							case CHARGE:
-								switch(move)
+								switch(user[userIndex].move[index])
 								{
 									case RAZOR_WIND:
 									case SKY_ATTACK:
@@ -2416,14 +2096,14 @@ public final class Battle
 											Mechanics.charging[0]=true;
 											Mechanics.damage=0;
 
-											moveWasLocked = true;
+											userLockedMove=index;
 										}
 										else
 										{
 											Mechanics.charging[0]=false;
 											enemy[enemyIndex].health-=Mechanics.damage;
-											moveWasUnLocked = true;
-											  decPP=true;
+											userLockedMove=-1;
+											  user[userIndex].TRUE_PP[index]--;
 										}
 										break;
 									case HYPER_BEAM:
@@ -2431,13 +2111,13 @@ public final class Battle
 										{
 											Mechanics.charging[0]=true;
 											enemy[enemyIndex].health-=Mechanics.damage;
-											moveWasLocked = true;
-											  decPP=true;
+											userLockedMove=index;
+											  user[userIndex].TRUE_PP[index]--;
 										}
 										else
 										{
 											Mechanics.charging[0]=false;
-											moveWasUnLocked = true;
+											userLockedMove=-1;
 											Mechanics.damage=0;
 										}
 										break;
@@ -2446,11 +2126,11 @@ public final class Battle
 								break;
 							case FAINT:
 								enemy[enemyIndex].health-=Mechanics.damage;
-								  decPP=true;
+								  user[userIndex].TRUE_PP[index]--;
 								user[userIndex].health=0;
 								break;
 							case RECOIL:
-								switch(move)
+								switch(user[userIndex].move[index])
 								{
 									case STRUGGLE:
 										enemy[enemyIndex].health-=Mechanics.damage;
@@ -2459,12 +2139,12 @@ public final class Battle
 									default:
 										enemy[enemyIndex].health-=Mechanics.damage;
 										user[userIndex].health-=Mechanics.damage/4;
-										  decPP=true;
+										  user[userIndex].TRUE_PP[index]--;
 										break;
 								}
 								break;
 							case COLLECT_DAMAGE:
-								switch(move)
+								switch(user[userIndex].move[index])
 								{
 									case BIDE:
 										if(Mechanics.turnsMultiTurn[0]==0)
@@ -2472,7 +2152,7 @@ public final class Battle
 											int rand2=(int)(Math.random()*2)+2;
 											Mechanics.turnsMultiTurn[0]=rand2;
 											Mechanics.storedDamage[0]=0;
-											moveWasLocked = true;
+											userLockedMove=index;
 											Mechanics.damage=0;
 										}
 										else if(Mechanics.turnsMultiTurn[0]==1)
@@ -2480,9 +2160,9 @@ public final class Battle
 											enemy[enemyIndex].health-=Mechanics.storedDamage[0];
 											Mechanics.turnsMultiTurn[0]=0;
 											Mechanics.storedDamage[0]=0;
-											moveWasUnLocked = true;;
+											userLockedMove=-1;
 											Mechanics.damage=0;
-											  decPP=true;
+											  user[userIndex].TRUE_PP[index]--;
 										}
 										else if(Mechanics.turnsMultiTurn[0]>1)
 										{
@@ -2497,7 +2177,7 @@ public final class Battle
 										}
 										else
 											hit=false;
-										  decPP=true;
+										  user[userIndex].TRUE_PP[index]--;
 										break;
 								}
 								break;
@@ -2505,20 +2185,20 @@ public final class Battle
 								if(!Mechanics.awayFromBattle[1])
 									hit=true;
 								if(hit)
-								switch(move)
+								switch(user[userIndex].move[index])
 								{
 									case DRAGON_RAGE:
 										enemy[enemyIndex].health-=40;
-										  decPP=true;
+										  user[userIndex].TRUE_PP[index]--;
 										break;
 									case SONIC_BOOM:
 										enemy[enemyIndex].health-=20;
-										  decPP=true;
+										  user[userIndex].TRUE_PP[index]--;
 										break;
 									case NIGHT_SHADE:
 									case SEISMIC_TOSS:
 										enemy[enemyIndex].health-=user[userIndex].level;
-										  decPP=true;
+										  user[userIndex].TRUE_PP[index]--;
 										break;
 									case PSYWAVE:
 										int rand3=(int)(Math.random()*1.5*user[userIndex].level)+1;
@@ -2526,28 +2206,28 @@ public final class Battle
 										if(rand3<1)
 											rand3=1;
 										enemy[enemyIndex].health-=rand3;
-										  decPP=true;
+										  user[userIndex].TRUE_PP[index]--;
 										break;
 									case SUPER_FANG:
 										enemy[enemyIndex].health/=2;
-										  decPP=true;
+										  user[userIndex].TRUE_PP[index]--;
 										break;
 								}
 								else
-									  decPP=true;
+									  user[userIndex].TRUE_PP[index]--;
 								break;
 							case HIDE:
 								if(!Mechanics.awayFromBattle[0])
 								{
 									Mechanics.awayFromBattle[0]=true;
-									moveWasLocked = true;
+									userLockedMove=index;
 								}
 								else
 								{
 									Mechanics.awayFromBattle[0]=false;
 									enemy[enemyIndex].health-=Mechanics.damage;
-									moveWasUnLocked = true;;
-									  decPP=true;
+									userLockedMove=-1;
+									  user[userIndex].TRUE_PP[index]--;
 								}
 								break;
 							case FURY:
@@ -2558,14 +2238,14 @@ public final class Battle
 										rand2=Integer.MAX_VALUE;
 									Mechanics.turnsMultiTurn[0]=rand2;
 									enemy[enemyIndex].health-=Mechanics.damage;
-									moveWasLocked = true;
-									  decPP=true;
+									userLockedMove=index;
+									  user[userIndex].TRUE_PP[index]--;
 								}
 								else if(Mechanics.turnsMultiTurn[0]==1)
 								{
 									enemy[enemyIndex].health-=Mechanics.damage;
 									Mechanics.turnsMultiTurn[0]=0;
-									moveWasUnLocked = true;;
+									userLockedMove=-1;
 									hit=true;
 									if(user[userIndex].move[userCmd]!=Pokemon.Move.RAGE)
 										user[userIndex].substatus=Pokemon.Substatus.CONFU;
@@ -2577,13 +2257,47 @@ public final class Battle
 									Mechanics.turnsMultiTurn[0]--;
 								}
 						}
-				}
-				break;
-				case RAISE_STAT:
+					}
+					else
+					{
+						hasPP=false;
+
+						if(!Mechanics.hasPPAtAll(user[userIndex]))
+						{
+							//Stores Current PP
+							int pp1=user[userIndex].move[0].pp;
+							int pp2=user[userIndex].move[1].pp;
+							int pp3=user[userIndex].move[2].pp;
+							int pp4=user[userIndex].move[3].pp;
+
+							Pokemon.Move savedMove=user[userIndex].move[index];
+							user[userIndex].move[index]=Pokemon.Move.STRUGGLE;
+
+							//Initializes move
+							user[userIndex].createMoves();
+							//Uses move
+							useMove(0,index);
+							//Writes Move Info
+							postAttackInfo(0);
+							//Reassigns Moves
+							user[userIndex].move[index]=savedMove;
+							user[userIndex].createMoves();
+
+							//Assigns Previous PP
+							user[userIndex].move[0].pp=pp1;
+							user[userIndex].move[1].pp=pp2;
+							user[userIndex].move[2].pp=pp3;
+							user[userIndex].move[3].pp=pp4;
+						}
+					}
+					break;
+			case RAISE_STAT:
+				hit=true;
+
+				if(user[userIndex].move[index].pp>0)
 				{
-					hit=true;
 					hasPP=true;
-					switch(move)
+					switch(user[userIndex].move[index])
 					{
 						case SHARPEN:
 						case MEDITATE:
@@ -2592,7 +2306,7 @@ public final class Battle
 							user[userIndex].atkStage+=2;
 							user[userIndex].atk=(int)((Mechanics.calcOtherStat(user[userIndex].baseATK,user[userIndex].ATK_IV,user[userIndex].ATK_EV,user[userIndex].level))*
 							Mechanics.stageMultiplier(user[userIndex].atkStage));
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case DEFENSE_CURL:
 						case HARDEN:
@@ -2603,13 +2317,13 @@ public final class Battle
 							user[userIndex].defStage+=2;
 							user[userIndex].def=(int)((Mechanics.calcOtherStat(user[userIndex].baseDEF,user[userIndex].DEF_IV,user[userIndex].DEF_EV,user[userIndex].level))*
 							Mechanics.stageMultiplier(user[userIndex].defStage));
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case AGILITY:
 							user[userIndex].speedStage+=2;
 							user[userIndex].speed=(int)((Mechanics.calcOtherStat(user[userIndex].baseSPEED,user[userIndex].SPEED_IV,user[userIndex].SPEED_EV,user[userIndex].level))*
 							Mechanics.stageMultiplier(user[userIndex].speedStage));
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case GROWTH:
 							user[userIndex].spclStage--;
@@ -2617,18 +2331,50 @@ public final class Battle
 							user[userIndex].spclStage+=2;
 							user[userIndex].spcl=(int)((Mechanics.calcOtherStat(user[userIndex].baseSPCL,user[userIndex].SPCL_IV,user[userIndex].SPCL_EV,user[userIndex].level))*
 							Mechanics.stageMultiplier(user[userIndex].spclStage));
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case DOUBLE_TEAM:
 						case MINIMIZE:
 							user[userIndex].evaStage++;
 							user[userIndex].eva=1*Mechanics.stageMultiplier(user[userIndex].evaStage);
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 					}
 				}
+				else
+				{
+					hasPP=false;
+					if(!Mechanics.hasPPAtAll(user[userIndex]))
+						{
+							//Stores Current PP
+							int pp1=user[userIndex].move[0].pp;
+							int pp2=user[userIndex].move[1].pp;
+							int pp3=user[userIndex].move[2].pp;
+							int pp4=user[userIndex].move[3].pp;
+
+							Pokemon.Move savedMove=user[userIndex].move[index];
+							user[userIndex].move[index]=Pokemon.Move.STRUGGLE;
+
+							//Initializes move
+							user[userIndex].createMoves();
+							//Uses move
+							useMove(0,index);
+							//Writes Move Info
+							postAttackInfo(0);
+							//Reassigns Moves
+							user[userIndex].move[index]=savedMove;
+							user[userIndex].createMoves();
+
+							//Assigns Previous PP
+							user[userIndex].move[0].pp=pp1;
+							user[userIndex].move[1].pp=pp2;
+							user[userIndex].move[2].pp=pp3;
+							user[userIndex].move[3].pp=pp4;
+						}
+				}
 				break;
-				case LOWER_STAT:
+			case LOWER_STAT:
+				if(user[userIndex].move[index].pp>0)
 				{
 					if(!Mechanics.awayFromBattle[1])
 						hit=true;
@@ -2637,13 +2383,13 @@ public final class Battle
 
 					if(hit)
 					{
-					switch(move)
+					switch(user[userIndex].move[index])
 					{
 						case GROWL:
 							enemy[enemyIndex].atkStage--;
 							enemy[enemyIndex].atk=(int)((Mechanics.calcOtherStat(enemy[enemyIndex].baseATK,enemy[enemyIndex].ATK_IV,enemy[enemyIndex].ATK_EV,enemy[enemyIndex].level))*
 							Mechanics.stageMultiplier(enemy[enemyIndex].atkStage));
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case SCREECH:
 							enemy[enemyIndex].defStage--;
@@ -2652,38 +2398,70 @@ public final class Battle
 							enemy[enemyIndex].defStage--;
 							enemy[enemyIndex].def=(int)((Mechanics.calcOtherStat(enemy[enemyIndex].baseDEF,enemy[enemyIndex].DEF_IV,enemy[enemyIndex].DEF_EV,enemy[enemyIndex].level))*
 							Mechanics.stageMultiplier(enemy[enemyIndex].defStage));
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case FLASH:
 						case KINESIS:
 						case SAND_ATTACK:
 							enemy[enemyIndex].accuracyStage--;
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case STRING_SHOT:
 							enemy[enemyIndex].speedStage--;
 							enemy[enemyIndex].speed=(int)((Mechanics.calcOtherStat(enemy[enemyIndex].baseSPEED,enemy[enemyIndex].SPEED_IV,enemy[enemyIndex].SPEED_EV,enemy[enemyIndex].level))*
 							Mechanics.stageMultiplier(enemy[enemyIndex].speedStage));
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 					}
 				}
 					else
-						  decPP=true;
+						  user[userIndex].TRUE_PP[index]--;
+				}
+				else
+				{
+					hasPP=false;
+					if(!Mechanics.hasPPAtAll(user[userIndex]))
+						{
+							//Stores Current PP
+							int pp1=user[userIndex].move[0].pp;
+							int pp2=user[userIndex].move[1].pp;
+							int pp3=user[userIndex].move[2].pp;
+							int pp4=user[userIndex].move[3].pp;
+
+							Pokemon.Move savedMove=user[userIndex].move[index];
+							user[userIndex].move[index]=Pokemon.Move.STRUGGLE;
+
+							//Initializes move
+							user[userIndex].createMoves();
+							//Uses move
+							useMove(0,index);
+							//Writes Move Info
+							postAttackInfo(0);
+							//Reassigns Moves
+							user[userIndex].move[index]=savedMove;
+							user[userIndex].createMoves();
+
+							//Assigns Previous PP
+							user[userIndex].move[0].pp=pp1;
+							user[userIndex].move[1].pp=pp2;
+							user[userIndex].move[2].pp=pp3;
+							user[userIndex].move[3].pp=pp4;
+						}
 				}
 				break;
-				case INFLICT_STATUS:
+			case INFLICT_STATUS:
+				if(user[userIndex].move[index].pp>0)
 				{
 					hasPP=true;
 					//Checks if move hit or not
-					if(Mechanics.checkHit(user[userIndex],move,enemy[enemyIndex].eva)&&!Mechanics.awayFromBattle[1])
+					if(Mechanics.checkHit(user[userIndex],index,enemy[enemyIndex].eva)&&!Mechanics.awayFromBattle[1])
 						hit=true;
 					else
 						hit=false;
 
 					boolean sleep=false;
 
-					switch(move)
+					switch(user[userIndex].move[index])
 					{
 						case LEECH_SEED:
 						case CONFUSE_RAY:
@@ -2692,10 +2470,10 @@ public final class Battle
 							{
 								Mechanics.turnsConfused[1]=(int)(Math.random()*4)+1;
 								Mechanics.isConfused[1]=true;
-								enemy[enemyIndex].substatus=move.substatus;
+								enemy[enemyIndex].substatus=user[userIndex].move[index].substatus;
 								sideHit=true;
 							}
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case HYPNOSIS:
 						case LOVELY_KISS:
@@ -2716,39 +2494,68 @@ public final class Battle
 								{
 									if(!Mechanics.sleepClauseActive(user,userNumOfPokemon))
 									{
-										enemy[enemyIndex].status=move.status;
+										enemy[enemyIndex].status=user[userIndex].move[index].status;
 										sideHit=true;
-										if (move == Pokemon.Move.TOXIC)
-											Mechanics.isBadlyPoisoned[1]=true;
 									}
 								}
 								else
 								{
-									enemy[enemyIndex].status=move.status;
+									enemy[enemyIndex].status=user[userIndex].move[index].status;
 									sideHit=true;
-									if (move == Pokemon.Move.TOXIC)
-											Mechanics.isBadlyPoisoned[1]=true;
 								}
 							}
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 					}
 				}
+				else
+				{
+					hasPP=false;
+
+					if(!Mechanics.hasPPAtAll(user[userIndex]))
+						{
+							//Stores Current PP
+							int pp1=user[userIndex].move[0].pp;
+							int pp2=user[userIndex].move[1].pp;
+							int pp3=user[userIndex].move[2].pp;
+							int pp4=user[userIndex].move[3].pp;
+
+							Pokemon.Move savedMove=user[userIndex].move[index];
+							user[userIndex].move[index]=Pokemon.Move.STRUGGLE;
+
+							//Initializes move
+							user[userIndex].createMoves();
+							//Uses move
+							useMove(0,index);
+							//Writes Move Info
+							postAttackInfo(0);
+							//Reassigns Moves
+							user[userIndex].move[index]=savedMove;
+							user[userIndex].createMoves();
+
+							//Assigns Previous PP
+							user[userIndex].move[0].pp=pp1;
+							user[userIndex].move[1].pp=pp2;
+							user[userIndex].move[2].pp=pp3;
+							user[userIndex].move[3].pp=pp4;
+						}
+				}
 				break;
-				case SPECIAL:
+			case SPECIAL:
+				if(user[userIndex].move[index].pp>0)
 				{
 					hasPP=true;
 
-					switch(move)
+					switch(user[userIndex].move[index])
 					{
 						case CONVERSION:
 							hit=true;
 							user[userIndex].type1=enemy[enemyIndex].type1;
 							user[userIndex].type2=enemy[enemyIndex].type2;
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case DISABLE:
-							if(Mechanics.turnsDisabled[1]==0&&Mechanics.checkHit(user[userIndex],move,enemy[enemyIndex].eva)
+							if(Mechanics.turnsDisabled[1]==0&&Mechanics.checkHit(user[userIndex],index,enemy[enemyIndex].eva)
 								&&!Mechanics.awayFromBattle[1])
 								hit=true;
 							if(hit)
@@ -2756,44 +2563,60 @@ public final class Battle
 								Mechanics.turnsDisabled[1]=(int)(Math.random()*3)+2;
 								Mechanics.moveDisabled[1]=(int)(Math.random()*4);
 							}
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case FOCUS_ENERGY:
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case HAZE:
 							user[userIndex].status=Pokemon.Status.OK;
 							user[userIndex].substatus=Pokemon.Substatus.OK;
 							enemy[enemyIndex].status=Pokemon.Status.OK;
 							enemy[enemyIndex].substatus=Pokemon.Substatus.OK;
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case LIGHT_SCREEN:
 							Mechanics.turnsLightScreen[0]=5;
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case REFLECT:
 							Mechanics.turnsReflect[0]=5;
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case METRONOME:
 							//Declares Move Use Here
-							b1.addText(user[userIndex].nickname+" used "+move);
-							  decPP=true;
+							b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
+							  user[userIndex].TRUE_PP[index]--;
+
+							//Stores Current PP
+							int pp1=user[userIndex].TRUE_PP[0];
+							int pp2=user[userIndex].TRUE_PP[1];
+							int pp3=user[userIndex].TRUE_PP[2];
+							int pp4=user[userIndex].TRUE_PP[3];
 
 							//Chooses a random move
 							int randy=(int)(Math.random()*163);
-							umetHold=Pokemon.randomMoveMet(randy);
-							
+							user[userIndex].move[index]=user[userIndex].randomMove(randy);
 
+
+							//Initializes move
+							user[userIndex].createMoves();
 							//Uses move
-							useMove(0,umetHold);
+							useMove(0,index);
 							//Writes Move Info
-							postAttackInfo(0,umetHold);
-							
+							postAttackInfo(0);
+							//Reassigns Moves
+							user[userIndex].move[index]=Pokemon.Move.METRONOME;
+							user[userIndex].createMoves();
+
+							//Assigns Previous PP
+							user[userIndex].TRUE_PP[0]=pp1;
+							user[userIndex].TRUE_PP[1]=pp2;
+							user[userIndex].TRUE_PP[2]=pp3;
+							user[userIndex].TRUE_PP[3]=pp4;
 							break;
 						case MIMIC:
-							b1.addText(user[userIndex].nickname+" used "+move);
+							b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 							//Stores Current PP
 							int pp11=user[userIndex].TRUE_PP[0];
 							int pp22=user[userIndex].TRUE_PP[1];
@@ -2804,21 +2627,19 @@ public final class Battle
 
 							//Chooses a random move
 							int randy2=(int)(Math.random()*4);
-							move=enemy[enemyIndex].move[randy2];
+							user[userIndex].move[index]=enemy[enemyIndex].move[randy2];
 
 							//Initializes moves
 							user[userIndex].createMoves();
-							
-							int indexx = userCmd;
 
 							//Assigns Previous PP
-							if(indexx!=0)
+							if(index!=0)
 							user[userIndex].TRUE_PP[0]=pp11;
-							if(indexx!=1)
+							if(index!=1)
 							user[userIndex].TRUE_PP[1]=pp22;
-							if(indexx!=2)
+							if(index!=2)
 							user[userIndex].TRUE_PP[2]=pp33;
-							if(indexx!=3)
+							if(index!=3)
 							user[userIndex].TRUE_PP[3]=pp44;
 
 							b1.addText(user[userIndex].nickname+" learned "+user[userIndex].move[userCmd]+"!");
@@ -2826,8 +2647,8 @@ public final class Battle
 							break;
 						case MIRROR_MOVE:
 							//Declares Move Use Here
-							b1.addText(user[userIndex].nickname+" used "+move);
-							  decPP=true;
+							b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
+							  user[userIndex].TRUE_PP[index]--;
 
 							//Uses move if move is not Mirror Move (Infinite Recursion) or out of range(ArrayIndexOutOfBounds)
 							if(enemyCmd<0||enemyCmd>3)
@@ -2842,16 +2663,27 @@ public final class Battle
 								int pp333=user[userIndex].TRUE_PP[2];
 								int pp444=user[userIndex].TRUE_PP[3];
 
-								Pokemon.Move mover = Pokemon.Move.NONE;
 								//Chooses most recent enemy move
 								if(enemyCmd>=0&&enemyCmd<4)
-								mover=enemy[enemyIndex].move[enemyCmd];
+								user[userIndex].move[index]=enemy[enemyIndex].move[enemyCmd];
 
-								useMove(0,mover);
+								//Initializes move
+								user[userIndex].createMoves();
+
+								useMove(0,index);
 
 								//Writes Move Info
-								postAttackInfo(0,move);
+								postAttackInfo(0);
 
+								//Reassigns Moves
+								user[userIndex].move[index]=Pokemon.Move.MIRROR_MOVE;
+								user[userIndex].createMoves();
+
+								//Assigns Previous PP
+								user[userIndex].TRUE_PP[0]=pp111;
+								user[userIndex].TRUE_PP[1]=pp222;
+								user[userIndex].TRUE_PP[2]=pp333;
+								user[userIndex].TRUE_PP[3]=pp444;
 							}
 							else
 							{
@@ -2866,7 +2698,7 @@ public final class Battle
 							}
 							else
 								hit=false;
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case RECOVER:
 						case SOFTBOILED:
@@ -2877,7 +2709,7 @@ public final class Battle
 							}
 							else
 								hit=false;
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case REST:
 							if(user[userIndex].health<user[userIndex].healthMax)
@@ -2889,14 +2721,14 @@ public final class Battle
 							}
 							else
 								hit=false;
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case SPLASH:
 							hit=true;
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case SUBSTITUTE:
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							if(Mechanics.canCreateSubstitute(user[userIndex])&&!Mechanics.hasSubstitute[0])
 							{
 								Mechanics.createSubstitute(user[userIndex].healthMax/4,0);
@@ -2907,8 +2739,8 @@ public final class Battle
 								hit=false;
 							break;
 						case TRANSFORM:
-							b1.addText(user[userIndex].nickname+" used "+move);
-							decPP=true;
+							b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
+							user[userIndex].TRUE_PP[index]--;
 
 							Pokemon.Species s=user[userIndex].species;
 
@@ -2929,6 +2761,7 @@ public final class Battle
 							//Assigns 5 PP to all moves
 							for(int i=0; i<4; i++)
 							{
+								user[userIndex].move[i].pp=5;
 								user[userIndex].TRUE_PP[i]=5;
 							}
 							//Assigns former nickname
@@ -2949,38 +2782,75 @@ public final class Battle
 								BATTLE_OVER=true;
 								Mechanics.canAttack[1]=false;
 							}
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 					}
+				}
+				else
+				{
+					hasPP=false;
+
+					if(!Mechanics.hasPPAtAll(user[userIndex]))
+						{
+							//Stores Current PP
+							int pp1=user[userIndex].move[0].pp;
+							int pp2=user[userIndex].move[1].pp;
+							int pp3=user[userIndex].move[2].pp;
+							int pp4=user[userIndex].move[3].pp;
+
+							Pokemon.Move savedMove=user[userIndex].move[index];
+							user[userIndex].move[index]=Pokemon.Move.STRUGGLE;
+
+							//Initializes move
+							user[userIndex].createMoves();
+							//Uses move
+							useMove(0,index);
+							//Writes Move Info
+							postAttackInfo(0);
+							//Reassigns Moves
+							user[userIndex].move[index]=savedMove;
+							user[userIndex].createMoves();
+
+							//Assigns Previous PP
+							user[userIndex].move[0].pp=pp1;
+							user[userIndex].move[1].pp=pp2;
+							user[userIndex].move[2].pp=pp3;
+							user[userIndex].move[3].pp=pp4;
+						}
 				}
 				break;
 			}
 		}
-		else 
+		//Enemy Set/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		else
 		{
-			switch (move.mainEffect)
+			switch(enemy[enemyIndex].move[index].mainEffect)
 			{
 				case DAMAGE:
-				{
-					//Checks if move is Special or not, then uses correct formula to calculate
+					if(enemy[enemyIndex].move[index].pp>0)
+					{
+						hasPP=true;
+						//Checks if move is Special or not, then uses correct formula to calculate
 						//damage.
-						if(Mechanics.isSpecial(move.moveType))
-							Mechanics.calcDamage(move.basePower,
-							enemy[enemyIndex].level,enemy[enemyIndex].spcl,user[userIndex].spcl,1);
+						if(Mechanics.isSpecial(enemy[enemyIndex].move[index].moveType))
+							Mechanics.calcDamage(enemy[enemyIndex].move[index].basePower,
+							enemy[enemyIndex].level,enemy[enemyIndex].spcl,user[userIndex].spcl,0);
 						else
-							Mechanics.calcDamage(move.basePower,
-							enemy[enemyIndex].level,enemy[enemyIndex].atk,user[userIndex].def,1);
+							Mechanics.calcDamage(enemy[enemyIndex].move[index].basePower,
+							enemy[enemyIndex].level,enemy[enemyIndex].atk,user[userIndex].def,0);
 
 						//Adds type multiplier to damage
-						Mechanics.damage*=Mechanics.typeMultiplier(move.moveType,
+						Mechanics.damage*=Mechanics.typeMultiplier(enemy[enemyIndex].move[index].moveType,
 						user[userIndex].type1,user[userIndex].type2);
 
 						//Multiplies damage by 1.5 for Same Type Attack Bonus
-						if(Mechanics.isSTAB(enemy[enemyIndex].type1,enemy[enemyIndex].type2,move.moveType))
+						if(Mechanics.isSTAB(enemy[enemyIndex].type1,enemy[enemyIndex].type2,enemy[enemyIndex].move[index].moveType))
 							Mechanics.damage*=1.5;
 
 						//Multiplies damage by 2 for critical hit
-						if(move.sideEffect==Pokemon.Side_Effect.HIGH_CRIT)
+						if(enemy[enemyIndex].move[index].sideEffect==Pokemon.Side_Effect.HIGH_CRIT)
 							Mechanics.isHighCritical[1]=true;
 						if(Mechanics.checkCritical(enemy[enemyIndex].baseSPEED,1)&&Mechanics.effective!=Mechanics.Effective.NONE)
 						{
@@ -2989,25 +2859,25 @@ public final class Battle
 						}
 
 						//Reduces physical damage due to burn
-						if(!Mechanics.isSpecial(move.moveType)&&
+						if(!Mechanics.isSpecial(enemy[enemyIndex].move[index].moveType)&&
 							enemy[enemyIndex].status==Pokemon.Status.BRN)
 							{
 								Mechanics.damage*=0.75;
 							}
 
 						//Reduces damage when Light Screen or Reflect are up
-						if(!Mechanics.isSpecial(move.moveType)&&Mechanics.turnsReflect[0]>0)
+						if(!Mechanics.isSpecial(enemy[enemyIndex].move[index].moveType)&&Mechanics.turnsReflect[0]>0)
 						{
 							Mechanics.damage/=2;
 						}
-						else if(Mechanics.isSpecial(move.moveType)&&Mechanics.turnsLightScreen[0]>0)
+						else if(Mechanics.isSpecial(enemy[enemyIndex].move[index].moveType)&&Mechanics.turnsLightScreen[0]>0)
 						{
 							Mechanics.damage/=2;
 						}
 
 						//Checks if move hit or not
-						if(!Mechanics.checkHit(enemy[enemyIndex],move,user[userIndex].eva)||
-							(Mechanics.awayFromBattle[0]&&move!=Pokemon.Move.SWIFT)&&Mechanics.turnsMultiTurn[1]<1)
+						if(!Mechanics.checkHit(enemy[enemyIndex],index,user[userIndex].eva)||
+							(Mechanics.awayFromBattle[0]&&enemy[enemyIndex].move[index]!=Pokemon.Move.SWIFT)&&Mechanics.turnsMultiTurn[1]<1)
 						{
 							Mechanics.damage=0;
 							hit=false;
@@ -3029,17 +2899,17 @@ public final class Battle
 							Mechanics.damage = user[userIndex].health;
 						}
 
-						switch(move.sideEffect)
+						switch(enemy[enemyIndex].move[index].sideEffect)
 						{
 							case HIGH_CRIT:
 							case QUICK_ATTACK:
 							case SWIFT:
 							case NONE:
 								user[userIndex].health-=Mechanics.damage;
-								  decPP=true;
+								enemy[enemyIndex].move[index].pp--;
 								break;
 							case ABSORB:
-								if(move==Pokemon.Move.DREAM_EATER)
+								if(enemy[enemyIndex].move[index]==Pokemon.Move.DREAM_EATER)
 								{
 									if(user[userIndex].status!=Pokemon.Status.SLP)
 									{
@@ -3049,14 +2919,14 @@ public final class Battle
 								}
 								enemy[enemyIndex].health=Mechanics.recover(enemy[enemyIndex],Mechanics.damage/2);
 								user[userIndex].health-=Mechanics.damage;
-								  decPP=true;
+								enemy[enemyIndex].move[index].pp--;
 								break;
 							case STAT:
-								if(Mechanics.checkSideEffect(move)&&Mechanics.damage>0)
+								if(Mechanics.checkSideEffect(enemy[enemyIndex].move[index])&&Mechanics.damage>0)
 									sideHit=true;
 								if(sideHit)
 								{
-									switch(move)
+									switch(enemy[enemyIndex].move[index])
 									{
 										case ACID:
 											user[userIndex].defStage--;
@@ -3078,54 +2948,53 @@ public final class Battle
 									}
 								}
 								user[userIndex].health-=Mechanics.damage;
-								  decPP=true;
+								enemy[enemyIndex].move[index].pp--;
 								break;
 							case STATUS:
-								if(Mechanics.checkSideEffect(move)
+								if(Mechanics.checkSideEffect(enemy[enemyIndex].move[index])
 									&&user[userIndex].status==Pokemon.Status.OK&&Mechanics.damage>0
 										&&!Mechanics.awayFromBattle[0])
 									{
-										user[userIndex].status=move.status;
+										user[userIndex].status=enemy[enemyIndex].move[index].status;
 										sideHit=true;
 									}
 								user[userIndex].health-=Mechanics.damage;
-								  decPP=true;
+								enemy[enemyIndex].move[index].pp--;
 								break;
 							case SUBSTATUS:
-								if(Mechanics.checkSideEffect(move)
+								if(Mechanics.checkSideEffect(enemy[enemyIndex].move[index])
 									&&user[userIndex].substatus==Pokemon.Substatus.OK&&Mechanics.damage>0
 										&&!Mechanics.awayFromBattle[0])
 								{
-									user[userIndex].substatus=move.substatus;
+									user[userIndex].substatus=enemy[enemyIndex].move[index].substatus;
 									sideHit=true;
 								}
 								user[userIndex].health-=Mechanics.damage;
-								  decPP=true;
+								enemy[enemyIndex].move[index].pp--;
 								break;
 							case MULTI_HIT:
-								int rand=(int)((Math.random()*3)+2);
+								int rand=(int)(Math.random()*3)+2;
 								Mechanics.damage*=rand;
 								timesHit=rand;
 								user[userIndex].health-=Mechanics.damage;
-								  decPP=true;
+								enemy[enemyIndex].move[index].pp--;
 								break;
 							case MULTI_TURN:
 								if(Mechanics.turnsMultiTurn[1]==0&&hit)
 								{
-									int rand2=(int)((Math.random()*4)+2);
+									int rand2=(int)(Math.random()*4)+2;
 									Mechanics.turnsMultiTurn[1]=rand2;
 									user[userIndex].health-=Mechanics.damage;
-									Mechanics.canAttack[1]=false;
-									moveWasLocked = true;
-									  decPP=true;
+									Mechanics.canAttack[0]=false;
+									enemyLockedMove=index;
+									enemy[enemyIndex].move[index].pp--;
 								}
 								else if(Mechanics.turnsMultiTurn[1]==1)
 								{
 									user[userIndex].health-=Mechanics.damage;
-									System.out.println("Damage Done: " + Mechanics.damage);
 									Mechanics.turnsMultiTurn[1]=0;
-									Mechanics.canAttack[1]=true;
-									moveWasUnLocked = true;;
+									Mechanics.canAttack[0]=true;
+									enemyLockedMove=-1;
 									hit=true;
 								}
 								else if(Mechanics.turnsMultiTurn[1]>1)
@@ -3142,7 +3011,7 @@ public final class Battle
 									if(enemy[enemyIndex].speed>user[userIndex].speed)
 									{
 										Mechanics.damage=Integer.MAX_VALUE;
-										//Mechanics.damage=enemy[enemyIndex].health;
+										//Mechanics.damage=user[userIndex].health;
 									}
 									else
 									{
@@ -3151,10 +3020,10 @@ public final class Battle
 									}
 								}
 								user[userIndex].health-=Mechanics.damage;
-								  decPP=true;
+								enemy[enemyIndex].move[index].pp--;
 								break;
 							case CHARGE:
-								switch(move)
+								switch(enemy[enemyIndex].move[index])
 								{
 									case RAZOR_WIND:
 									case SKY_ATTACK:
@@ -3165,14 +3034,14 @@ public final class Battle
 											Mechanics.charging[1]=true;
 											Mechanics.damage=0;
 
-											moveWasLocked = true;
+											enemyLockedMove=index;
 										}
 										else
 										{
 											Mechanics.charging[1]=false;
 											user[userIndex].health-=Mechanics.damage;
-											moveWasUnLocked = true;;
-											  decPP=true;
+											enemyLockedMove=-1;
+											enemy[enemyIndex].move[index].pp--;
 										}
 										break;
 									case HYPER_BEAM:
@@ -3180,14 +3049,14 @@ public final class Battle
 										{
 											Mechanics.charging[1]=true;
 											user[userIndex].health-=Mechanics.damage;
-											moveWasLocked = true;
-											  decPP=true;
+											enemyLockedMove=index;
+											enemy[enemyIndex].move[index].pp--;
 										}
 										else
 										{
 											Mechanics.charging[1]=false;
-											moveWasUnLocked = true;;
 											Mechanics.damage=0;
+											enemyLockedMove=-1;
 										}
 										break;
 
@@ -3195,25 +3064,26 @@ public final class Battle
 								break;
 							case FAINT:
 								user[userIndex].health-=Mechanics.damage;
-								  decPP=true;
+								enemy[enemyIndex].move[index].pp--;
 								enemy[enemyIndex].health=0;
 								break;
 							case RECOIL:
-								switch(move)
+								switch(enemy[enemyIndex].move[index])
 								{
 									case STRUGGLE:
 										user[userIndex].health-=Mechanics.damage;
 										enemy[enemyIndex].health-=Mechanics.damage/2;
+										enemy[enemyIndex].move[index].pp--;
 										break;
 									default:
 										user[userIndex].health-=Mechanics.damage;
 										enemy[enemyIndex].health-=Mechanics.damage/4;
-										  decPP=true;
+										enemy[enemyIndex].move[index].pp--;
 										break;
 								}
 								break;
 							case COLLECT_DAMAGE:
-								switch(move)
+								switch(enemy[enemyIndex].move[index])
 								{
 									case BIDE:
 										if(Mechanics.turnsMultiTurn[1]==0)
@@ -3221,21 +3091,21 @@ public final class Battle
 											int rand2=(int)(Math.random()*2)+2;
 											Mechanics.turnsMultiTurn[1]=rand2;
 											Mechanics.storedDamage[1]=0;
-											moveWasLocked = true;
 											Mechanics.damage=0;
+											enemyLockedMove=index;
 										}
 										else if(Mechanics.turnsMultiTurn[1]==1)
 										{
 											user[userIndex].health-=Mechanics.storedDamage[1];
 											Mechanics.turnsMultiTurn[1]=0;
 											Mechanics.storedDamage[1]=0;
-											moveWasUnLocked = true;
-											Mechanics.damage=0;
-											  decPP=true;
+											enemyLockedMove=-1;
+											enemy[enemyIndex].move[index].pp--;
 										}
 										else if(Mechanics.turnsMultiTurn[1]>1)
 										{
 											Mechanics.turnsMultiTurn[1]--;
+											Mechanics.damage=0;
 										}
 										break;
 									case COUNTER:
@@ -3246,7 +3116,7 @@ public final class Battle
 										}
 										else
 											hit=false;
-										  decPP=true;
+										enemy[enemyIndex].move[index].pp--;
 										break;
 								}
 								break;
@@ -3254,49 +3124,49 @@ public final class Battle
 								if(!Mechanics.awayFromBattle[0])
 									hit=true;
 								if(hit)
-								switch(move)
+								switch(enemy[enemyIndex].move[index])
 								{
 									case DRAGON_RAGE:
 										user[userIndex].health-=40;
-										  decPP=true;
+										enemy[enemyIndex].move[index].pp--;
 										break;
 									case SONIC_BOOM:
 										user[userIndex].health-=20;
-										  decPP=true;
+										enemy[enemyIndex].move[index].pp--;
 										break;
 									case NIGHT_SHADE:
 									case SEISMIC_TOSS:
 										user[userIndex].health-=enemy[enemyIndex].level;
-										  decPP=true;
+										enemy[enemyIndex].move[index].pp--;
 										break;
 									case PSYWAVE:
-										int rand3=(int)(Math.random()*1.5*user[userIndex].level)+1;
+										int rand3=(int)(Math.random()*1.5*enemy[enemyIndex].level)+1;
 										//Ensures that damage is at least 1
 										if(rand3<1)
 											rand3=1;
 										user[userIndex].health-=rand3;
-										  decPP=true;
+										enemy[enemyIndex].move[index].pp--;
 										break;
 									case SUPER_FANG:
 										user[userIndex].health/=2;
-										  decPP=true;
+										enemy[enemyIndex].move[index].pp--;
 										break;
 								}
 								else
-									  decPP=true;
+									enemy[enemyIndex].move[index].pp--;
 								break;
 							case HIDE:
 								if(!Mechanics.awayFromBattle[1])
 								{
 									Mechanics.awayFromBattle[1]=true;
-									moveWasLocked = true;
+									enemyLockedMove=index;
 								}
 								else
 								{
 									Mechanics.awayFromBattle[1]=false;
 									user[userIndex].health-=Mechanics.damage;
-									moveWasUnLocked = true;;
-									  decPP=true;
+									enemyLockedMove=-1;
+									enemy[enemyIndex].move[index].pp--;
 								}
 								break;
 							case FURY:
@@ -3307,14 +3177,14 @@ public final class Battle
 										rand2=Integer.MAX_VALUE;
 									Mechanics.turnsMultiTurn[1]=rand2;
 									user[userIndex].health-=Mechanics.damage;
-									moveWasLocked = true;
-									  decPP=true;
+									enemyLockedMove=index;
+									enemy[enemyIndex].move[index].pp--;
 								}
 								else if(Mechanics.turnsMultiTurn[1]==1)
 								{
 									user[userIndex].health-=Mechanics.damage;
 									Mechanics.turnsMultiTurn[1]=0;
-									moveWasUnLocked = true;;
+									enemyLockedMove=-1;
 									hit=true;
 									if(enemy[enemyIndex].move[enemyCmd]!=Pokemon.Move.RAGE)
 										enemy[enemyIndex].substatus=Pokemon.Substatus.CONFU;
@@ -3326,13 +3196,47 @@ public final class Battle
 									Mechanics.turnsMultiTurn[1]--;
 								}
 						}
-				}
-				break;
-				case RAISE_STAT:
+					}
+					else
+					{
+						hasPP=false;
+
+						if(!Mechanics.hasPPAtAll(enemy[enemyIndex]))
+						{
+							//Stores Current PP
+							int pp1=enemy[enemyIndex].move[0].pp;
+							int pp2=enemy[enemyIndex].move[1].pp;
+							int pp3=enemy[enemyIndex].move[2].pp;
+							int pp4=enemy[enemyIndex].move[3].pp;
+
+							Pokemon.Move savedMove=enemy[enemyIndex].move[index];
+							enemy[enemyIndex].move[index]=Pokemon.Move.STRUGGLE;
+
+							//Initializes move
+							enemy[enemyIndex].createMoves();
+							//Uses move
+							useMove(1,index);
+							//Writes Move Info
+							postAttackInfo(0);
+							//Reassigns Moves
+							enemy[enemyIndex].move[index]=savedMove;
+							enemy[enemyIndex].createMoves();
+
+							//Assigns Previous PP
+							enemy[enemyIndex].move[0].pp=pp1;
+							enemy[enemyIndex].move[1].pp=pp2;
+							enemy[enemyIndex].move[2].pp=pp3;
+							enemy[enemyIndex].move[3].pp=pp4;
+						}
+					}
+					break;
+			case RAISE_STAT:
+				hit=true;
+
+				if(enemy[enemyIndex].move[index].pp>0)
 				{
-					hit=true;
 					hasPP=true;
-					switch(move)
+					switch(enemy[enemyIndex].move[index])
 					{
 						case SHARPEN:
 						case MEDITATE:
@@ -3341,7 +3245,7 @@ public final class Battle
 							enemy[enemyIndex].atkStage+=2;
 							enemy[enemyIndex].atk=(int)((Mechanics.calcOtherStat(enemy[enemyIndex].baseATK,enemy[enemyIndex].ATK_IV,enemy[enemyIndex].ATK_EV,enemy[enemyIndex].level))*
 							Mechanics.stageMultiplier(enemy[enemyIndex].atkStage));
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case DEFENSE_CURL:
 						case HARDEN:
@@ -3352,13 +3256,13 @@ public final class Battle
 							enemy[enemyIndex].defStage+=2;
 							enemy[enemyIndex].def=(int)((Mechanics.calcOtherStat(enemy[enemyIndex].baseDEF,enemy[enemyIndex].DEF_IV,enemy[enemyIndex].DEF_EV,enemy[enemyIndex].level))*
 							Mechanics.stageMultiplier(enemy[enemyIndex].defStage));
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case AGILITY:
 							enemy[enemyIndex].speedStage+=2;
 							enemy[enemyIndex].speed=(int)((Mechanics.calcOtherStat(enemy[enemyIndex].baseSPEED,enemy[enemyIndex].SPEED_IV,enemy[enemyIndex].SPEED_EV,enemy[enemyIndex].level))*
 							Mechanics.stageMultiplier(enemy[enemyIndex].speedStage));
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case GROWTH:
 							enemy[enemyIndex].spclStage--;
@@ -3366,33 +3270,64 @@ public final class Battle
 							enemy[enemyIndex].spclStage+=2;
 							enemy[enemyIndex].spcl=(int)((Mechanics.calcOtherStat(enemy[enemyIndex].baseSPCL,enemy[enemyIndex].SPCL_IV,enemy[enemyIndex].SPCL_EV,enemy[enemyIndex].level))*
 							Mechanics.stageMultiplier(enemy[enemyIndex].spclStage));
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case DOUBLE_TEAM:
 						case MINIMIZE:
 							enemy[enemyIndex].evaStage++;
 							enemy[enemyIndex].eva=1*Mechanics.stageMultiplier(enemy[enemyIndex].evaStage);
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 					}
 				}
+				else
+				{
+					hasPP=false;
+
+						if(!Mechanics.hasPPAtAll(enemy[enemyIndex]))
+						{
+							//Stores Current PP
+							int pp1=enemy[enemyIndex].move[0].pp;
+							int pp2=enemy[enemyIndex].move[1].pp;
+							int pp3=enemy[enemyIndex].move[2].pp;
+							int pp4=enemy[enemyIndex].move[3].pp;
+
+							Pokemon.Move savedMove=enemy[enemyIndex].move[index];
+							enemy[enemyIndex].move[index]=Pokemon.Move.STRUGGLE;
+
+							//Initializes move
+							enemy[enemyIndex].createMoves();
+							//Uses move
+							useMove(1,index);
+							//Writes Move Info
+							postAttackInfo(0);
+							//Reassigns Moves
+							enemy[enemyIndex].move[index]=savedMove;
+							enemy[enemyIndex].createMoves();
+
+							//Assigns Previous PP
+							enemy[enemyIndex].move[0].pp=pp1;
+							enemy[enemyIndex].move[1].pp=pp2;
+							enemy[enemyIndex].move[2].pp=pp3;
+							enemy[enemyIndex].move[3].pp=pp4;
+						}
+				}
 				break;
-				case LOWER_STAT:
+			case LOWER_STAT:
+				if(enemy[enemyIndex].move[index].pp>0)
 				{
 					if(!Mechanics.awayFromBattle[0])
 						hit=true;
 					if(Mechanics.turnsMist[0]>0)
 						hit=false;
-
 					if(hit)
-					{
-					switch(move)
+					switch(enemy[enemyIndex].move[index])
 					{
 						case GROWL:
 							user[userIndex].atkStage--;
 							user[userIndex].atk=(int)((Mechanics.calcOtherStat(user[userIndex].baseATK,user[userIndex].ATK_IV,user[userIndex].ATK_EV,user[userIndex].level))*
 							Mechanics.stageMultiplier(user[userIndex].atkStage));
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case SCREECH:
 							user[userIndex].defStage--;
@@ -3401,50 +3336,82 @@ public final class Battle
 							user[userIndex].defStage--;
 							user[userIndex].def=(int)((Mechanics.calcOtherStat(user[userIndex].baseDEF,user[userIndex].DEF_IV,user[userIndex].DEF_EV,user[userIndex].level))*
 							Mechanics.stageMultiplier(user[userIndex].defStage));
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case FLASH:
 						case KINESIS:
 						case SAND_ATTACK:
 							user[userIndex].accuracyStage--;
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case STRING_SHOT:
 							user[userIndex].speedStage--;
 							user[userIndex].speed=(int)((Mechanics.calcOtherStat(user[userIndex].baseSPEED,user[userIndex].SPEED_IV,user[userIndex].SPEED_EV,user[userIndex].level))*
 							Mechanics.stageMultiplier(user[userIndex].speedStage));
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 					}
-				}
 					else
-						  decPP=true;
+						enemy[enemyIndex].move[index].pp--;
+				}
+				else
+				{
+					hasPP=false;
+
+						if(!Mechanics.hasPPAtAll(enemy[enemyIndex]))
+						{
+							//Stores Current PP
+							int pp1=enemy[enemyIndex].move[0].pp;
+							int pp2=enemy[enemyIndex].move[1].pp;
+							int pp3=enemy[enemyIndex].move[2].pp;
+							int pp4=enemy[enemyIndex].move[3].pp;
+
+							Pokemon.Move savedMove=enemy[enemyIndex].move[index];
+							enemy[enemyIndex].move[index]=Pokemon.Move.STRUGGLE;
+
+							//Initializes move
+							enemy[enemyIndex].createMoves();
+							//Uses move
+							useMove(1,index);
+							//Writes Move Info
+							postAttackInfo(0);
+							//Reassigns Moves
+							enemy[enemyIndex].move[index]=savedMove;
+							enemy[enemyIndex].createMoves();
+
+							//Assigns Previous PP
+							enemy[enemyIndex].move[0].pp=pp1;
+							enemy[enemyIndex].move[1].pp=pp2;
+							enemy[enemyIndex].move[2].pp=pp3;
+							enemy[enemyIndex].move[3].pp=pp4;
+						}
 				}
 				break;
-				case INFLICT_STATUS:
+			case INFLICT_STATUS:
+				if(enemy[enemyIndex].move[index].pp>0)
 				{
 					hasPP=true;
 					//Checks if move hit or not
-					if(Mechanics.checkHit(enemy[enemyIndex],move,user[userIndex].eva)&&!Mechanics.awayFromBattle[0])
+					if(Mechanics.checkHit(enemy[enemyIndex],index,user[userIndex].eva)&&!Mechanics.awayFromBattle[0])
 						hit=true;
 					else
 						hit=false;
 
 					boolean sleep=false;
 
-					switch(move)
+					switch(enemy[enemyIndex].move[index])
 					{
 						case LEECH_SEED:
 						case CONFUSE_RAY:
 						case SUPERSONIC:
-							if(hit&&user[userIndex].substatus==Pokemon.Substatus.OK&&!Mechanics.awayFromBattle[0])
+							if(hit&&user[userIndex].substatus==Pokemon.Substatus.OK)
 							{
 								Mechanics.turnsConfused[0]=(int)(Math.random()*4)+1;
 								Mechanics.isConfused[0]=true;
-								user[userIndex].substatus=move.substatus;
+								user[userIndex].substatus=enemy[enemyIndex].move[index].substatus;
 								sideHit=true;
 							}
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case HYPNOSIS:
 						case LOVELY_KISS:
@@ -3459,45 +3426,74 @@ public final class Battle
 						case GLARE:
 						case STUN_SPORE:
 						case THUNDER_WAVE:
-							if(hit&&user[userIndex].status==Pokemon.Status.OK&&!Mechanics.awayFromBattle[0])
+							if(hit&&user[userIndex].status==Pokemon.Status.OK)
 							{
 								if(sleep)
 								{
-									if(!Mechanics.sleepClauseActive(user,userNumOfPokemon))
+									if(!Mechanics.sleepClauseActive(enemy,enemyNumOfPokemon))
 									{
-										user[userIndex].status=move.status;
+										user[userIndex].status=enemy[enemyIndex].move[index].status;
 										sideHit=true;
-										if (move == Pokemon.Move.TOXIC)
-											Mechanics.isBadlyPoisoned[0]=true;
 									}
 								}
 								else
 								{
-									user[userIndex].status=move.status;
+									user[userIndex].status=enemy[enemyIndex].move[index].status;
 									sideHit=true;
-									if (move == Pokemon.Move.TOXIC)
-											Mechanics.isBadlyPoisoned[0]=true;
 								}
 							}
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 					}
 				}
+				else
+				{
+					hasPP=false;
+
+						if(!Mechanics.hasPPAtAll(enemy[enemyIndex]))
+						{
+							//Stores Current PP
+							int pp1=enemy[enemyIndex].move[0].pp;
+							int pp2=enemy[enemyIndex].move[1].pp;
+							int pp3=enemy[enemyIndex].move[2].pp;
+							int pp4=enemy[enemyIndex].move[3].pp;
+
+							Pokemon.Move savedMove=enemy[enemyIndex].move[index];
+							enemy[enemyIndex].move[index]=Pokemon.Move.STRUGGLE;
+
+							//Initializes move
+							enemy[enemyIndex].createMoves();
+							//Uses move
+							useMove(1,index);
+							//Writes Move Info
+							postAttackInfo(0);
+							//Reassigns Moves
+							enemy[enemyIndex].move[index]=savedMove;
+							enemy[enemyIndex].createMoves();
+
+							//Assigns Previous PP
+							enemy[enemyIndex].move[0].pp=pp1;
+							enemy[enemyIndex].move[1].pp=pp2;
+							enemy[enemyIndex].move[2].pp=pp3;
+							enemy[enemyIndex].move[3].pp=pp4;
+						}
+				}
 				break;
-				case SPECIAL:
+			case SPECIAL:
+				if(enemy[enemyIndex].move[index].pp>0)
 				{
 					hasPP=true;
 
-					switch(move)
+					switch(enemy[enemyIndex].move[index])
 					{
 						case CONVERSION:
 							hit=true;
 							enemy[enemyIndex].type1=user[userIndex].type1;
 							enemy[enemyIndex].type2=user[userIndex].type2;
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case DISABLE:
-							if(Mechanics.turnsDisabled[0]==0&&Mechanics.checkHit(enemy[enemyIndex],move,user[userIndex].eva)
+							if(Mechanics.turnsDisabled[0]==0&&Mechanics.checkHit(enemy[enemyIndex],index,user[userIndex].eva)
 								&&!Mechanics.awayFromBattle[0])
 								hit=true;
 							if(hit)
@@ -3505,96 +3501,125 @@ public final class Battle
 								Mechanics.turnsDisabled[0]=(int)(Math.random()*3)+2;
 								Mechanics.moveDisabled[0]=(int)(Math.random()*4);
 							}
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case FOCUS_ENERGY:
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case HAZE:
-							enemy[enemyIndex].status=Pokemon.Status.OK;
-							enemy[enemyIndex].substatus=Pokemon.Substatus.OK;
 							user[userIndex].status=Pokemon.Status.OK;
 							user[userIndex].substatus=Pokemon.Substatus.OK;
-							  decPP=true;
+							enemy[enemyIndex].status=Pokemon.Status.OK;
+							enemy[enemyIndex].substatus=Pokemon.Substatus.OK;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case LIGHT_SCREEN:
 							Mechanics.turnsLightScreen[1]=5;
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case REFLECT:
 							Mechanics.turnsReflect[1]=5;
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case METRONOME:
 							//Declares Move Use Here
-							b1.addText(enemy[enemyIndex].nickname+" used "+move);
-							  decPP=true;
+							b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
+							enemy[enemyIndex].move[index].pp--;
+
+							//Stores Current PP
+							int pp1=enemy[enemyIndex].move[0].pp;
+							int pp2=enemy[enemyIndex].move[1].pp;
+							int pp3=enemy[enemyIndex].move[2].pp;
+							int pp4=enemy[enemyIndex].move[3].pp;
 
 							//Chooses a random move
 							int randy=(int)(Math.random()*163);
-							emetHold=Pokemon.randomMoveMet(randy);
+							enemy[enemyIndex].move[index]=enemy[enemyIndex].randomMove(randy);
 
+
+							//Initializes move
+							enemy[enemyIndex].createMoves();
 							//Uses move
-							useMove(1,emetHold);
+							useMove(1,index);
 							//Writes Move Info
-							postAttackInfo(1,emetHold);
-							
+							postAttackInfo(1);
+							//Reassigns Moves
+							enemy[enemyIndex].move[index]=Pokemon.Move.METRONOME;
+							enemy[enemyIndex].createMoves();
+
+							//Assigns Previous PP
+							enemy[enemyIndex].move[0].pp=pp1;
+							enemy[enemyIndex].move[1].pp=pp2;
+							enemy[enemyIndex].move[2].pp=pp3;
+							enemy[enemyIndex].move[3].pp=pp4;
 							break;
 						case MIMIC:
-							b1.addText(enemy[enemyIndex].nickname+" used "+move);
+							b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 							//Stores Current PP
-							int pp11=enemy[enemyIndex].TRUE_PP[0];
-							int pp22=enemy[enemyIndex].TRUE_PP[1];
-							int pp33=enemy[enemyIndex].TRUE_PP[2];
-							int pp44=enemy[enemyIndex].TRUE_PP[3];
-
-							//revert[userIndex]=user[userIndex];
+							int pp11=enemy[enemyIndex].move[0].pp;
+							int pp22=enemy[enemyIndex].move[1].pp;
+							int pp33=enemy[enemyIndex].move[2].pp;
+							int pp44=enemy[enemyIndex].move[3].pp;
 
 							//Chooses a random move
 							int randy2=(int)(Math.random()*4);
-							move=user[userIndex].move[randy2];
+							enemy[enemyIndex].move[index]=user[userIndex].move[randy2];
 
 							//Initializes moves
 							enemy[enemyIndex].createMoves();
-							
-							int indexx = enemyCmd;
 
 							//Assigns Previous PP
-							if(indexx!=0)
-							enemy[enemyIndex].TRUE_PP[0]=pp11;
-							if(indexx!=1)
-							enemy[enemyIndex].TRUE_PP[1]=pp22;
-							if(indexx!=2)
-							enemy[enemyIndex].TRUE_PP[2]=pp33;
-							if(indexx!=3)
-							enemy[enemyIndex].TRUE_PP[3]=pp44;
+							if(index!=0)
+							enemy[enemyIndex].move[0].pp=pp11;
+							if(index!=1)
+							enemy[enemyIndex].move[1].pp=pp22;
+							if(index!=2)
+							enemy[enemyIndex].move[2].pp=pp33;
+							if(index!=3)
+							enemy[enemyIndex].move[3].pp=pp44;
 
-							b1.addText(enemy[enemyIndex].nickname+" learned "+enemy[enemyIndex].move[enemyCmd]+"!");
-							nonPostingCase[0]=true;
+							b1.addText("Enemy "+enemy[enemyIndex].nickname+" learned "+enemy[enemyIndex].move[enemyCmd]+"!");
+							nonPostingCase[1]=true;
 							break;
 						case MIRROR_MOVE:
 							//Declares Move Use Here
-							b1.addText(enemy[enemyIndex].nickname+" used "+move);
-							  decPP=true;
+							b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
+							enemy[enemyIndex].move[index].pp--;
 
-							//Uses move if move is not Mirror Move (Infinite Recursion) or out of range(ArrayIndexOutOfBounds)
+							//Uses move if move is not Mirror Move (Infinite Recursion)
 							if(userCmd<0||userCmd>3)
 							{
 								b1.addText("The move failed!");
 							}
-							else if(user[userCmd].move[userCmd]!=Pokemon.Move.MIRROR_MOVE)
+							else if(enemy[enemyIndex].move[enemyCmd]!=Pokemon.Move.MIRROR_MOVE)
 							{
+								//Stores Current PP
+								int pp111=enemy[enemyIndex].move[0].pp;
+								int pp222=enemy[enemyIndex].move[1].pp;
+								int pp333=enemy[enemyIndex].move[2].pp;
+								int pp444=enemy[enemyIndex].move[3].pp;
 
-								Pokemon.Move mover = Pokemon.Move.NONE;
-								//Chooses most recent enemy move
+								//Chooses most recent user move
 								if(userCmd>=0&&userCmd<4)
-								mover=user[userIndex].move[userCmd];
+								enemy[enemyIndex].move[index]=user[userIndex].move[userCmd];
 
-								useMove(0,mover);
+								//Initializes move
+								enemy[enemyIndex].createMoves();
+
+								useMove(1,index);
 
 								//Writes Move Info
-								postAttackInfo(0,move);
+								postAttackInfo(1);
 
+								//Reassigns Moves
+								enemy[enemyIndex].move[index]=Pokemon.Move.MIRROR_MOVE;
+								enemy[enemyIndex].createMoves();
+
+								//Assigns Previous PP
+								enemy[enemyIndex].move[0].pp=pp111;
+								enemy[enemyIndex].move[1].pp=pp222;
+								enemy[enemyIndex].move[2].pp=pp333;
+								enemy[enemyIndex].move[3].pp=pp444;
 							}
 							else
 							{
@@ -3604,12 +3629,12 @@ public final class Battle
 						case MIST:
 							if(Mechanics.turnsMist[1]==0)
 							{
-								Mechanics.turnsMist[0]=5;
+								Mechanics.turnsMist[1]=5;
 								hit=true;
 							}
 							else
 								hit=false;
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case RECOVER:
 						case SOFTBOILED:
@@ -3620,7 +3645,7 @@ public final class Battle
 							}
 							else
 								hit=false;
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case REST:
 							if(enemy[enemyIndex].health<enemy[enemyIndex].healthMax)
@@ -3632,14 +3657,14 @@ public final class Battle
 							}
 							else
 								hit=false;
-							  decPP=true;
+							  user[userIndex].TRUE_PP[index]--;
 							break;
 						case SPLASH:
 							hit=true;
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 						case SUBSTITUTE:
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							if(Mechanics.canCreateSubstitute(enemy[enemyIndex])&&!Mechanics.hasSubstitute[1])
 							{
 								Mechanics.createSubstitute(enemy[enemyIndex].healthMax/4,1);
@@ -3650,20 +3675,15 @@ public final class Battle
 								hit=false;
 							break;
 						case TRANSFORM:
-							b1.addText(enemy[enemyIndex].nickname+" used "+move);
-							decPP=true;
+							b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 
-							Pokemon.Species s=enemy[enemyIndex].species;
-
-							//Stores data for reference
+							//Stores nickname for reference
 							String str=enemy[enemyIndex].nickname;
-							//revert[userIndex]=user[userIndex];
-							//revert[userIndex].species=s;
 
 							//Assigns Pokemon Species
 							enemy[enemyIndex].species=user[userIndex].species;
 
-							//Creates Pokemon with enemy moves
+							//Creates Pokemon with user moves
 							enemy[enemyIndex]=new Pokemon(enemy[enemyIndex].species,user[userIndex].move[0],user[userIndex].move[1],
 							user[userIndex].move[2],user[userIndex].move[3],enemy[enemyIndex].level);
 
@@ -3671,15 +3691,13 @@ public final class Battle
 
 							//Assigns 5 PP to all moves
 							for(int i=0; i<4; i++)
-							{
-								enemy[enemyIndex].TRUE_PP[i]=5;
-							}
+								enemy[enemyIndex].move[i].pp=5;
 							//Assigns former nickname
 							enemy[enemyIndex].nickname=str;
 
-							b1.addText(enemy[enemyIndex].nickname+" transformed into "+enemy[enemyIndex].species);
+							b1.addText("Enemy "+enemy[enemyIndex].nickname+" transformed into "+enemy[enemyIndex].species);
 
-							nonPostingCase[0]=true;
+							nonPostingCase[1]=true;
 							break;
 						case ROAR:
 						case TELEPORT:
@@ -3688,17 +3706,50 @@ public final class Battle
 								hit=false;
 							else
 							{
-								hit=true;
 								BATTLE_OVER=true;
+								hit=true;
 								Mechanics.canAttack[0]=false;
 							}
-							  decPP=true;
+							enemy[enemyIndex].move[index].pp--;
 							break;
 					}
+				}
+				else
+				{
+					hasPP=false;
+
+						if(!Mechanics.hasPPAtAll(enemy[enemyIndex]))
+						{
+							//Stores Current PP
+							int pp1=enemy[enemyIndex].move[0].pp;
+							int pp2=enemy[enemyIndex].move[1].pp;
+							int pp3=enemy[enemyIndex].move[2].pp;
+							int pp4=enemy[enemyIndex].move[3].pp;
+
+							Pokemon.Move savedMove=enemy[enemyIndex].move[index];
+							enemy[enemyIndex].move[index]=Pokemon.Move.STRUGGLE;
+
+							//Initializes move
+							enemy[enemyIndex].createMoves();
+							//Uses move
+							useMove(1,index);
+							//Writes Move Info
+							postAttackInfo(0);
+							//Reassigns Moves
+							enemy[enemyIndex].move[index]=savedMove;
+							enemy[enemyIndex].createMoves();
+
+							//Assigns Previous PP
+							enemy[enemyIndex].move[0].pp=pp1;
+							enemy[enemyIndex].move[1].pp=pp2;
+							enemy[enemyIndex].move[2].pp=pp3;
+							enemy[enemyIndex].move[3].pp=pp4;
+						}
 				}
 				break;
 			}
 		}
+
 		if(hit)
 			System.out.println("Accuracy successful.");
 		else
@@ -3707,30 +3758,28 @@ public final class Battle
 			System.out.println("Critical Hit");
 
 		checkFainted();
-		
 	}
 
 	//Adds text from attack to JTextfield
-	public static void postAttackInfo(int userOfMove, Pokemon.Move move)
+	public static void postAttackInfo(int userOfMove)
 	{
 		switch(userOfMove)
 		{
 			case 0:
-				switch(move.mainEffect)
+				switch(user[userIndex].move[userCmd].mainEffect)
 				{
 					case DAMAGE:
 						if(!nonPostingCase[0]&&hasPP)
 						{
-							if(!Mechanics.awayFromBattle[0]&&hit&&Mechanics.damage>0||move.sideEffect==Pokemon.Side_Effect.FIXED_DAMAGE)
+							if(!Mechanics.awayFromBattle[0]&&hit&&Mechanics.damage>0||user[userIndex].move[userCmd].sideEffect==Pokemon.Side_Effect.FIXED_DAMAGE)
 							{
-								if (!JokemonDriver.mute)
 								enemyHit.play();
 								b1.setFlicker(1);
 							}
 
 							boolean fixed=false;
 
-							switch(move.sideEffect)
+							switch(user[userIndex].move[userCmd].sideEffect)
 							{
 								case FIXED_DAMAGE:
 									crit=false;
@@ -3741,18 +3790,17 @@ public final class Battle
 								case OHKO:
 								case QUICK_ATTACK:
 								case NONE:
-									if (Mechanics.hasPPAtAll(user[userIndex]))
-									b1.addText(user[userIndex].nickname+" used "+move);
+									b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 									if(hit)
 									{
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
 										if(!fixed)
-										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(user[userIndex].move[userCmd].moveType,
 										enemy[enemyIndex].type1,enemy[enemyIndex].type2)));
 
-										if(move.sideEffect==Pokemon.Side_Effect.OHKO&&Mechanics.effective!=Mechanics.Effective.NONE)
+										if(user[userIndex].move[userCmd].sideEffect==Pokemon.Side_Effect.OHKO&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("It's a One-Hit-KO!");
 
 										if(Mechanics.hasSubstitute[1])
@@ -3767,13 +3815,13 @@ public final class Battle
 									}
 									break;
 								case ABSORB:
-									b1.addText(user[userIndex].nickname+" used "+move);
+									b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 									if(hit)
 									{
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
-										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(user[userIndex].move[userCmd].moveType,
 										enemy[enemyIndex].type1,enemy[enemyIndex].type2)));
 
 										if(Mechanics.hasSubstitute[1])
@@ -3789,13 +3837,13 @@ public final class Battle
 									}
 									break;
 								case STAT:
-									b1.addText(user[userIndex].nickname+" used "+move);
+									b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 									if(hit)
 									{
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
-										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(user[userIndex].move[userCmd].moveType,
 										enemy[enemyIndex].type1,enemy[enemyIndex].type2)));
 
 										if(Mechanics.hasSubstitute[1])
@@ -3806,9 +3854,8 @@ public final class Battle
 
 										if(sideHit)
 										{
-											if (!JokemonDriver.mute)
 											decStat.play();
-											switch(move)
+											switch(user[userIndex].move[userCmd])
 											{
 												case ACID:
 													b1.addText("The enemy's Defense fell!");
@@ -3830,13 +3877,13 @@ public final class Battle
 									}
 									break;
 								case STATUS:
-									b1.addText(user[userIndex].nickname+" used "+move);
+									b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 									if(hit)
 									{
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
-										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(user[userIndex].move[userCmd].moveType,
 										enemy[enemyIndex].type1,enemy[enemyIndex].type2)));
 
 										if(Mechanics.hasSubstitute[1])
@@ -3847,14 +3894,13 @@ public final class Battle
 
 										if(sideHit)
 										{
-											switch(move)
+											switch(user[userIndex].move[userCmd])
 											{
 												case AURORA_BEAM:
 												case BLIZZARD:
 												case ICE_BEAM:
 												case ICE_PUNCH:
 													b1.addText("The enemy is frozen solid!");
-													if (!JokemonDriver.mute)
 													frz.play();
 													break;
 												case BODY_SLAM:
@@ -3864,7 +3910,6 @@ public final class Battle
 												case THUNDERBOLT:
 												case THUNDERSHOCK:
 													b1.addText("The enemy is paralyzed! It may not attack!");
-													if (!JokemonDriver.mute)
 													par.play();
 													break;
 												case EMBER:
@@ -3872,14 +3917,12 @@ public final class Battle
 												case FIRE_PUNCH:
 												case FLAMETHROWER:
 													b1.addText("The enemy was burned!");
-													if (!JokemonDriver.mute)
 													brn.play();
 													break;
 												case POISON_STING:
 												case SLUDGE:
 												case SMOG:
 													b1.addText("The enemy was poisoned!");
-													if (!JokemonDriver.mute)
 													psn.play();
 													break;
 											}
@@ -3891,13 +3934,13 @@ public final class Battle
 									}
 									break;
 								case SUBSTATUS:
-									b1.addText(user[userIndex].nickname+" used "+move);
+									b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 									if(hit)
 									{
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
-										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(user[userIndex].move[userCmd].moveType,
 										enemy[enemyIndex].type1,enemy[enemyIndex].type2)));
 
 										if(Mechanics.hasSubstitute[1])
@@ -3908,7 +3951,7 @@ public final class Battle
 
 										if(sideHit)
 										{
-											switch(move)
+											switch(user[userIndex].move[userCmd])
 											{
 												case BITE:
 												case BONE_CLUB:
@@ -3930,7 +3973,7 @@ public final class Battle
 									}
 									break;
 								case CHARGE:
-									switch(move)
+									switch(user[userIndex].move[userCmd])
 									{
 										case RAZOR_WIND:
 										case SKY_ATTACK:
@@ -3942,14 +3985,14 @@ public final class Battle
 											}
 											else
 											{
-												b1.addText(user[userIndex].nickname+" used "+move);
+												b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 
 												if(hit)
 												{
 													if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 														b1.addText("Critical Hit!");
 
-													b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+													b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(user[userIndex].move[userCmd].moveType,
 													enemy[enemyIndex].type1,enemy[enemyIndex].type2)));
 
 													if(Mechanics.hasSubstitute[1])
@@ -3967,14 +4010,14 @@ public final class Battle
 										case HYPER_BEAM:
 											if(Mechanics.charging[0])
 											{
-												b1.addText(user[userIndex].nickname+" used "+move);
+												b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 
 												if(hit)
 												{
 													if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 														b1.addText("Critical Hit!");
 
-													b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+													b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(user[userIndex].move[userCmd].moveType,
 													enemy[enemyIndex].type1,enemy[enemyIndex].type2)));
 
 													if(Mechanics.hasSubstitute[1])
@@ -3996,8 +4039,8 @@ public final class Battle
 									}
 									break;
 								case RECOIL:
-									if(move!=Pokemon.Move.NONE)
-										b1.addText(user[userIndex].nickname+" used "+move);
+									if(user[userIndex].move[userCmd]!=Pokemon.Move.NONE)
+										b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 									else
 										b1.addText(user[userIndex].nickname+" used STRUGGLE");
 
@@ -4006,7 +4049,7 @@ public final class Battle
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
-										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(user[userIndex].move[userCmd].moveType,
 										enemy[enemyIndex].type1,enemy[enemyIndex].type2)));
 
 										if(Mechanics.damage>0&&Mechanics.effective!=Mechanics.Effective.NONE)
@@ -4024,18 +4067,18 @@ public final class Battle
 									}
 									break;
 								case COLLECT_DAMAGE:
-									switch(move)
+									switch(user[userIndex].move[userCmd])
 									{
 										case BIDE:
 											if(Mechanics.turnsMultiTurn[0]==0)
 											{
-												b1.addText(user[userIndex].nickname+" used "+move);
+												b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 												if(hit)
 												{
 													if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 														b1.addText("Critical Hit!");
 
-													b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+													b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(user[userIndex].move[userCmd].moveType,
 													enemy[enemyIndex].type1,enemy[enemyIndex].type2)));
 
 													if(Mechanics.hasSubstitute[1])
@@ -4055,13 +4098,13 @@ public final class Battle
 											}
 											break;
 										case COUNTER:
-											b1.addText(user[userIndex].nickname+" used "+move);
+											b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 											if(hit&&Mechanics.storedDamage[0]>0)
 											{
 												if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 													b1.addText("Critical Hit!");
 
-												b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+												b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(user[userIndex].move[userCmd].moveType,
 												enemy[enemyIndex].type1,enemy[enemyIndex].type2)));
 
 												if(Mechanics.hasSubstitute[1])
@@ -4078,13 +4121,13 @@ public final class Battle
 									}
 									break;
 								case MULTI_HIT:
-									b1.addText(user[userIndex].nickname+" used "+move);
+									b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 									if(hit)
 									{
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
-										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(user[userIndex].move[userCmd].moveType,
 										enemy[enemyIndex].type1,enemy[enemyIndex].type2)));
 										if(Mechanics.damage>0)
 										b1.addText("Hit "+timesHit+" times!");
@@ -4101,7 +4144,7 @@ public final class Battle
 									}
 									break;
 								case MULTI_TURN:
-									b1.addText(user[userIndex].nickname+" used "+move);
+									b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 									if(hit)
 									{
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
@@ -4115,7 +4158,7 @@ public final class Battle
 
 										if(Mechanics.turnsMultiTurn[0]>0)
 										{
-											b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+											b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(user[userIndex].move[userCmd].moveType,
 											enemy[enemyIndex].type1,enemy[enemyIndex].type2)));
 
 											b1.addText("The enemy can't move!");
@@ -4131,8 +4174,8 @@ public final class Battle
 									}
 									break;
 								case FURY:
-									b1.addText(user[userIndex].nickname+" used "+move);
-									if(move!=Pokemon.Move.RAGE)
+									b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
+									if(user[userIndex].move[userCmd]!=Pokemon.Move.RAGE)
 									b1.addText(user[userIndex].nickname+" is attacking violently!");
 									else
 									{
@@ -4150,7 +4193,7 @@ public final class Battle
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
-										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(user[userIndex].move[userCmd].moveType,
 										enemy[enemyIndex].type1,enemy[enemyIndex].type2)));
 
 										if(Mechanics.hasSubstitute[1])
@@ -4163,19 +4206,19 @@ public final class Battle
 									{
 										b1.addText("The Attack Missed!");
 									}
-									if(Mechanics.turnsMultiTurn[0]==0&&move!=Pokemon.Move.RAGE)
+									if(Mechanics.turnsMultiTurn[0]==0&&user[userIndex].move[userCmd]!=Pokemon.Move.RAGE)
 										b1.addText(user[userIndex].nickname+" became confused due to fatigue!");
 									break;
 								case HIDE:
 									if(!Mechanics.awayFromBattle[0])
 									{
-										b1.addText(user[userIndex].nickname+" used "+move);
+										b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 										if(hit)
 										{
 											if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
-											b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+											b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(user[userIndex].move[userCmd].moveType,
 											enemy[enemyIndex].type1,enemy[enemyIndex].type2)));
 
 											if(Mechanics.hasSubstitute[1])
@@ -4201,12 +4244,11 @@ public final class Battle
 						}
 						break;
 					case RAISE_STAT:
-						b1.addText(user[userIndex].nickname+" used "+move);
+						b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 
-						if (!JokemonDriver.mute)
 						incStat.play();
 
-						switch(move)
+						switch(user[userIndex].move[userCmd])
 						{
 							case SHARPEN:
 							case MEDITATE:
@@ -4250,13 +4292,13 @@ public final class Battle
 						}
 						break;
 					case LOWER_STAT:
-						b1.addText(user[userIndex].nickname+" used "+move);
+						b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 
-						if(hit&&!JokemonDriver.mute)
+						if(hit)
 						decStat.play();
 
 						if(hit){
-						switch(move)
+						switch(user[userIndex].move[userCmd])
 						{
 							case GROWL:
 								if(enemy[enemyIndex].atkStage<=-6)
@@ -4293,15 +4335,14 @@ public final class Battle
 							b1.addText("The move failed!");
 						break;
 					case INFLICT_STATUS:
-						b1.addText(user[userIndex].nickname+" used "+move);
-						switch(move)
+						b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
+						switch(user[userIndex].move[userCmd])
 						{
 							case CONFUSE_RAY:
 							case SUPERSONIC:
 								if(sideHit)
 								{
 									b1.addText("The enemy became confused!");
-									if (!JokemonDriver.mute)
 									special.play();
 								}
 								else
@@ -4313,7 +4354,6 @@ public final class Battle
 								if(sideHit)
 								{
 									b1.addText("The enemy is paralyzed! It may not attack!");
-									if (!JokemonDriver.mute)
 									par.play();
 								}
 								else
@@ -4327,7 +4367,6 @@ public final class Battle
 								if(sideHit)
 								{
 									b1.addText("The enemy fell asleep!");
-									if (!JokemonDriver.mute)
 									slp.play();
 								}
 								else
@@ -4337,7 +4376,6 @@ public final class Battle
 								if(sideHit)
 								{
 									b1.addText("The enemy was seeded!");
-									if (!JokemonDriver.mute)
 									special.play();
 								}
 								else
@@ -4348,11 +4386,7 @@ public final class Battle
 							case TOXIC:
 								if(sideHit)
 								{
-									if (!Mechanics.isBadlyPoisoned[1])
 									b1.addText("The enemy was poisoned!");
-									else
-									b1.addText("The enemy was badly poisoned!");
-									if (!JokemonDriver.mute)
 									psn.play();
 								}
 								else
@@ -4362,17 +4396,16 @@ public final class Battle
 						break;
 					case SPECIAL:
 
-						if (!JokemonDriver.mute)
 						special.play();
 
 						switch(user[userIndex].move[userCmd])
 						{
 							case CONVERSION:
-								b1.addText(user[userIndex].nickname+" used "+move);
+								b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 								b1.addText(user[userIndex].nickname+" is now the same type as the enemy!");
 								break;
 							case DISABLE:
-								b1.addText(user[userIndex].nickname+" used "+move);
+								b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 								if(hit)
 								{
 									b1.addText("Enemy "+enemy[enemyIndex].nickname+"'s "+enemy[enemyIndex].move[Mechanics.moveDisabled[1]]+
@@ -4385,16 +4418,16 @@ public final class Battle
 								break;
 							case FOCUS_ENERGY:
 								Mechanics.isHighCritical[0]=true;
-								b1.addText(user[userIndex].nickname+" used "+move);
+								b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 								b1.addText(user[userIndex].nickname+" is getting pumped!");
 								break;
 							case HAZE:
-								b1.addText(user[userIndex].nickname+" used "+move);
+								b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 								b1.addText("All status changes are eliminated!");
 								break;
 							case LIGHT_SCREEN:
 							case REFLECT:
-								b1.addText(user[userIndex].nickname+" used "+move);
+								b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 								b1.addText("A protective shield was created!");
 								break;
 							case METRONOME:
@@ -4403,7 +4436,7 @@ public final class Battle
 							case TRANSFORM:
 								break;
 							case MIST:
-								b1.addText(user[userIndex].nickname+" used "+move);
+								b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 								if(hit)
 								{
 									b1.addText("A protective mist surrounded the area!");
@@ -4414,9 +4447,9 @@ public final class Battle
 							case RECOVER:
 							case SOFTBOILED:
 							case REST:
-								b1.addText(user[userIndex].nickname+" used "+move);
+								b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 
-								if(move==Pokemon.Move.REST&&hit)
+								if(user[userIndex].move[userCmd]==Pokemon.Move.REST&&hit)
 									b1.addText(user[userIndex].nickname+" started sleeping!");
 
 								if(hit)
@@ -4425,12 +4458,12 @@ public final class Battle
 									b1.addText("The move failed!");
 								break;
 							case SPLASH:
-								b1.addText(user[userIndex].nickname+" used "+move);
+								b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 								if(hit)
 								b1.addText("Nothing Happened!");
 								break;
 							case SUBSTITUTE:
-								b1.addText(user[userIndex].nickname+" used "+move);
+								b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 								if(hit)
 								{
 									b1.addText(user[userIndex].nickname+" created a substitute!");
@@ -4441,7 +4474,7 @@ public final class Battle
 							case ROAR:
 							case TELEPORT:
 							case WHIRLWIND:
-								b1.addText(user[userIndex].nickname+" used "+move);
+								b1.addText(user[userIndex].nickname+" used "+user[userIndex].move[userCmd]);
 								if(!hit)
 									b1.addText("The move failed!");
 								else
@@ -4465,7 +4498,7 @@ public final class Battle
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		case 1:
 	{
-		switch(move.mainEffect)
+		switch(enemy[enemyIndex].move[enemyCmd].mainEffect)
 				{
 					case DAMAGE:
 						if(!nonPostingCase[1]&&hasPP)
@@ -4474,12 +4507,11 @@ public final class Battle
 
 							if(!Mechanics.awayFromBattle[1]&&hit&&Mechanics.damage>0)
 							{
-								if (!JokemonDriver.mute)
 								userHit.play();
 								b1.setFlicker(0);
 							}
 
-							switch(move.sideEffect)
+							switch(enemy[enemyIndex].move[enemyCmd].sideEffect)
 							{
 								case FIXED_DAMAGE:
 									crit=false;
@@ -4490,17 +4522,17 @@ public final class Battle
 								case OHKO:
 								case QUICK_ATTACK:
 								case NONE:
-									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 									if(hit)
 									{
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
 										if(!fixed)
-										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(enemy[enemyIndex].move[enemyCmd].moveType,
 										user[userIndex].type1,user[userIndex].type2)));
 
-										if(move.sideEffect==Pokemon.Side_Effect.OHKO&&Mechanics.effective!=Mechanics.Effective.NONE)
+										if(enemy[enemyIndex].move[enemyCmd].sideEffect==Pokemon.Side_Effect.OHKO&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("It's a One-Hit-KO!");
 
 										if(Mechanics.hasSubstitute[0])
@@ -4515,13 +4547,13 @@ public final class Battle
 									}
 									break;
 								case ABSORB:
-									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 									if(hit)
 									{
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
-										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(enemy[enemyIndex].move[enemyCmd].moveType,
 										user[userIndex].type1,user[userIndex].type2)));
 
 										if(Mechanics.hasSubstitute[0])
@@ -4538,13 +4570,13 @@ public final class Battle
 									}
 									break;
 								case STAT:
-									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 									if(hit)
 									{
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
-										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(enemy[enemyIndex].move[enemyCmd].moveType,
 										user[userIndex].type1,user[userIndex].type2)));
 
 										if(Mechanics.hasSubstitute[0])
@@ -4555,10 +4587,9 @@ public final class Battle
 
 										if(sideHit)
 										{
-											if (!JokemonDriver.mute)
 											decStat.play();
 
-											switch(move)
+											switch(enemy[enemyIndex].move[enemyCmd])
 											{
 												case ACID:
 													b1.addText(user[userIndex].nickname+"'s Defense fell!");
@@ -4580,13 +4611,13 @@ public final class Battle
 									}
 									break;
 								case STATUS:
-									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 									if(hit)
 									{
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
-										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(enemy[enemyIndex].move[enemyCmd].moveType,
 										user[userIndex].type1,user[userIndex].type2)));
 
 										if(Mechanics.hasSubstitute[0])
@@ -4597,14 +4628,13 @@ public final class Battle
 
 										if(sideHit)
 										{
-											switch(move)
+											switch(enemy[enemyIndex].move[enemyCmd])
 											{
 												case AURORA_BEAM:
 												case BLIZZARD:
 												case ICE_BEAM:
 												case ICE_PUNCH:
 													b1.addText(user[userIndex].nickname+" is frozen solid!");
-													if (!JokemonDriver.mute)
 													frz.play();
 													break;
 												case BODY_SLAM:
@@ -4614,7 +4644,6 @@ public final class Battle
 												case THUNDERBOLT:
 												case THUNDERSHOCK:
 													b1.addText(user[userIndex].nickname+" is paralyzed! It may not attack!");
-													if (!JokemonDriver.mute)
 													par.play();
 													break;
 												case EMBER:
@@ -4622,14 +4651,12 @@ public final class Battle
 												case FIRE_PUNCH:
 												case FLAMETHROWER:
 													b1.addText(user[userIndex].nickname+" was burned!");
-													if (!JokemonDriver.mute)
 													brn.play();
 													break;
 												case POISON_STING:
 												case SLUDGE:
 												case SMOG:
 													b1.addText(user[userIndex].nickname+" was poisoned!");
-													if (!JokemonDriver.mute)
 													psn.play();
 													break;
 											}
@@ -4641,13 +4668,13 @@ public final class Battle
 									}
 									break;
 								case SUBSTATUS:
-									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 									if(hit)
 									{
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
-										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(enemy[enemyIndex].move[enemyCmd].moveType,
 										user[userIndex].type1,user[userIndex].type2)));
 
 										if(Mechanics.hasSubstitute[0])
@@ -4658,7 +4685,7 @@ public final class Battle
 
 										if(sideHit)
 										{
-											switch(move)
+											switch(enemy[enemyIndex].move[enemyCmd])
 											{
 												case BITE:
 												case BONE_CLUB:
@@ -4680,7 +4707,7 @@ public final class Battle
 									}
 									break;
 								case CHARGE:
-									switch(move)
+									switch(enemy[enemyIndex].move[enemyCmd])
 									{
 										case RAZOR_WIND:
 										case SKY_ATTACK:
@@ -4692,14 +4719,14 @@ public final class Battle
 											}
 											else
 											{
-												b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+												b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 
 												if(hit)
 												{
 													if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 														b1.addText("Critical Hit!");
 
-													b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+													b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(enemy[enemyIndex].move[enemyCmd].moveType,
 													user[userIndex].type1,user[userIndex].type2)));
 
 													if(Mechanics.hasSubstitute[0])
@@ -4717,14 +4744,14 @@ public final class Battle
 										case HYPER_BEAM:
 											if(Mechanics.charging[1])
 											{
-												b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+												b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 
 												if(hit)
 												{
 													if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 														b1.addText("Critical Hit!");
 
-													b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+													b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(enemy[enemyIndex].move[enemyCmd].moveType,
 													user[userIndex].type1,user[userIndex].type2)));
 
 													if(Mechanics.hasSubstitute[0])
@@ -4746,13 +4773,13 @@ public final class Battle
 									}
 									break;
 								case RECOIL:
-									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 									if(hit)
 									{
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
-										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(enemy[enemyIndex].move[enemyCmd].moveType,
 										user[userIndex].type1,user[userIndex].type2)));
 
 										if(Mechanics.hasSubstitute[0])
@@ -4770,18 +4797,18 @@ public final class Battle
 									}
 									break;
 								case COLLECT_DAMAGE:
-									switch(move)
+									switch(enemy[enemyIndex].move[enemyCmd])
 									{
 										case BIDE:
 											if(Mechanics.turnsMultiTurn[1]==0)
 											{
-												b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+												b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 												if(hit)
 												{
 													if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 														b1.addText("Critical Hit!");
 
-													b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+													b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(enemy[enemyIndex].move[enemyCmd].moveType,
 													user[userIndex].type1,user[userIndex].type2)));
 
 													if(Mechanics.hasSubstitute[0])
@@ -4801,13 +4828,13 @@ public final class Battle
 											}
 											break;
 										case COUNTER:
-											b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+											b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 											if(hit&&Mechanics.storedDamage[1]>0)
 											{
 												if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 													b1.addText("Critical Hit!");
 
-												b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+												b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(enemy[enemyIndex].move[enemyCmd].moveType,
 												user[userIndex].type1,user[userIndex].type2)));
 
 												if(Mechanics.hasSubstitute[0])
@@ -4824,13 +4851,13 @@ public final class Battle
 									}
 									break;
 								case MULTI_HIT:
-									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 									if(hit)
 									{
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
-										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(enemy[enemyIndex].move[enemyCmd].moveType,
 										user[userIndex].type1,user[userIndex].type2)));
 
 										if(Mechanics.hasSubstitute[0])
@@ -4848,7 +4875,7 @@ public final class Battle
 									}
 									break;
 								case MULTI_TURN:
-									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 									if(hit)
 									{
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
@@ -4862,7 +4889,7 @@ public final class Battle
 
 										if(Mechanics.turnsMultiTurn[1]>0)
 										{
-											b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+											b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(enemy[enemyIndex].move[enemyCmd].moveType,
 											user[userIndex].type1,user[userIndex].type2)));
 
 											b1.addText(user[userIndex].nickname+" can't move!");
@@ -4878,8 +4905,8 @@ public final class Battle
 									}
 									break;
 								case FURY:
-									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
-									if(move!=Pokemon.Move.RAGE)
+									b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
+									if(enemy[enemyIndex].move[enemyCmd]!=Pokemon.Move.RAGE)
 									b1.addText("Enemy "+enemy[enemyIndex].nickname+" is attacking violently!");
 									else
 									{
@@ -4897,7 +4924,7 @@ public final class Battle
 										if(crit&&Mechanics.effective!=Mechanics.Effective.NONE)
 											b1.addText("Critical Hit!");
 
-										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+										b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(enemy[enemyIndex].move[enemyCmd].moveType,
 										user[userIndex].type1,user[userIndex].type2)));
 
 										if(Mechanics.hasSubstitute[0])
@@ -4910,19 +4937,19 @@ public final class Battle
 									{
 										b1.addText("The Attack Missed!");
 									}
-									if(Mechanics.turnsMultiTurn[1]==0&&move!=Pokemon.Move.RAGE)
+									if(Mechanics.turnsMultiTurn[1]==0&&enemy[enemyIndex].move[enemyCmd]!=Pokemon.Move.RAGE)
 										b1.addText("Enemy "+enemy[enemyIndex].nickname+" became confused due to fatigue!");
 									break;
 								case HIDE:
 									if(!Mechanics.awayFromBattle[1])
 									{
-										b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+										b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 										if(hit)
 										{
 											if(crit)
 												b1.addText("Critical Hit!");
 
-											b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(move.moveType,
+											b1.addText(Mechanics.multiplierToString(Mechanics.typeMultiplier(enemy[enemyIndex].move[enemyCmd].moveType,
 											user[userIndex].type1,user[userIndex].type2)));
 
 											if(Mechanics.hasSubstitute[0])
@@ -4938,7 +4965,7 @@ public final class Battle
 									}
 									else
 									{
-										if(move==Pokemon.Move.DIG)
+										if(enemy[enemyIndex].move[enemyCmd]==Pokemon.Move.DIG)
 											b1.addText("Enemy "+enemy[enemyIndex].nickname+" burrowed underground!");
 										else
 											b1.addText("Enemy "+enemy[enemyIndex].nickname+" flew up high!");
@@ -4948,10 +4975,9 @@ public final class Battle
 						}
 						break;
 					case RAISE_STAT:
-						b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
-						if (!JokemonDriver.mute)
+						b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 						incStat.play();
-						switch(move)
+						switch(enemy[enemyIndex].move[enemyCmd])
 						{
 							case SHARPEN:
 							case MEDITATE:
@@ -4995,13 +5021,13 @@ public final class Battle
 						}
 						break;
 					case LOWER_STAT:
-						b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+						b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 
-						if(hit&&!JokemonDriver.mute)
+						if(hit)
 							decStat.play();
 
 						if(hit)
-						switch(move)
+						switch(enemy[enemyIndex].move[enemyCmd])
 						{
 							case GROWL:
 								if(user[userIndex].atkStage<=-6)
@@ -5037,15 +5063,14 @@ public final class Battle
 							b1.addText("The move failed!");
 						break;
 					case INFLICT_STATUS:
-						b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
-						switch(move)
+						b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
+						switch(enemy[enemyIndex].move[enemyCmd])
 						{
 							case CONFUSE_RAY:
 							case SUPERSONIC:
 								if(sideHit)
 								{
 									b1.addText(user[userIndex].nickname+" became confused!");
-									if (!JokemonDriver.mute)
 									special.play();
 								}
 								else
@@ -5057,7 +5082,6 @@ public final class Battle
 								if(sideHit)
 								{
 									b1.addText(user[userIndex].nickname+" is paralyzed! It may not attack!");
-									if (!JokemonDriver.mute)
 									par.play();
 								}
 								else
@@ -5071,7 +5095,6 @@ public final class Battle
 								if(sideHit)
 								{
 									b1.addText(user[userIndex].nickname+" fell asleep!");
-									if (!JokemonDriver.mute)
 									slp.play();
 								}
 								else
@@ -5081,7 +5104,6 @@ public final class Battle
 								if(sideHit)
 								{
 									b1.addText(user[userIndex].nickname+" was seeded!");
-									if (!JokemonDriver.mute)
 									special.play();
 								}
 								else
@@ -5092,11 +5114,7 @@ public final class Battle
 							case TOXIC:
 								if(sideHit)
 								{
-									if (!Mechanics.isBadlyPoisoned[0])
 									b1.addText(user[userIndex].nickname+" was poisoned!");
-									else
-									b1.addText(user[userIndex].nickname+" was badley poisoned!");
-									if (!JokemonDriver.mute)
 									psn.play();
 								}
 								else
@@ -5106,17 +5124,16 @@ public final class Battle
 						break;
 					case SPECIAL:
 
-						if (!JokemonDriver.mute)
 						special.play();
 
-						switch(move)
+						switch(enemy[enemyIndex].move[enemyCmd])
 						{
 							case CONVERSION:
-								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 								b1.addText("Enemy "+enemy[enemyIndex].nickname+" is now the same type as "+user[userIndex].nickname+"!");
 								break;
 							case DISABLE:
-								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 								if(hit)
 								{
 									b1.addText(user[userIndex].nickname+"'s "+user[userIndex].move[Mechanics.moveDisabled[0]]+
@@ -5129,16 +5146,16 @@ public final class Battle
 								break;
 							case FOCUS_ENERGY:
 								Mechanics.isHighCritical[1]=true;
-								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 								b1.addText("Enemy "+enemy[enemyIndex].nickname+" is getting pumped!");
 								break;
 							case HAZE:
-								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 								b1.addText("All status changes are eliminated!");
 								break;
 							case LIGHT_SCREEN:
 							case REFLECT:
-								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 								b1.addText("A protective shield was created!");
 								break;
 							case METRONOME:
@@ -5147,7 +5164,7 @@ public final class Battle
 							case TRANSFORM:
 								break;
 							case MIST:
-								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 								if(hit)
 								{
 									b1.addText("A protective mist surrounded the area!");
@@ -5158,9 +5175,9 @@ public final class Battle
 							case RECOVER:
 							case SOFTBOILED:
 							case REST:
-								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 
-								if(move==Pokemon.Move.REST&&hit)
+								if(enemy[enemyIndex].move[enemyCmd]==Pokemon.Move.REST&&hit)
 									b1.addText(enemy[enemyIndex].nickname+" started sleeping!");
 
 								if(hit)
@@ -5169,12 +5186,12 @@ public final class Battle
 									b1.addText("The move failed!");
 								break;
 							case SPLASH:
-								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 								if(hit)
 								b1.addText("Nothing Happened!");
 								break;
 							case SUBSTITUTE:
-								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 								if(hit)
 								{
 									b1.addText("Enemy "+enemy[enemyIndex].nickname+" created a substitute!");
@@ -5185,12 +5202,12 @@ public final class Battle
 							case ROAR:
 							case TELEPORT:
 							case WHIRLWIND:
-								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+move);
+								b1.addText("Enemy "+enemy[enemyIndex].nickname+" used "+enemy[enemyIndex].move[enemyCmd]);
 								if(!hit)
 									b1.addText("The move failed!");
 								else
 								{
-									if(move==Pokemon.Move.TELEPORT)
+									if(enemy[enemyIndex].move[enemyCmd]==Pokemon.Move.TELEPORT)
 										b1.addText(enemy[enemyIndex].nickname+" teleported away!");
 									else
 										b1.addText(enemy[enemyIndex].nickname+" sent you away!");

@@ -552,17 +552,11 @@ public class Pokedex
 		areasFound[19] = "04050612132539";
 		areasFound[20] = "0102";
 		areasFound[21] = "05";
-		if (JokemonDriver.VERSION.equals("Peaches"))
 		areasFound[22] = "0306";
-		else
-		areasFound[22] = "";
 		areasFound[23] = "";
 		areasFound[24] = "0315";
 		areasFound[25] = "";
-		if (JokemonDriver.VERSION.equals("Cream"))
 		areasFound[26] = "0306";
-		else
-		areasFound[26] = "";
 		areasFound[27] = "";
 		areasFound[28] = "03";
 		areasFound[29] = "0607";
@@ -572,19 +566,13 @@ public class Pokedex
 		areasFound[33] = "";
 		areasFound[34] = "05";
 		areasFound[35] = "";
-		if (JokemonDriver.VERSION.equals("Cream"))
 		areasFound[36] = "05";
-		else
-		areasFound[36] = "";
 		areasFound[37] = "";
 		areasFound[38] = "05";
 		areasFound[39] = "";
 		areasFound[40] = "050634363738";
 		areasFound[41] = "39";
-		if (JokemonDriver.VERSION.equals("Peaches"))
 		areasFound[42] = "04";
-		else
-		areasFound[42] = "";
 		areasFound[43] = "";
 		areasFound[44] = "";
 		areasFound[45] = "04";
@@ -593,22 +581,13 @@ public class Pokedex
 		areasFound[48] = "";
 		areasFound[49] = "0635";
 		areasFound[50] = "35";
-		if (JokemonDriver.VERSION.equals("Cream"))
 		areasFound[51] = "0710";
-		else
-		areasFound[51] = "";
 		areasFound[52] = "";
 		areasFound[53] = "10";
 		areasFound[54] = "";
-		if (JokemonDriver.VERSION.equalsIgnoreCase("Peaches"))
 		areasFound[55] = "11";
-		else
-		areasFound[55] = "";	
 		areasFound[56] = "";
-		if (JokemonDriver.VERSION.equals("Peaches"))
 		areasFound[57] = "1011";
-		else
-		areasFound[57] = "";
 		areasFound[58] = "";
 		areasFound[59] = "04";
 		areasFound[60] = "1011";
@@ -619,10 +598,7 @@ public class Pokedex
 		areasFound[65] = "06";
 		areasFound[66] = "12";
 		areasFound[67] = "";
-		if (JokemonDriver.VERSION.equals("Cream"))
 		areasFound[68] = "11";
-		else
-		areasFound[68] = "";
 		areasFound[69] = "";
 		areasFound[70] = "";
 		areasFound[71] = "";
@@ -676,23 +652,11 @@ public class Pokedex
 		areasFound[119] = "39";
 		areasFound[120] = "";
 		areasFound[121] = "0708";
-		if (JokemonDriver.VERSION.equals("Peaches"))
 		areasFound[122] = "39";
-		else
-		areasFound[122] = "";
 		areasFound[123] = "0708";
-		if (JokemonDriver.VERSION.equals("Peaches"))
 		areasFound[124] = "12";
-		else
-		areasFound[124] = "";
-		if (JokemonDriver.VERSION.equals("Cream"))
 		areasFound[125] = "05";
-		else
-		areasFound[125] = "";
-		if (JokemonDriver.VERSION.equals("Cream"))
 		areasFound[126] = "11";
-		else
-		areasFound[126] = "";
 		areasFound[127] = "04";
 		areasFound[128] = "0203";
 		areasFound[129] = "";
@@ -718,11 +682,309 @@ public class Pokedex
 		areasFound[149] = "";
 		areasFound[150] = "";
 
-		for (int i =0; i<seen.length; i++)
-			seen[i]=false;
+		seen[0] = false;
+		seen[1] = false;
+		seen[2] = false;
+		seen[3] = false;
+		seen[4] = false;
+		seen[5] = false;
+		seen[6] = false;
+		seen[7] = false;
+		seen[8] = false;
+		seen[9] = false;
+		seen[10] = false;
+		seen[11] = false;
+		seen[12] = false;
+		seen[13] = false;
+		seen[14] = false;
+		seen[15] = false;
+		seen[16] = false;
+		seen[17] = false;
+		seen[18] = false;
+		seen[19] = false;
+		seen[20] = false;
+		seen[21] = false;
+		seen[22] = false;
+		seen[23] = false;
+		seen[24] = false;
+		seen[25] = false;
+		seen[26] = false;
+		seen[27] = false;
+		seen[28] = false;
+		seen[29] = false;
+		seen[30] = false;
+		seen[31] = false;
+		seen[32] = false;
+		seen[33] = false;
+		seen[34] = false;
+		seen[35] = false;
+		seen[36] = false;
+		seen[37] = false;
+		seen[38] = false;
+		seen[39] = false;
+		seen[40] = false;
+		seen[41] = false;
+		seen[42] = false;
+		seen[43] = false;
+		seen[44] = false;
+		seen[45] = false;
+		seen[46] = false;
+		seen[47] = false;
+		seen[48] = false;
+		seen[49] = false;
+		seen[50] = false;
+		seen[51] = false;
+		seen[52] = false;
+		seen[53] = false;
+		seen[54] = false;
+		seen[55] = false;
+		seen[56] = false;
+		seen[57] = false;
+		seen[58] = false;
+		seen[59] = false;
+		seen[60] = false;
+		seen[61] = false;
+		seen[62] = false;
+		seen[63] = false;
+		seen[64] = false;
+		seen[65] = false;
+		seen[66] = false;
+		seen[67] = false;
+		seen[68] = false;
+		seen[69] = false;
+		seen[70] = false;
+		seen[71] = false;
+		seen[72] = false;
+		seen[73] = false;
+		seen[74] = false;
+		seen[75] = false;
+		seen[76] = false;
+		seen[77] = false;
+		seen[78] = false;
+		seen[79] = false;
+		seen[80] = false;
+		seen[81] = false;
+		seen[82] = false;
+		seen[83] = false;
+		seen[84] = false;
+		seen[85] = false;
+		seen[86] = false;
+		seen[87] = false;
+		seen[88] = false;
+		seen[89] = false;
+		seen[90] = false;
+		seen[91] = false;
+		seen[92] = false;
+		seen[93] = false;
+		seen[94] = false;
+		seen[95] = false;
+		seen[96] = false;
+		seen[97] = false;
+		seen[98] = false;
+		seen[99] = false;
+		seen[100] = false;
+		seen[101] = false;
+		seen[102] = false;
+		seen[103] = false;
+		seen[104] = false;
+		seen[105] = false;
+		seen[106] = false;
+		seen[107] = false;
+		seen[108] = false;
+		seen[109] = false;
+		seen[110] = false;
+		seen[111] = false;
+		seen[112] = false;
+		seen[113] = false;
+		seen[114] = false;
+		seen[115] = false;
+		seen[116] = false;
+		seen[117] = false;
+		seen[118] = false;
+		seen[119] = false;
+		seen[120] = false;
+		seen[121] = false;
+		seen[122] = false;
+		seen[123] = false;
+		seen[124] = false;
+		seen[125] = false;
+		seen[126] = false;
+		seen[127] = false;
+		seen[128] = false;
+		seen[129] = false;
+		seen[130] = false;
+		seen[131] = false;
+		seen[132] = false;
+		seen[133] = false;
+		seen[134] = false;
+		seen[135] = false;
+		seen[136] = false;
+		seen[137] = false;
+		seen[138] = false;
+		seen[139] = false;
+		seen[140] = false;
+		seen[141] = false;
+		seen[142] = false;
+		seen[143] = false;
+		seen[144] = false;
+		seen[145] = false;
+		seen[146] = false;
+		seen[147] = false;
+		seen[148] = false;
+		seen[149] = false;
+		seen[150] = false;
 
-		for (int i =0; i<caught.length; i++)
-			caught[i]=false;
+		caught[0] = false;
+		caught[1] = false;
+		caught[2] = false;
+		caught[3] = false;
+		caught[4] = false;
+		caught[5] = false;
+		caught[6] = false;
+		caught[7] = false;
+		caught[8] = false;
+		caught[9] = false;
+		caught[10] = false;
+		caught[11] = false;
+		caught[12] = false;
+		caught[13] = false;
+		caught[14] = false;
+		caught[15] = false;
+		caught[16] = false;
+		caught[17] = false;
+		caught[18] = false;
+		caught[19] = false;
+		caught[20] = false;
+		caught[21] = false;
+		caught[22] = false;
+		caught[23] = false;
+		caught[24] = false;
+		caught[25] = false;
+		caught[26] = false;
+		caught[27] = false;
+		caught[28] = false;
+		caught[29] = false;
+		caught[30] = false;
+		caught[31] = false;
+		caught[32] = false;
+		caught[33] = false;
+		caught[34] = false;
+		caught[35] = false;
+		caught[36] = false;
+		caught[37] = false;
+		caught[38] = false;
+		caught[39] = false;
+		caught[40] = false;
+		caught[41] = false;
+		caught[42] = false;
+		caught[43] = false;
+		caught[44] = false;
+		caught[45] = false;
+		caught[46] = false;
+		caught[47] = false;
+		caught[48] = false;
+		caught[49] = false;
+		caught[50] = false;
+		caught[51] = false;
+		caught[52] = false;
+		caught[53] = false;
+		caught[54] = false;
+		caught[55] = false;
+		caught[56] = false;
+		caught[57] = false;
+		caught[58] = false;
+		caught[59] = false;
+		caught[60] = false;
+		caught[61] = false;
+		caught[62] = false;
+		caught[63] = false;
+		caught[64] = false;
+		caught[65] = false;
+		caught[66] = false;
+		caught[67] = false;
+		caught[68] = false;
+		caught[69] = false;
+		caught[70] = false;
+		caught[71] = false;
+		caught[72] = false;
+		caught[73] = false;
+		caught[74] = false;
+		caught[75] = false;
+		caught[76] = false;
+		caught[77] = false;
+		caught[78] = false;
+		caught[79] = false;
+		caught[80] = false;
+		caught[81] = false;
+		caught[82] = false;
+		caught[83] = false;
+		caught[84] = false;
+		caught[85] = false;
+		caught[86] = false;
+		caught[87] = false;
+		caught[88] = false;
+		caught[89] = false;
+		caught[90] = false;
+		caught[91] = false;
+		caught[92] = false;
+		caught[93] = false;
+		caught[94] = false;
+		caught[95] = false;
+		caught[96] = false;
+		caught[97] = false;
+		caught[98] = false;
+		caught[99] = false;
+		caught[100] = false;
+		caught[101] = false;
+		caught[102] = false;
+		caught[103] = false;
+		caught[104] = false;
+		caught[105] = false;
+		caught[106] = false;
+		caught[107] = false;
+		caught[108] = false;
+		caught[109] = false;
+		caught[110] = false;
+		caught[111] = false;
+		caught[112] = false;
+		caught[113] = false;
+		caught[114] = false;
+		caught[115] = false;
+		caught[116] = false;
+		caught[117] = false;
+		caught[118] = false;
+		caught[119] = false;
+		caught[120] = false;
+		caught[121] = false;
+		caught[122] = false;
+		caught[123] = false;
+		caught[124] = false;
+		caught[125] = false;
+		caught[126] = false;
+		caught[127] = false;
+		caught[128] = false;
+		caught[129] = false;
+		caught[130] = false;
+		caught[131] = false;
+		caught[132] = false;
+		caught[133] = false;
+		caught[134] = false;
+		caught[135] = false;
+		caught[136] = false;
+		caught[137] = false;
+		caught[138] = false;
+		caught[139] = false;
+		caught[140] = false;
+		caught[141] = false;
+		caught[142] = false;
+		caught[143] = false;
+		caught[144] = false;
+		caught[145] = false;
+		caught[146] = false;
+		caught[147] = false;
+		caught[148] = false;
+		caught[149] = false;
+		caught[150] = false;
 	}
 
 	public static void seen(int index)
@@ -1304,15 +1566,5 @@ public class Pokedex
 		}
 
 		return Pokemon.Species.MISSINGNO;
-	}
-	
-	public static boolean completed()
-	{
-		for (int i = 0; i<caught.length; i++)
-		{
-			if (caught[i] == false)
-			return false;
-		}
-		return true;
 	}
 }

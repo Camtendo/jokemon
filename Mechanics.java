@@ -39,8 +39,6 @@ public final class Mechanics
 	static boolean hasSubstitute[]=new boolean[2];
 	static boolean canAttack[]=new boolean[2];
 	static boolean awayFromBattle[]=new boolean[2];
-	static boolean isBadlyPoisoned[]=new boolean[2];
-
 
 	//Initializes necessary variables
 	public static void initialize()
@@ -198,26 +196,16 @@ public final class Mechanics
 			else
 				break;
 		}
-		
-		if (highest>100)
-			highest=100;
 
-		return highest;
-	}
-	
-	public static int getHighestLevel(Pokemon party[])
-	{
-		int highest=0;
-
-		for(int i=0; i<party.length; i++)
+		for(int i=0; i<pc.length; i++)
 		{
-			if(party[i]!=null)
+			if(pc[i]!=null)
 			{
-				if(party[i].level>highest)
-					highest=party[i].level;
+				if(pc[i].level>highest)
+					highest=pc[i].level;
 			}
 			else
-				break;
+				return highest;
 		}
 
 		return highest;
@@ -258,12 +246,13 @@ public final class Mechanics
 	//Returns true if the pokemon has the move
 	public static boolean hasMove(Pokemon pokemon, Pokemon.Move move)
 	{
+		boolean has = false;
 		for (int i = 0; i<4; i++)
 		{
 			if (pokemon.move[i] == move)
-			return true;
+			has = true;
 		}
-		return false;
+		return has;
 	}
 
 	//Checks party for HM01 Cut
@@ -355,7 +344,6 @@ public final class Mechanics
 
 		return false;
 	}
-	
 
 	//Creates a new Substitute
 	public static void createSubstitute(int health,int target)
@@ -419,14 +407,12 @@ public final class Mechanics
 	}
 
 	//Checks if a move hit. Gets Pokemon and a move index and Enemy's Evasion
-	public static boolean checkHit(Pokemon p, Pokemon.Move move, double evade)
+	public static boolean checkHit(Pokemon p, int index, double evade)
 	{
 		int randy=(int)(Math.random()*100);
 
-		return randy<(move.accuracy*stageMultiplier(p.accuracyStage))/evade;
+		return randy<(p.move[index].accuracy*stageMultiplier(p.accuracyStage))/evade;
 	}
-	
-
 
 	//Checks if a side effect hit
 	public static boolean checkSideEffect(Pokemon.Move m)
@@ -443,7 +429,7 @@ public final class Mechanics
 		{
 			if(p.move[i]!=Pokemon.Move.NONE)
 			{
-				if(p.TRUE_PP[i]>0)
+				if(hasPP(p.move[i]))
 				{
 					return true;
 				}
@@ -485,9 +471,15 @@ public final class Mechanics
 	}
 
 	//Returns if a Pokemon has PP for a move
-	public static boolean hasPP(int i)
+	public static boolean hasPP(Pokemon.Move m)
 	{
-		return i>0;
+		return m.pp>0;
+	}
+
+	//Returns if a Pokemon has PP for a move
+	public static boolean enemyHasPP(Pokemon.Move m)
+	{
+		return m.pp>1;
 	}
 
 	//Returns number of Pokemon Remaining
@@ -497,7 +489,7 @@ public final class Mechanics
 
 		for(int i=0; i<numOfPokemon; i++)
 		{
-			if(p[i] != null && isAlive(p[i].health))
+			if(isAlive(p[i].health))
 			{
 				temp++;
 			}

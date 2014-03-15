@@ -17,7 +17,7 @@ public final class BattleTest
 	public static void main(String args[])
 	{
 		new ItemTest();
-		user[0]=new Pokemon(Pokemon.Species.EEVEE,Pokemon.Move.TRANSFORM,Pokemon.Move.WRAP,Pokemon.Move.PSYCHIC,Pokemon.Move.RECOVER,40);
+		user[0]=new Pokemon(Pokemon.Species.EEVEE,Pokemon.Move.FLAMETHROWER,Pokemon.Move.SELFDESTRUCT,Pokemon.Move.PSYCHIC,Pokemon.Move.RECOVER,4);
 		//user[0].setNickname("Scrappy");
 		user[1]=new Pokemon(Pokemon.Species.MISSINGNO,68);
 		user[2]=new Pokemon(Pokemon.Species.MEW,80);
@@ -25,7 +25,7 @@ public final class BattleTest
 		user[4]=new Pokemon(Pokemon.Species.RAICHU,79);
 		user[5]=new Pokemon(Pokemon.Species.SNORLAX,84);
 		
-		enemy[0]=new Pokemon(Pokemon.Species.CATERPIE,Pokemon.Move.FLY,7);
+		enemy[0]=new Pokemon(Pokemon.Species.CATERPIE,7);
 		new BattleWindow(user,enemy,"WILD");
 
 		Trainer testTrainer=new Trainer(Trainer.TrainerType.JAVA,"GRUNT",Pokemon.Species.RATICATE,Pokemon.Species.GOLBAT,Pokemon.Species.MUK,60);

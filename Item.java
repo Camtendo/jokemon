@@ -45,7 +45,7 @@ public class Item extends javax.swing.JPanel
 		FRESH_WATER,FULL_HEAL,FULL_RESTORE,GOLD_TEETH,
 		GOOD_ROD,GREAT_BALL,GUARD_SPECIAL,HELIX_FOSSIL,
 		HP_UP,HYPER_POTION,ICE_HEAL,IRON,ITEM_FINDER,
-		LEAF_STONE,LEMONADE,LIFT_KEY,MASTER_BALL,MAX_ELIXER,
+		LEAF_STONE,LEMONADE,LIFT_KEY,MASTER_BALL,MAX_ELIXIR,
 		MAX_ETHER,MAX_POTION,MAX_REPEL,MAX_REVIVE,MOON_STONE,
 		NUGGET,OLD_AMBER,OLD_ROD,PARALYZE_HEAL,POKE_BALL,
 		POKE_FLUTE,POTION,PP_UP,PROTEIN,RARE_CANDY,REPEL,
@@ -466,7 +466,7 @@ public class Item extends javax.swing.JPanel
 				alphabet = 13;
 				message = "A pokeball that wont fail";
 				break;
-			case MAX_ELIXER:
+			case MAX_ELIXIR:
 				effect1 = Effect.ELIXER;
 				power1 = 255;
 				effect2 = Effect.NONE;
@@ -517,16 +517,6 @@ public class Item extends javax.swing.JPanel
 				pocket = Pocket.MEDICINE;
 				alphabet = 13;
 				message = "Revives one Pokemon to full health";
-				break;
-			case MOON_STONE:
-				effect1 = Effect.EVO_STONE;
-				power1 = 100;
-				effect2 = Effect.NONE;
-				storeCost = 2100;
-				reUsable = false;
-				pocket = Pocket.ITEM;
-				alphabet = 13;
-				message = "Evolves certain normal type Pokemon";
 				break;
 			case NUGGET:
 				effect1 = Effect.NONE;
@@ -809,8 +799,6 @@ public class Item extends javax.swing.JPanel
 				reUsable = true;
 				alphabet = 20;
 				pocket = Pocket.TMHM;
-				if (mNo <= 0 || mNo > 50)
-					mNo = 1;
 				switch (mNo)
 				{
 					case 1:
@@ -1062,11 +1050,6 @@ public class Item extends javax.swing.JPanel
 						moveLearned = Pokemon.Move.SUBSTITUTE;
 						message = "Teaches one Pokemon Substitute";
 						storeCost = 10000;
-						break;
-					default:
-						moveLearned = Pokemon.Move.TACKLE;
-						message = "Invalid Tm";
-						storeCost = 7000;
 						break;
 				}
 			}

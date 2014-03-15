@@ -54,17 +54,13 @@ public class Frogger extends JPanel implements KeyListener
 		if(count>4)
 			frogx=7;
 			//   //
-		URL url=JokemonDriver.class.getResource("NERDY_BIKER.png");
-		run[1]=new ImageIcon(url).getImage();
-		run[2]=new ImageIcon(url).getImage();
-		run[3]=new ImageIcon(url).getImage();
-		run[4]=new ImageIcon(url).getImage();
-		url=JokemonDriver.class.getResource("Bulbasaur.png");
-		run[5]=new ImageIcon(url).getImage();
-		url=JokemonDriver.class.getResource("Ivysaur.png");
-		run[6]=new ImageIcon(url).getImage();
-		url=JokemonDriver.class.getResource("Venusaur.png");
-		run[7]=new ImageIcon(url).getImage();
+		run[1]=new ImageIcon("NERDY_BIKER.PNG").getImage();
+		run[2]=new ImageIcon("NERDY_BIKER.PNG").getImage();
+		run[3]=new ImageIcon("NERDY_BIKER.PNG").getImage();
+		run[4]=new ImageIcon("NERDY_BIKER.PNG").getImage();
+		run[5]=new ImageIcon("bulbasaur.PNG").getImage();
+		run[6]=new ImageIcon("ivysaur.PNG").getImage();
+		run[7]=new ImageIcon("venusaur.PNG").getImage();
 		JFrame jf = new JFrame("Don't Die");
 		Container cp = jf.getContentPane();
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

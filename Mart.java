@@ -94,7 +94,6 @@ public class Mart extends JFrame implements ActionListener
 				fullInventory.add(new Item(Item.Type.IRON,1));
 				fullInventory.add(new Item(Item.Type.LEAF_STONE,1));
 				fullInventory.add(new Item(Item.Type.LEMONADE,1));
-				fullInventory.add(new Item(Item.Type.MOON_STONE,1));
 				fullInventory.add(new Item(Item.Type.PROTEIN,1));
 				fullInventory.add(new Item(Item.Type.SODA_POP,1));
 				fullInventory.add(new Item(Item.Type.THUNDER_STONE,1));
@@ -187,11 +186,6 @@ public class Mart extends JFrame implements ActionListener
 				fullInventory.add(new Item(Item.Type.ULTIMA_REPEL,1));
 				fullInventory.add(new Item(Item.Type.MAX_REVIVE,1));
 				fullInventory.add(new Item(Item.Type.FULL_HEAL,1));
-				fullInventory.add(new Item(Item.Type.ETHER,1));
-				fullInventory.add(new Item(Item.Type.ELIXER,1));
-				fullInventory.add(new Item(Item.Type.MAX_ETHER,1));
-				fullInventory.add(new Item(Item.Type.MAX_ELIXER,1));
-				fullInventory.add(new Item(Item.Type.REVIVE,1));
 				break;
 			case Null_Zone:
 				fullInventory.add(new Item(Item.Type.MOUNTAIN_DEW,1));
@@ -670,7 +664,7 @@ public class Mart extends JFrame implements ActionListener
 		{
 			Inventory.money-=amount;
 
-			if(currentDisplay.get(selectedItemId).type!=Item.Type.TM)
+			if(currentDisplay.get(selectedItemId).type!=Item.Type.TM||currentDisplay.get(selectedItemId).type!=Item.Type.HM)
 				Inventory.addItem(new Item(currentDisplay.get(selectedItemId).type,amount/currentDisplay.get(selectedItemId).storeCost));
 			else
 				Inventory.addItem(new Item(currentDisplay.get(selectedItemId).type,amount/currentDisplay.get(selectedItemId).storeCost,currentDisplay.get(selectedItemId).mNo));

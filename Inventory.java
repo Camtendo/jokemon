@@ -198,15 +198,11 @@ public class Inventory
 			return selectedPokemon;
 		}
 
-		boolean itemCancel1 = false;
-		boolean itemCancel2 = false;
 
 		selectedPokemon = itemEffect(selectedPokemon,item.type,item.effect1,item.power1,item.healStatus);
-		itemCancel1 = itemCancel;
 		selectedPokemon = itemEffect(selectedPokemon,item.type,item.effect2,item.power2,item.healStatus);
-		itemCancel2 = itemCancel;
 
-		if ((!itemCancel1 || !itemCancel2)&& !npc)
+		if (!itemCancel && !npc)
 		decrementItem(item);
 
 		return selectedPokemon;

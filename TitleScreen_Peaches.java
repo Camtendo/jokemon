@@ -46,7 +46,7 @@ public class TitleScreen_Peaches extends JPanel implements Runnable, KeyListener
 	
 	public TitleScreen_Peaches()
 	{
-		URL introU=TitleScreen_Peaches.class.getResource("titlemusic.mid");
+		URL introU=TitleScreen_Peaches.class.getResource("Music/JokemonTitleMusic.mid");
     	titleMusic=JApplet.newAudioClip(introU);
     	
     	URL url=TitleScreen_Peaches.class.getResource("Music/credits.mid");

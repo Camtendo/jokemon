@@ -143,10 +143,6 @@ public class TitleScreen_Cream extends JPanel implements Runnable
 		g.setColor(Color.WHITE);
 		if(Math.abs(randStars[0].x)%50>=10)
 		g.drawString("Press Spacebar",170,470);
-		
-		g.drawImage(camtendo,0,500,754/4,209/4,this);
-		g.drawImage(justinian,680,500,471/4,247/4,this);
-		g.drawImage(jinc,740,0,200/4,300/4,this);
 	}
 	
 	public void paintCredits(Graphics g)

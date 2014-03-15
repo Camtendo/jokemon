@@ -59,7 +59,7 @@ public class Pokemon
 		OK,CONFU,FLINCH,SEED
 	}
 
-	public static enum Move
+	public enum Move
 	{
 		ABSORB,ACID,ACID_ARMOR,AGILITY,AMNESIA,AURORA_BEAM,BARRAGE,BARRIER,
 		BIDE,BIND,BITE,BLIZZARD,BODY_SLAM,BONE_CLUB,BONEMERANG,BUBBLE,BUBBLEBEAM,
@@ -240,7 +240,7 @@ public class Pokemon
 	{
 		IS_TRADED=(idNumber==idToBeChecked);
 	}
-
+	
 	//Sets this Pokemon's stats TO DA MAX!!!
 	public void setMaxStats()
 	{
@@ -254,7 +254,7 @@ public class Pokemon
 		SPCL_EV=256*256;
 		SPEED_IV=31;
 		SPEED_EV=256*256;
-
+		
 		healthMax=Mechanics.calcHPStat(baseHP,HP_IV, HP_EV,level);
 		health=healthMax;
 
@@ -302,10 +302,10 @@ public class Pokemon
 	public void setNickname(String nick)
 	{
 		nickname=nick;
-
+		
 		if(nickname.length()>10)
 			setNickname(nickname.substring(0,10));
-
+			
 		if(nickname.equals("")||nickname.equals(" ")||nickname.equals("  ")||nickname.equals("   ")
 			||nickname.equals("    ")||nickname.equals("     ")||nickname.equals("      ")||nickname.equals("       ")
 			||nickname.equals("        ")||nickname.equals("         ")||nickname.equals("          "))
@@ -661,7 +661,7 @@ public class Pokemon
 	//Trade version
 	public Species evolve(Pokemon p, int idToCheck)
 	{
-		if(IS_TRADED)
+		if(idToCheck!=p.idNumber)
 		{
 			switch(p.species)
 			{
@@ -717,12 +717,12 @@ public class Pokemon
 	{
 		return HP_IV+ATK_IV+DEF_IV+SPCL_IV+SPEED_IV;
 	}
-
+	
 	//Returns a string of this Pokemon's types
 	public String getTypeString()
 	{
 		String str="";
-
+		
 		switch(type1)
 		{
 			case BIRD:
@@ -831,14 +831,14 @@ public class Pokemon
 					break;
 				default:
 					break;
-			}
+			}	
 		}
-
+		
 		return str;
 	}
 
 	//Takes in 0 - 162 and returns metronome when it's not between 0 and 162
-	public static Move randomMove(int num)
+	public Move randomMove(int num)
 	{
 		switch(num)
 		{
@@ -859,9 +859,7 @@ public class Pokemon
 			case 7:
 				return Move.BARRIER;
 			case 8:
-				return Move.BIND;
 			case 9:
-				return Move.BIDE;
 			case 10:
 				return Move.BITE;
 			case 11:
@@ -877,7 +875,6 @@ public class Pokemon
 			case 16:
 				return Move.BUBBLEBEAM;
 			case 17:
-				return Move.CLAMP;
 			case 18:
 				return Move.COMET_PUNCH;
 			case 19:
@@ -897,7 +894,6 @@ public class Pokemon
 			case 26:
 				return Move.DEFENSE_CURL;
 			case 27:
-				return Move.DIG;
 			case 28:
 				return Move.DISABLE;
 			case 29:
@@ -929,7 +925,6 @@ public class Pokemon
 			case 42:
 				return Move.FIRE_PUNCH;
 			case 43:
-				return Move.FIRE_SPIN;
 			case 44:
 				return Move.FISSURE;
 			case 45:
@@ -937,7 +932,6 @@ public class Pokemon
 			case 46:
 				return Move.FLASH;
 			case 47:
-				return Move.FLY;
 			case 48:
 				return Move.FOCUS_ENERGY;
 			case 49:
@@ -969,7 +963,6 @@ public class Pokemon
 			case 62:
 				return Move.HYDRO_PUMP;
 			case 63:
-				return Move.HYPER_BEAM;
 			case 64:
 				return Move.HYPER_FANG;
 			case 65:
@@ -1021,7 +1014,6 @@ public class Pokemon
 			case 88:
 				return Move.PECK;
 			case 89:
-				return Move.PETAL_DANCE;
 			case 90:
 				return Move.PIN_MISSILE;
 			case 91:
@@ -1041,11 +1033,9 @@ public class Pokemon
 			case 98:
 				return Move.QUICK_ATTACK;
 			case 99:
-				return Move.RAGE;
 			case 100:
 				return Move.RAZOR_LEAF;
 			case 101:
-				return Move.RAZOR_WIND;
 			case 102:
 				return Move.RECOVER;
 			case 103:
@@ -1075,9 +1065,7 @@ public class Pokemon
 			case 115:
 				return Move.SING;
 			case 116:
-				return Move.SKULL_BASH;
 			case 117:
-				return Move.SKY_ATTACK;
 			case 118:
 				return Move.SLAM;
 			case 119:
@@ -1093,7 +1081,6 @@ public class Pokemon
 			case 124:
 				return Move.SOFTBOILED;
 			case 125:
-				return Move.SOLARBEAM;
 			case 126:
 				return Move.SONIC_BOOM;
 			case 127:
@@ -1133,7 +1120,6 @@ public class Pokemon
 			case 144:
 				return Move.TELEPORT;
 			case 145:
-				return Move.THRASH;
 			case 146:
 				return Move.THUNDER;
 			case 147:
@@ -1167,336 +1153,6 @@ public class Pokemon
 			case 161:
 				return Move.WITHDRAW;
 			case 162:
-				return Move.WRAP;
-			default :
-				return Move.METRONOME;
-		}
-	}
-	
-	public static Move randomMoveMet(int num)
-	{
-		switch(num)
-		{
-			case 0:
-				return Move.ABSORB;
-			case 1:
-				return Move.ACID;
-			case 2:
-				return Move.ACID_ARMOR;
-			case 3:
-				return Move.AGILITY;
-			case 4:
-				return Move.AMNESIA;
-			case 5:
-				return Move.AURORA_BEAM;
-			case 6:
-				return Move.BARRAGE;
-			case 7:
-				return Move.BARRIER;
-			case 8:
-				return Move.BIND;
-			case 9:
-				return Move.BIDE;
-			case 10:
-				return Move.BITE;
-			case 11:
-				return Move.BLIZZARD;
-			case 12:
-				return Move.BODY_SLAM;
-			case 13:
-				return Move.BONE_CLUB;
-			case 14:
-				return Move.BONEMERANG;
-			case 15:
-				return Move.BUBBLE;
-			case 16:
-				return Move.BUBBLEBEAM;
-			case 17:
-				return Move.CLAMP;
-			case 18:
-				return Move.COMET_PUNCH;
-			case 19:
-				return Move.CONFUSE_RAY;
-			case 20:
-				return Move.CONFUSION;
-			case 21:
-				return Move.CONSTRICT;
-			case 22:
-				return Move.CONVERSION;
-			case 24:
-				return Move.CRABHAMMER;
-			case 25:
-				return Move.CUT;
-			case 26:
-				return Move.DEFENSE_CURL;
-			case 27:
-				return Move.DIG;
-			case 28:
-				return Move.DISABLE;
-			case 29:
-				return Move.DIZZY_PUNCH;
-			case 30:
-				return Move.DOUBLE_KICK;
-			case 31:
-				return Move.DOUBLE_TEAM;
-			case 32:
-				return Move.DOUBLE_EDGE;
-			case 33:
-				return Move.DOUBLESLAP;
-			case 34:
-				return Move.DRAGON_RAGE;
-			case 35:
-				return Move.DREAM_EATER;
-			case 36:
-				return Move.DRILL_PECK;
-			case 37:
-				return Move.EARTHQUAKE;
-			case 38:
-				return Move.EGG_BOMB;
-			case 39:
-				return Move.EMBER;
-			case 40:
-				return Move.EXPLOSION;
-			case 41:
-				return Move.FIRE_BLAST;
-			case 42:
-				return Move.FIRE_PUNCH;
-			case 43:
-				return Move.FIRE_SPIN;
-			case 44:
-				return Move.FISSURE;
-			case 45:
-				return Move.FLAMETHROWER;
-			case 46:
-				return Move.FLASH;
-			case 47:
-				return Move.FLY;
-			case 48:
-				return Move.FOCUS_ENERGY;
-			case 49:
-				return Move.FURY_ATTACK;
-			case 50:
-				return Move.FURY_SWIPES;
-			case 51:
-				return Move.GLARE;
-			case 52:
-				return Move.GROWL;
-			case 53:
-				return Move.GROWTH;
-			case 54:
-				return Move.GUILLOTINE;
-			case 55:
-				return Move.GUST;
-			case 56:
-				return Move.HARDEN;
-			case 57:
-				return Move.HAZE;
-			case 58:
-				return Move.HEADBUTT;
-			case 59:
-				return Move.HI_JUMP_KICK;
-			case 60:
-				return Move.HORN_ATTACK;
-			case 61:
-				return Move.HORN_DRILL;
-			case 62:
-				return Move.HYDRO_PUMP;
-			case 63:
-				return Move.HYPER_BEAM;
-			case 64:
-				return Move.HYPER_FANG;
-			case 65:
-				return Move.HYPNOSIS;
-			case 66:
-				return Move.ICE_BEAM;
-			case 67:
-				return Move.ICE_PUNCH;
-			case 68:
-				return Move.JUMP_KICK;
-			case 69:
-				return Move.KARATE_CHOP;
-			case 70:
-				return Move.KINESIS;
-			case 71:
-				return Move.LEECH_LIFE;
-			case 72:
-				return Move.LEECH_SEED;
-			case 73:
-				return Move.LEER;
-			case 74:
-				return Move.LICK;
-			case 75:
-				return Move.LIGHT_SCREEN;
-			case 76:
-				return Move.LOVELY_KISS;
-			case 77:
-				return Move.LOW_KICK;
-			case 78:
-				return Move.MEDITATE;
-			case 79:
-				return Move.MEGA_DRAIN;
-			case 80:
-				return Move.MEGA_KICK;
-			case 81:
-				return Move.MEGA_PUNCH;
-			case 83:
-				return Move.MINIMIZE;
-			case 85:
-				return Move.MIST;
-			case 86:
-				return Move.NIGHT_SHADE;
-			case 87:
-				return Move.PAY_DAY;
-			case 88:
-				return Move.PECK;
-			case 89:
-				return Move.PETAL_DANCE;
-			case 90:
-				return Move.PIN_MISSILE;
-			case 91:
-				return Move.POISON_GAS;
-			case 92:
-				return Move.POISON_STING;
-			case 93:
-				return Move.POISONPOWDER;
-			case 94:
-				return Move.POUND;
-			case 95:
-				return Move.PSYBEAM;
-			case 96:
-				return Move.PSYCHIC;
-			case 97:
-				return Move.PSYWAVE;
-			case 98:
-				return Move.QUICK_ATTACK;
-			case 99:
-				return Move.RAGE;
-			case 100:
-				return Move.RAZOR_LEAF;
-			case 101:
-				return Move.RAZOR_WIND;
-			case 102:
-				return Move.RECOVER;
-			case 103:
-				return Move.REFLECT;
-			case 104:
-				return Move.REST;
-			case 105:
-				return Move.ROAR;
-			case 106:
-				return Move.ROCK_SLIDE;
-			case 107:
-				return Move.ROCK_THROW;
-			case 108:
-				return Move.ROLLING_KICK;
-			case 109:
-				return Move.SAND_ATTACK;
-			case 110:
-				return Move.SCRATCH;
-			case 111:
-				return Move.SCREECH;
-			case 112:
-				return Move.SEISMIC_TOSS;
-			case 113:
-				return Move.SELFDESTRUCT;
-			case 114:
-				return Move.SHARPEN;
-			case 115:
-				return Move.SING;
-			case 116:
-				return Move.SKULL_BASH;
-			case 117:
-				return Move.SKY_ATTACK;
-			case 118:
-				return Move.SLAM;
-			case 119:
-				return Move.SLASH;
-			case 120:
-				return Move.SLEEP_POWDER;
-			case 121:
-				return Move.SLUDGE;
-			case 122:
-				return Move.SMOG;
-			case 123:
-				return Move.SMOKESCREEN;
-			case 124:
-				return Move.SOFTBOILED;
-			case 125:
-				return Move.SOLARBEAM;
-			case 126:
-				return Move.SONIC_BOOM;
-			case 127:
-				return Move.SPIKE_CANNON;
-			case 128:
-				return Move.SPLASH;
-			case 129:
-				return Move.SPORE;
-			case 130:
-				return Move.STOMP;
-			case 131:
-				return Move.STRENGTH;
-			case 132:
-				return Move.STRING_SHOT;
-			case 133:
-				return Move.STUN_SPORE;
-			case 134:
-				return Move.SUBMISSION;
-			case 135:
-				return Move.SUBSTITUTE;
-			case 136:
-				return Move.SUPER_FANG;
-			case 137:
-				return Move.SUPERSONIC;
-			case 138:
-				return Move.SURF;
-			case 139:
-				return Move.SWIFT;
-			case 140:
-				return Move.SWORDS_DANCE;
-			case 141:
-				return Move.TACKLE;
-			case 142:
-				return Move.TAIL_WHIP;
-			case 143:
-				return Move.TAKE_DOWN;
-			case 144:
-				return Move.TELEPORT;
-			case 145:
-				return Move.THRASH;
-			case 146:
-				return Move.THUNDER;
-			case 147:
-				return Move.THUNDER_WAVE;
-			case 148:
-				return Move.THUNDERBOLT;
-			case 149:
-				return Move.THUNDERPUNCH;
-			case 150:
-				return Move.THUNDERSHOCK;
-			case 151:
-				return Move.TOXIC;
-			case 152:
-				return Move.TRANSFORM;
-			case 153:
-				return Move.TRI_ATTACK;
-			case 154:
-				return Move.TWINEEDLE;
-			case 155:
-				return Move.VICEGRIP;
-			case 156:
-				return Move.VINE_WHIP;
-			case 157:
-				return Move.WATER_GUN;
-			case 158:
-				return Move.WATERFALL;
-			case 159:
-				return Move.WHIRLWIND;
-			case 160:
-				return Move.WING_ATTACK;
-			case 161:
-				return Move.WITHDRAW;
-			case 162:
-				return Move.WRAP;
 			default :
 				return Move.METRONOME;
 		}
@@ -7867,1559 +7523,1543 @@ public class Pokemon
 
 	public void createMoves()
 	{
-		Pokemon.createAllMoves();
 		for(int i=0; i<4; i++)
 		{
+			switch(move[i])
+			{
+				case TACKLE:
+					move[i].accuracy=95;
+					move[i].basePower=35;
+					move[i].pp=35;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case GROWL:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=40;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.LOWER_STAT;
+					break;
+				case ABSORB:
+					move[i].accuracy=100;
+					move[i].basePower=20;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.ABSORB;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.GRASS;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case ACID:
+					move[i].accuracy=100;
+					move[i].basePower=40;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.POISON;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case ACID_ARMOR:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=40;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.POISON;
+					move[i].mainEffect=Primary_Effect.RAISE_STAT;
+					break;
+				case AGILITY:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.PSYCHIC;
+					move[i].mainEffect=Primary_Effect.RAISE_STAT;
+					break;
+				case AMNESIA:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.PSYCHIC;
+					move[i].mainEffect=Primary_Effect.RAISE_STAT;
+					break;
+				case AURORA_BEAM:
+					move[i].accuracy=100;
+					move[i].basePower=65;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.ICE;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.FRZ;
+					break;
+				case BARRAGE:
+					move[i].accuracy=85;
+					move[i].basePower=15;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.MULTI_HIT;
+					move[i].sideEffectAcc=85;
+					move[i].moveType=Type.PSYCHIC;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case BARRIER:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.PSYCHIC;
+					move[i].mainEffect=Primary_Effect.RAISE_STAT;
+					break;
+				case BIDE:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.COLLECT_DAMAGE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case BIND:
+					move[i].accuracy=75;
+					move[i].basePower=15;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.MULTI_TURN;
+					move[i].sideEffectAcc=75;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case BITE:
+					move[i].accuracy=100;
+					move[i].basePower=60;
+					move[i].pp=25;
+					move[i].sideEffect=Side_Effect.SUBSTATUS;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].substatus=Substatus.FLINCH;
+					break;
+				case BLIZZARD:
+					move[i].accuracy=90;
+					move[i].basePower=120;
+					move[i].pp=5;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.ICE;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.FRZ;
+					break;
+				case BODY_SLAM:
+					move[i].accuracy=100;
+					move[i].basePower=85;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=30;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.PAR;
+					break;
+				case BONE_CLUB:
+					move[i].accuracy=85;
+					move[i].basePower=65;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.SUBSTATUS;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.GROUND;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].substatus=Substatus.FLINCH;
+					break;
+				case BONEMERANG:
+					move[i].accuracy=90;
+					move[i].basePower=50;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.MULTI_HIT;
+					move[i].sideEffectAcc=90;
+					move[i].moveType=Type.GROUND;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case BUBBLE:
+					move[i].accuracy=100;
+					move[i].basePower=20;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.WATER;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case BUBBLEBEAM:
+					move[i].accuracy=100;
+					move[i].basePower=65;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.WATER;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case CLAMP:
+					move[i].accuracy=75;
+					move[i].basePower=35;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.MULTI_TURN;
+					move[i].sideEffectAcc=75;
+					move[i].moveType=Type.WATER;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case COMET_PUNCH:
+					move[i].accuracy=85;
+					move[i].basePower=18;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.MULTI_HIT;
+					move[i].sideEffectAcc=85;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case CONFUSE_RAY:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.SUBSTATUS;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.GHOST;
+					move[i].mainEffect=Primary_Effect.INFLICT_STATUS;
+					move[i].substatus=Substatus.CONFU;
+					break;
+				case CONFUSION:
+					move[i].accuracy=100;
+					move[i].basePower=50;
+					move[i].pp=25;
+					move[i].sideEffect=Side_Effect.SUBSTATUS;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.PSYCHIC;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].substatus=Substatus.CONFU;
+					break;
+				case CONSTRICT:
+					move[i].accuracy=100;
+					move[i].basePower=10;
+					move[i].pp=35;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case CONVERSION:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.CONVERSION;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case COUNTER:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.COLLECT_DAMAGE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.FIGHTING;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case CRABHAMMER:
+					move[i].accuracy=85;
+					move[i].basePower=90;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.HIGH_CRIT;
+					move[i].sideEffectAcc=85;
+					move[i].moveType=Type.WATER;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case CUT:
+					move[i].accuracy=95;
+					move[i].basePower=50;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case DEFENSE_CURL:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=40;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.RAISE_STAT;
+					break;
+				case DIG:
+					move[i].accuracy=100;
+					move[i].basePower=100;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.HIDE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.GROUND;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case DISABLE:
+					move[i].accuracy=55;
+					move[i].basePower=0;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.DISABLE;
+					move[i].sideEffectAcc=55;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case DIZZY_PUNCH:
+					move[i].accuracy=100;
+					move[i].basePower=70;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case DOUBLE_KICK:
+					move[i].accuracy=100;
+					move[i].basePower=30;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.MULTI_HIT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.FIGHTING;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case DOUBLE_TEAM:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.RAISE_STAT;
+					break;
+				case DOUBLE_EDGE:
+					move[i].accuracy=100;
+					move[i].basePower=100;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.RECOIL;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case DOUBLESLAP:
+					move[i].accuracy=85;
+					move[i].basePower=15;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.MULTI_HIT;
+					move[i].sideEffectAcc=85;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case DRAGON_RAGE:
+					move[i].accuracy=100;
+					move[i].basePower=40;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.FIXED_DAMAGE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.DRAGON;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case DREAM_EATER:
+					move[i].accuracy=100;
+					move[i].basePower=100;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.ABSORB;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.PSYCHIC;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case DRILL_PECK:
+					move[i].accuracy=80;
+					move[i].basePower=100;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.FLYING;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case EARTHQUAKE:
+					move[i].accuracy=100;
+					move[i].basePower=100;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.GROUND;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case EGG_BOMB:
+					move[i].accuracy=75;
+					move[i].basePower=100;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case EMBER:
+					move[i].accuracy=100;
+					move[i].basePower=40;
+					move[i].pp=25;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.FIRE;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.BRN;
+					break;
+				case EXPLOSION:
+					move[i].accuracy=100;
+					move[i].basePower=170;
+					move[i].pp=5;
+					move[i].sideEffect=Side_Effect.FAINT;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case FIRE_BLAST:
+					move[i].accuracy=85;
+					move[i].basePower=120;
+					move[i].pp=5;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=30;
+					move[i].moveType=Type.FIRE;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.BRN;
+					break;
+				case FIRE_PUNCH:
+					move[i].accuracy=100;
+					move[i].basePower=75;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.FIRE;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.BRN;
+					break;
+				case FIRE_SPIN:
+					move[i].accuracy=70;
+					move[i].basePower=15;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.MULTI_TURN;
+					move[i].sideEffectAcc=70;
+					move[i].moveType=Type.FIRE;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case FISSURE:
+					move[i].accuracy=30;
+					move[i].basePower=0;
+					move[i].pp=5;
+					move[i].sideEffect=Side_Effect.OHKO;
+					move[i].sideEffectAcc=30;
+					move[i].moveType=Type.GROUND;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case FLAMETHROWER:
+					move[i].accuracy=100;
+					move[i].basePower=95;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.FIRE;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.BRN;
+					break;
+				case FLASH:
+					move[i].accuracy=70;
+					move[i].basePower=0;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=70;
+					move[i].moveType=Type.ELECTRIC;
+					move[i].mainEffect=Primary_Effect.LOWER_STAT;
+					break;
+				case FLY:
+					move[i].accuracy=95;
+					move[i].basePower=70;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.HIDE;
+					move[i].sideEffectAcc=95;
+					move[i].moveType=Type.FLYING;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case FOCUS_ENERGY:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case FURY_SWIPES:
+					move[i].accuracy=80;
+					move[i].basePower=18;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.MULTI_HIT;
+					move[i].sideEffectAcc=80;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case FURY_ATTACK:
+					move[i].accuracy=85;
+					move[i].basePower=15;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.MULTI_HIT;
+					move[i].sideEffectAcc=85;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case GLARE:
+					move[i].accuracy=75;
+					move[i].basePower=0;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=75;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.INFLICT_STATUS;
+					move[i].status=Status.PAR;
+					break;
+				case GROWTH:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=40;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.GRASS;
+					move[i].mainEffect=Primary_Effect.RAISE_STAT;
+					break;
+				case GUILLOTINE:
+					move[i].accuracy=30;
+					move[i].basePower=0;
+					move[i].pp=5;
+					move[i].sideEffect=Side_Effect.OHKO;
+					move[i].sideEffectAcc=30;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case GUST:
+					move[i].accuracy=100;
+					move[i].basePower=40;
+					move[i].pp=35;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.FLYING;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case HARDEN:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.RAISE_STAT;
+					break;
+				case HAZE:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.ICE;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case HEADBUTT:
+					move[i].accuracy=100;
+					move[i].basePower=70;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.SUBSTATUS;
+					move[i].sideEffectAcc=30;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].substatus=Substatus.FLINCH;
+					break;
+				case HI_JUMP_KICK:
+					move[i].accuracy=90;
+					move[i].basePower=85;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.RECOIL;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.FIGHTING;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case HORN_ATTACK:
+					move[i].accuracy=100;
+					move[i].basePower=65;
+					move[i].pp=25;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case HORN_DRILL:
+					move[i].accuracy=30;
+					move[i].basePower=0;
+					move[i].pp=5;
+					move[i].sideEffect=Side_Effect.OHKO;
+					move[i].sideEffectAcc=30;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case HYDRO_PUMP:
+					move[i].accuracy=80;
+					move[i].basePower=120;
+					move[i].pp=5;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.WATER;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case HYPER_BEAM:
+					move[i].accuracy=90;
+					move[i].basePower=150;
+					move[i].pp=5;
+					move[i].sideEffect=Side_Effect.CHARGE;
+					move[i].sideEffectAcc=90;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case HYPER_FANG:
+					move[i].accuracy=90;
+					move[i].basePower=80;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.SUBSTATUS;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].substatus=Substatus.FLINCH;
+					break;
+				case HYPNOSIS:
+					move[i].accuracy=60;
+					move[i].basePower=0;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=60;
+					move[i].moveType=Type.PSYCHIC;
+					move[i].mainEffect=Primary_Effect.INFLICT_STATUS;
+					move[i].status=Status.SLP;
+					break;
+				case ICE_BEAM:
+					move[i].accuracy=100;
+					move[i].basePower=95;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.ICE;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.FRZ;
+					break;
+				case ICE_PUNCH:
+					move[i].accuracy=100;
+					move[i].basePower=75;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.ICE;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.FRZ;
+					break;
+				case JUMP_KICK:
+					move[i].accuracy=95;
+					move[i].basePower=70;
+					move[i].pp=25;
+					move[i].sideEffect=Side_Effect.RECOIL;
+					move[i].sideEffectAcc=95;
+					move[i].moveType=Type.FIGHTING;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case KARATE_CHOP:
+					move[i].accuracy=100;
+					move[i].basePower=50;
+					move[i].pp=25;
+					move[i].sideEffect=Side_Effect.HIGH_CRIT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.FIGHTING;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case KINESIS:
+					move[i].accuracy=80;
+					move[i].basePower=0;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=80;
+					move[i].moveType=Type.PSYCHIC;
+					move[i].mainEffect=Primary_Effect.LOWER_STAT;
+					break;
+				case LEECH_LIFE:
+					move[i].accuracy=100;
+					move[i].basePower=20;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.ABSORB;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.BUG;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].substatus=Substatus.SEED;
+					break;
+				case LEECH_SEED:
+					move[i].accuracy=90;
+					move[i].basePower=0;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.SUBSTATUS;
+					move[i].sideEffectAcc=90;
+					move[i].moveType=Type.GRASS;
+					move[i].mainEffect=Primary_Effect.INFLICT_STATUS;
+					move[i].substatus=Substatus.SEED;
+					break;
+				case LEER:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.LOWER_STAT;
+					break;
+				case LICK:
+					move[i].accuracy=100;
+					move[i].basePower=20;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=30;
+					move[i].moveType=Type.GHOST;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.PAR;
+					break;
+				case LIGHT_SCREEN:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.PSYCHIC;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case LOVELY_KISS:
+					move[i].accuracy=75;
+					move[i].basePower=0;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=75;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.INFLICT_STATUS;
+					move[i].status=Status.SLP;
+					break;
+				case LOW_KICK:
+					move[i].accuracy=90;
+					move[i].basePower=50;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.FIGHTING;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case MEDITATE:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=40;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.PSYCHIC;
+					move[i].mainEffect=Primary_Effect.RAISE_STAT;
+					break;
+				case MEGA_DRAIN:
+					move[i].accuracy=100;
+					move[i].basePower=40;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.ABSORB;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.GRASS;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case MEGA_KICK:
+					move[i].accuracy=75;
+					move[i].basePower=120;
+					move[i].pp=5;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=75;
+					move[i].moveType=Type.FIGHTING;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case MEGA_PUNCH:
+					move[i].accuracy=85;
+					move[i].basePower=80;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=85;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case METRONOME:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.METRONOME;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case MIMIC:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.MIMIC;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case MINIMIZE:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.RAISE_STAT;
+					break;
+				case MIRROR_MOVE:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.MIRROR_MOVE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.FLYING;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case MIST:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.MULTI_TURN;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.ICE;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case NIGHT_SHADE:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.FIXED_DAMAGE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.GHOST;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case PAY_DAY:
+					move[i].accuracy=100;
+					move[i].basePower=40;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case PECK:
+					move[i].accuracy=100;
+					move[i].basePower=35;
+					move[i].pp=35;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.FLYING;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case PETAL_DANCE:
+					move[i].accuracy=100;
+					move[i].basePower=70;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.FURY;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.GRASS;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case PIN_MISSILE:
+					move[i].accuracy=85;
+					move[i].basePower=14;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.MULTI_HIT;
+					move[i].sideEffectAcc=85;
+					move[i].moveType=Type.BUG;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case POISON_GAS:
+					move[i].accuracy=55;
+					move[i].basePower=0;
+					move[i].pp=40;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=55;
+					move[i].moveType=Type.POISON;
+					move[i].mainEffect=Primary_Effect.INFLICT_STATUS;
+					move[i].status=Status.PSN;
+					break;
+				case POISON_STING:
+					move[i].accuracy=100;
+					move[i].basePower=15;
+					move[i].pp=35;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=20;
+					move[i].moveType=Type.POISON;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.PSN;
+					break;
+				case POISONPOWDER:
+					move[i].accuracy=75;
+					move[i].basePower=0;
+					move[i].pp=35;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=75;
+					move[i].moveType=Type.POISON;
+					move[i].mainEffect=Primary_Effect.INFLICT_STATUS;
+					move[i].status=Status.PSN;
+					break;
+				case POUND:
+					move[i].accuracy=100;
+					move[i].basePower=40;
+					move[i].pp=35;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case PSYBEAM:
+					move[i].accuracy=100;
+					move[i].basePower=65;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.SUBSTATUS;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.PSYCHIC;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].substatus=Substatus.CONFU;
+					break;
+				case PSYCHIC:
+					move[i].accuracy=100;
+					move[i].basePower=90;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=30;
+					move[i].moveType=Type.PSYCHIC;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case PSYWAVE:
+					move[i].accuracy=80;
+					move[i].basePower=0;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.FIXED_DAMAGE;
+					move[i].sideEffectAcc=80;
+					move[i].moveType=Type.PSYCHIC;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case QUICK_ATTACK:
+					move[i].accuracy=100;
+					move[i].basePower=40;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.QUICK_ATTACK;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case RAGE:
+					move[i].accuracy=100;
+					move[i].basePower=20;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.FURY;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case RAZOR_LEAF:
+					move[i].accuracy=95;
+					move[i].basePower=55;
+					move[i].pp=25;
+					move[i].sideEffect=Side_Effect.HIGH_CRIT;
+					move[i].sideEffectAcc=95;
+					move[i].moveType=Type.GRASS;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case RAZOR_WIND:
+					move[i].accuracy=75;
+					move[i].basePower=80;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.CHARGE;
+					move[i].sideEffectAcc=75;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case RECOVER:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.RECOVERY;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case REFLECT:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.PSYCHIC;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case REST:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.RECOVERY;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case ROAR:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.ROAR;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case ROCK_SLIDE:
+					move[i].accuracy=90;
+					move[i].basePower=75;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.ROCK;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case ROCK_THROW:
+					move[i].accuracy=90;
+					move[i].basePower=50;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case ROLLING_KICK:
+					move[i].accuracy=85;
+					move[i].basePower=60;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.SUBSTATUS;
+					move[i].sideEffectAcc=30;
+					move[i].moveType=Type.FIGHTING;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].substatus=Substatus.FLINCH;
+					break;
+				case SAND_ATTACK:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.GROUND;
+					move[i].mainEffect=Primary_Effect.LOWER_STAT;
+					break;
+				case SCRATCH:
+					move[i].accuracy=100;
+					move[i].basePower=40;
+					move[i].pp=35;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case SCREECH:
+					move[i].accuracy=85;
+					move[i].basePower=0;
+					move[i].pp=40;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=85;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.LOWER_STAT;
+					break;
+				case SEISMIC_TOSS:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.FIXED_DAMAGE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.FIGHTING;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case SELFDESTRUCT:
+					move[i].accuracy=100;
+					move[i].basePower=130;
+					move[i].pp=5;
+					move[i].sideEffect=Side_Effect.FAINT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case SHARPEN:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.RAISE_STAT;
+					break;
+				case SING:
+					move[i].accuracy=55;
+					move[i].basePower=0;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=55;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.INFLICT_STATUS;
+					move[i].status=Status.SLP;
+					break;
+				case SKULL_BASH:
+					move[i].accuracy=100;
+					move[i].basePower=100;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.CHARGE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case SKY_ATTACK:
+					move[i].accuracy=90;
+					move[i].basePower=140;
+					move[i].pp=5;
+					move[i].sideEffect=Side_Effect.CHARGE;
+					move[i].sideEffectAcc=90;
+					move[i].moveType=Type.FLYING;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case SLAM:
+					move[i].accuracy=80;
+					move[i].basePower=75;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=80;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case SLASH:
+					move[i].accuracy=100;
+					move[i].basePower=70;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.HIGH_CRIT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case SLEEP_POWDER:
+					move[i].accuracy=75;
+					move[i].basePower=0;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=75;
+					move[i].moveType=Type.GRASS;
+					move[i].mainEffect=Primary_Effect.INFLICT_STATUS;
+					move[i].status=Status.SLP;
+					break;
+				case SLUDGE:
+					move[i].accuracy=100;
+					move[i].basePower=65;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=30;
+					move[i].moveType=Type.POISON;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.PSN;
+					break;
+				case SMOG:
+					move[i].accuracy=70;
+					move[i].basePower=20;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=40;
+					move[i].moveType=Type.POISON;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.PSN;
+					break;
+				case SMOKESCREEN:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.LOWER_STAT;
+					break;
+				case SOFTBOILED:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.RECOVERY;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case SOLARBEAM:
+					move[i].accuracy=100;
+					move[i].basePower=120;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.CHARGE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.GRASS;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case SONIC_BOOM:
+					move[i].accuracy=90;
+					move[i].basePower=20;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.FIXED_DAMAGE;
+					move[i].sideEffectAcc=90;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case SPIKE_CANNON:
+					move[i].accuracy=100;
+					move[i].basePower=20;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.MULTI_HIT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case SPLASH:
+					move[i].accuracy=0;
+					move[i].basePower=0;
+					move[i].pp=40;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=0;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case SPORE:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.GRASS;
+					move[i].mainEffect=Primary_Effect.INFLICT_STATUS;
+					move[i].status=Status.SLP;
+					break;
+				case STOMP:
+					move[i].accuracy=100;
+					move[i].basePower=65;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.SUBSTATUS;
+					move[i].sideEffectAcc=30;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].substatus=Substatus.FLINCH;
+					break;
+				case STRENGTH:
+					move[i].accuracy=100;
+					move[i].basePower=80;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case STRING_SHOT:
+					move[i].accuracy=95;
+					move[i].basePower=0;
+					move[i].pp=40;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=95;
+					move[i].moveType=Type.BUG;
+					move[i].mainEffect=Primary_Effect.LOWER_STAT;
+					break;
+				case NONE:
+				case STRUGGLE:
+					move[i].accuracy=100;
+					move[i].basePower=50;
+					move[i].pp=256;
+					move[i].sideEffect=Side_Effect.RECOIL;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case STUN_SPORE:
+					move[i].accuracy=75;
+					move[i].basePower=0;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=75;
+					move[i].moveType=Type.GRASS;
+					move[i].mainEffect=Primary_Effect.INFLICT_STATUS;
+					move[i].status=Status.PAR;
+					break;
+				case SUBMISSION:
+					move[i].accuracy=80;
+					move[i].basePower=80;
+					move[i].pp=25;
+					move[i].sideEffect=Side_Effect.RECOIL;
+					move[i].sideEffectAcc=80;
+					move[i].moveType=Type.FIGHTING;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case SUBSTITUTE:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.SUBSTITUTE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case SUPER_FANG:
+					move[i].accuracy=90;
+					move[i].basePower=0;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.FIXED_DAMAGE;
+					move[i].sideEffectAcc=90;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case SUPERSONIC:
+					move[i].accuracy=55;
+					move[i].basePower=0;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.SUBSTATUS;
+					move[i].sideEffectAcc=55;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.INFLICT_STATUS;
+					move[i].substatus=Substatus.CONFU;
+					break;
+				case SURF:
+					move[i].accuracy=100;
+					move[i].basePower=95;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.WATER;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case SWIFT:
+					move[i].accuracy=100;
+					move[i].basePower=60;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.SWIFT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case SWORDS_DANCE:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.RAISE_STAT;
+					break;
+				case TAIL_WHIP:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.LOWER_STAT;
+					break;
+				case TAKE_DOWN:
+					move[i].accuracy=85;
+					move[i].basePower=90;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.RECOIL;
+					move[i].sideEffectAcc=85;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case TELEPORT:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.PSYCHIC;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case THRASH:
+					move[i].accuracy=100;
+					move[i].basePower=90;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.FURY;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case THUNDER:
+					move[i].accuracy=70;
+					move[i].basePower=120;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.ELECTRIC;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.PAR;
+					break;
+				case THUNDER_WAVE:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.ELECTRIC;
+					move[i].mainEffect=Primary_Effect.INFLICT_STATUS;
+					move[i].status=Status.PAR;
+					break;
+				case THUNDERBOLT:
+					move[i].accuracy=100;
+					move[i].basePower=95;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.ELECTRIC;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.PAR;
+					break;
+				case THUNDERPUNCH:
+					move[i].accuracy=100;
+					move[i].basePower=75;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.ELECTRIC;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.PAR;
+					break;
+				case THUNDERSHOCK:
+					move[i].accuracy=100;
+					move[i].basePower=40;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=10;
+					move[i].moveType=Type.ELECTRIC;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					move[i].status=Status.PAR;
+					break;
+				case TOXIC:
+					move[i].accuracy=85;
+					move[i].basePower=0;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.STATUS;
+					move[i].sideEffectAcc=85;
+					move[i].moveType=Type.POISON;
+					move[i].mainEffect=Primary_Effect.INFLICT_STATUS;
+					move[i].status=Status.PSN;
+					break;
+				case TRANSFORM:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.TRANSFORM;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case TRI_ATTACK:
+					move[i].accuracy=100;
+					move[i].basePower=80;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case TWINEEDLE:
+					move[i].accuracy=100;
+					move[i].basePower=25;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.MULTI_HIT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.BUG;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case VICEGRIP:
+					move[i].accuracy=100;
+					move[i].basePower=55;
+					move[i].pp=30;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case VINE_WHIP:
+					move[i].accuracy=100;
+					move[i].basePower=35;
+					move[i].pp=10;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.GRASS;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case WATER_GUN:
+					move[i].accuracy=100;
+					move[i].basePower=40;
+					move[i].pp=25;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.WATER;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case WATERFALL:
+					move[i].accuracy=100;
+					move[i].basePower=80;
+					move[i].pp=15;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.WATER;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case WHIRLWIND:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.ROAR;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.SPECIAL;
+					break;
+				case WING_ATTACK:
+					move[i].accuracy=100;
+					move[i].basePower=35;
+					move[i].pp=35;
+					move[i].sideEffect=Side_Effect.NONE;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.FLYING;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+				case WITHDRAW:
+					move[i].accuracy=100;
+					move[i].basePower=0;
+					move[i].pp=40;
+					move[i].sideEffect=Side_Effect.STAT;
+					move[i].sideEffectAcc=100;
+					move[i].moveType=Type.WATER;
+					move[i].mainEffect=Primary_Effect.RAISE_STAT;
+					break;
+				case WRAP:
+					move[i].accuracy=85;
+					move[i].basePower=15;
+					move[i].pp=20;
+					move[i].sideEffect=Side_Effect.MULTI_TURN;
+					move[i].sideEffectAcc=85;
+					move[i].moveType=Type.NORMAL;
+					move[i].mainEffect=Primary_Effect.DAMAGE;
+					break;
+			}
+
 			move[i].ppMax=move[i].pp;
 			TRUE_PP[i]=move[i].pp;
 			TRUE_PPMAX[i]=move[i].ppMax;
 		}
 
 		System.out.println(nickname+"'s moves created successfully");
-	}
-	
-	public static void createAllMoves()
-	{
-		for (int i = 0; i<=163; i++)
-		{
-			Move randyMove = randomMove(i);
-			switch (randyMove)
-			{
-				case TACKLE:
-					randyMove.accuracy=95;
-					randyMove.basePower=35;
-					randyMove.pp=35;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case GROWL:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=40;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.LOWER_STAT;
-					break;
-				case ABSORB:
-					randyMove.accuracy=100;
-					randyMove.basePower=20;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.ABSORB;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.GRASS;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case ACID:
-					randyMove.accuracy=100;
-					randyMove.basePower=40;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.POISON;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case ACID_ARMOR:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=40;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.POISON;
-					randyMove.mainEffect=Primary_Effect.RAISE_STAT;
-					break;
-				case AGILITY:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.PSYCHIC;
-					randyMove.mainEffect=Primary_Effect.RAISE_STAT;
-					break;
-				case AMNESIA:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.PSYCHIC;
-					randyMove.mainEffect=Primary_Effect.RAISE_STAT;
-					break;
-				case AURORA_BEAM:
-					randyMove.accuracy=100;
-					randyMove.basePower=65;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.ICE;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.FRZ;
-					break;
-				case BARRAGE:
-					randyMove.accuracy=85;
-					randyMove.basePower=15;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.MULTI_HIT;
-					randyMove.sideEffectAcc=85;
-					randyMove.moveType=Type.PSYCHIC;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case BARRIER:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.PSYCHIC;
-					randyMove.mainEffect=Primary_Effect.RAISE_STAT;
-					break;
-				case BIDE:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.COLLECT_DAMAGE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case BIND:
-					randyMove.accuracy=75;
-					randyMove.basePower=15;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.MULTI_TURN;
-					randyMove.sideEffectAcc=75;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case BITE:
-					randyMove.accuracy=100;
-					randyMove.basePower=60;
-					randyMove.pp=25;
-					randyMove.sideEffect=Side_Effect.SUBSTATUS;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.substatus=Substatus.FLINCH;
-					break;
-				case BLIZZARD:
-					randyMove.accuracy=90;
-					randyMove.basePower=120;
-					randyMove.pp=5;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.ICE;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.FRZ;
-					break;
-				case BODY_SLAM:
-					randyMove.accuracy=100;
-					randyMove.basePower=85;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=30;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.PAR;
-					break;
-				case BONE_CLUB:
-					randyMove.accuracy=85;
-					randyMove.basePower=65;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.SUBSTATUS;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.GROUND;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.substatus=Substatus.FLINCH;
-					break;
-				case BONEMERANG:
-					randyMove.accuracy=90;
-					randyMove.basePower=50;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.MULTI_HIT;
-					randyMove.sideEffectAcc=90;
-					randyMove.moveType=Type.GROUND;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case BUBBLE:
-					randyMove.accuracy=100;
-					randyMove.basePower=20;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.WATER;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case BUBBLEBEAM:
-					randyMove.accuracy=100;
-					randyMove.basePower=65;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.WATER;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case CLAMP:
-					randyMove.accuracy=75;
-					randyMove.basePower=35;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.MULTI_TURN;
-					randyMove.sideEffectAcc=75;
-					randyMove.moveType=Type.WATER;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case COMET_PUNCH:
-					randyMove.accuracy=85;
-					randyMove.basePower=18;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.MULTI_HIT;
-					randyMove.sideEffectAcc=85;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case CONFUSE_RAY:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.SUBSTATUS;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.GHOST;
-					randyMove.mainEffect=Primary_Effect.INFLICT_STATUS;
-					randyMove.substatus=Substatus.CONFU;
-					break;
-				case CONFUSION:
-					randyMove.accuracy=100;
-					randyMove.basePower=50;
-					randyMove.pp=25;
-					randyMove.sideEffect=Side_Effect.SUBSTATUS;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.PSYCHIC;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.substatus=Substatus.CONFU;
-					break;
-				case CONSTRICT:
-					randyMove.accuracy=100;
-					randyMove.basePower=10;
-					randyMove.pp=35;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case CONVERSION:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.CONVERSION;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case COUNTER:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.COLLECT_DAMAGE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.FIGHTING;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case CRABHAMMER:
-					randyMove.accuracy=85;
-					randyMove.basePower=90;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.HIGH_CRIT;
-					randyMove.sideEffectAcc=85;
-					randyMove.moveType=Type.WATER;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case CUT:
-					randyMove.accuracy=95;
-					randyMove.basePower=50;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case DEFENSE_CURL:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=40;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.RAISE_STAT;
-					break;
-				case DIG:
-					randyMove.accuracy=100;
-					randyMove.basePower=100;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.HIDE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.GROUND;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case DISABLE:
-					randyMove.accuracy=55;
-					randyMove.basePower=0;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.DISABLE;
-					randyMove.sideEffectAcc=55;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case DIZZY_PUNCH:
-					randyMove.accuracy=100;
-					randyMove.basePower=70;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case DOUBLE_KICK:
-					randyMove.accuracy=100;
-					randyMove.basePower=30;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.MULTI_HIT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.FIGHTING;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case DOUBLE_TEAM:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.RAISE_STAT;
-					break;
-				case DOUBLE_EDGE:
-					randyMove.accuracy=100;
-					randyMove.basePower=100;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.RECOIL;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case DOUBLESLAP:
-					randyMove.accuracy=85;
-					randyMove.basePower=15;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.MULTI_HIT;
-					randyMove.sideEffectAcc=85;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case DRAGON_RAGE:
-					randyMove.accuracy=100;
-					randyMove.basePower=40;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.FIXED_DAMAGE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.DRAGON;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case DREAM_EATER:
-					randyMove.accuracy=100;
-					randyMove.basePower=100;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.ABSORB;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.PSYCHIC;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case DRILL_PECK:
-					randyMove.accuracy=80;
-					randyMove.basePower=100;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.FLYING;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case EARTHQUAKE:
-					randyMove.accuracy=100;
-					randyMove.basePower=100;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.GROUND;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case EGG_BOMB:
-					randyMove.accuracy=75;
-					randyMove.basePower=100;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case EMBER:
-					randyMove.accuracy=100;
-					randyMove.basePower=40;
-					randyMove.pp=25;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.FIRE;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.BRN;
-					break;
-				case EXPLOSION:
-					randyMove.accuracy=100;
-					randyMove.basePower=170;
-					randyMove.pp=5;
-					randyMove.sideEffect=Side_Effect.FAINT;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case FIRE_BLAST:
-					randyMove.accuracy=85;
-					randyMove.basePower=120;
-					randyMove.pp=5;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=30;
-					randyMove.moveType=Type.FIRE;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.BRN;
-					break;
-				case FIRE_PUNCH:
-					randyMove.accuracy=100;
-					randyMove.basePower=75;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.FIRE;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.BRN;
-					break;
-				case FIRE_SPIN:
-					randyMove.accuracy=70;
-					randyMove.basePower=15;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.MULTI_TURN;
-					randyMove.sideEffectAcc=70;
-					randyMove.moveType=Type.FIRE;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case FISSURE:
-					randyMove.accuracy=30;
-					randyMove.basePower=0;
-					randyMove.pp=5;
-					randyMove.sideEffect=Side_Effect.OHKO;
-					randyMove.sideEffectAcc=30;
-					randyMove.moveType=Type.GROUND;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case FLAMETHROWER:
-					randyMove.accuracy=100;
-					randyMove.basePower=95;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.FIRE;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.BRN;
-					break;
-				case FLASH:
-					randyMove.accuracy=70;
-					randyMove.basePower=0;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=70;
-					randyMove.moveType=Type.ELECTRIC;
-					randyMove.mainEffect=Primary_Effect.LOWER_STAT;
-					break;
-				case FLY:
-					randyMove.accuracy=95;
-					randyMove.basePower=70;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.HIDE;
-					randyMove.sideEffectAcc=95;
-					randyMove.moveType=Type.FLYING;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case FOCUS_ENERGY:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case FURY_SWIPES:
-					randyMove.accuracy=80;
-					randyMove.basePower=18;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.MULTI_HIT;
-					randyMove.sideEffectAcc=80;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case FURY_ATTACK:
-					randyMove.accuracy=85;
-					randyMove.basePower=15;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.MULTI_HIT;
-					randyMove.sideEffectAcc=85;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case GLARE:
-					randyMove.accuracy=75;
-					randyMove.basePower=0;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=75;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.INFLICT_STATUS;
-					randyMove.status=Status.PAR;
-					break;
-				case GROWTH:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=40;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.GRASS;
-					randyMove.mainEffect=Primary_Effect.RAISE_STAT;
-					break;
-				case GUILLOTINE:
-					randyMove.accuracy=30;
-					randyMove.basePower=0;
-					randyMove.pp=5;
-					randyMove.sideEffect=Side_Effect.OHKO;
-					randyMove.sideEffectAcc=30;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case GUST:
-					randyMove.accuracy=100;
-					randyMove.basePower=40;
-					randyMove.pp=35;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.FLYING;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case HARDEN:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.RAISE_STAT;
-					break;
-				case HAZE:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.ICE;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case HEADBUTT:
-					randyMove.accuracy=100;
-					randyMove.basePower=70;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.SUBSTATUS;
-					randyMove.sideEffectAcc=30;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.substatus=Substatus.FLINCH;
-					break;
-				case HI_JUMP_KICK:
-					randyMove.accuracy=90;
-					randyMove.basePower=85;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.RECOIL;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.FIGHTING;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case HORN_ATTACK:
-					randyMove.accuracy=100;
-					randyMove.basePower=65;
-					randyMove.pp=25;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case HORN_DRILL:
-					randyMove.accuracy=30;
-					randyMove.basePower=0;
-					randyMove.pp=5;
-					randyMove.sideEffect=Side_Effect.OHKO;
-					randyMove.sideEffectAcc=30;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case HYDRO_PUMP:
-					randyMove.accuracy=80;
-					randyMove.basePower=120;
-					randyMove.pp=5;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.WATER;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case HYPER_BEAM:
-					randyMove.accuracy=90;
-					randyMove.basePower=150;
-					randyMove.pp=5;
-					randyMove.sideEffect=Side_Effect.CHARGE;
-					randyMove.sideEffectAcc=90;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case HYPER_FANG:
-					randyMove.accuracy=90;
-					randyMove.basePower=80;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.SUBSTATUS;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.substatus=Substatus.FLINCH;
-					break;
-				case HYPNOSIS:
-					randyMove.accuracy=60;
-					randyMove.basePower=0;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=60;
-					randyMove.moveType=Type.PSYCHIC;
-					randyMove.mainEffect=Primary_Effect.INFLICT_STATUS;
-					randyMove.status=Status.SLP;
-					break;
-				case ICE_BEAM:
-					randyMove.accuracy=100;
-					randyMove.basePower=95;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.ICE;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.FRZ;
-					break;
-				case ICE_PUNCH:
-					randyMove.accuracy=100;
-					randyMove.basePower=75;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.ICE;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.FRZ;
-					break;
-				case JUMP_KICK:
-					randyMove.accuracy=95;
-					randyMove.basePower=70;
-					randyMove.pp=25;
-					randyMove.sideEffect=Side_Effect.RECOIL;
-					randyMove.sideEffectAcc=95;
-					randyMove.moveType=Type.FIGHTING;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case KARATE_CHOP:
-					randyMove.accuracy=100;
-					randyMove.basePower=50;
-					randyMove.pp=25;
-					randyMove.sideEffect=Side_Effect.HIGH_CRIT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.FIGHTING;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case KINESIS:
-					randyMove.accuracy=80;
-					randyMove.basePower=0;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=80;
-					randyMove.moveType=Type.PSYCHIC;
-					randyMove.mainEffect=Primary_Effect.LOWER_STAT;
-					break;
-				case LEECH_LIFE:
-					randyMove.accuracy=100;
-					randyMove.basePower=20;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.ABSORB;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.BUG;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.substatus=Substatus.SEED;
-					break;
-				case LEECH_SEED:
-					randyMove.accuracy=90;
-					randyMove.basePower=0;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.SUBSTATUS;
-					randyMove.sideEffectAcc=90;
-					randyMove.moveType=Type.GRASS;
-					randyMove.mainEffect=Primary_Effect.INFLICT_STATUS;
-					randyMove.substatus=Substatus.SEED;
-					break;
-				case LEER:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.LOWER_STAT;
-					break;
-				case LICK:
-					randyMove.accuracy=100;
-					randyMove.basePower=20;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=30;
-					randyMove.moveType=Type.GHOST;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.PAR;
-					break;
-				case LIGHT_SCREEN:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.PSYCHIC;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case LOVELY_KISS:
-					randyMove.accuracy=75;
-					randyMove.basePower=0;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=75;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.INFLICT_STATUS;
-					randyMove.status=Status.SLP;
-					break;
-				case LOW_KICK:
-					randyMove.accuracy=90;
-					randyMove.basePower=50;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.FIGHTING;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case MEDITATE:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=40;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.PSYCHIC;
-					randyMove.mainEffect=Primary_Effect.RAISE_STAT;
-					break;
-				case MEGA_DRAIN:
-					randyMove.accuracy=100;
-					randyMove.basePower=40;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.ABSORB;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.GRASS;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case MEGA_KICK:
-					randyMove.accuracy=75;
-					randyMove.basePower=120;
-					randyMove.pp=5;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=75;
-					randyMove.moveType=Type.FIGHTING;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case MEGA_PUNCH:
-					randyMove.accuracy=85;
-					randyMove.basePower=80;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=85;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case METRONOME:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.METRONOME;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case MIMIC:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.MIMIC;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case MINIMIZE:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.RAISE_STAT;
-					break;
-				case MIRROR_MOVE:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.MIRROR_MOVE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.FLYING;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case MIST:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.MULTI_TURN;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.ICE;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case NIGHT_SHADE:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.FIXED_DAMAGE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.GHOST;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case PAY_DAY:
-					randyMove.accuracy=100;
-					randyMove.basePower=40;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case PECK:
-					randyMove.accuracy=100;
-					randyMove.basePower=35;
-					randyMove.pp=35;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.FLYING;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case PETAL_DANCE:
-					randyMove.accuracy=100;
-					randyMove.basePower=70;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.FURY;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.GRASS;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case PIN_MISSILE:
-					randyMove.accuracy=85;
-					randyMove.basePower=14;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.MULTI_HIT;
-					randyMove.sideEffectAcc=85;
-					randyMove.moveType=Type.BUG;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case POISON_GAS:
-					randyMove.accuracy=55;
-					randyMove.basePower=0;
-					randyMove.pp=40;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=55;
-					randyMove.moveType=Type.POISON;
-					randyMove.mainEffect=Primary_Effect.INFLICT_STATUS;
-					randyMove.status=Status.PSN;
-					break;
-				case POISON_STING:
-					randyMove.accuracy=100;
-					randyMove.basePower=15;
-					randyMove.pp=35;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=20;
-					randyMove.moveType=Type.POISON;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.PSN;
-					break;
-				case POISONPOWDER:
-					randyMove.accuracy=75;
-					randyMove.basePower=0;
-					randyMove.pp=35;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=75;
-					randyMove.moveType=Type.POISON;
-					randyMove.mainEffect=Primary_Effect.INFLICT_STATUS;
-					randyMove.status=Status.PSN;
-					break;
-				case POUND:
-					randyMove.accuracy=100;
-					randyMove.basePower=40;
-					randyMove.pp=35;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case PSYBEAM:
-					randyMove.accuracy=100;
-					randyMove.basePower=65;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.SUBSTATUS;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.PSYCHIC;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.substatus=Substatus.CONFU;
-					break;
-				case PSYCHIC:
-					randyMove.accuracy=100;
-					randyMove.basePower=90;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=30;
-					randyMove.moveType=Type.PSYCHIC;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case PSYWAVE:
-					randyMove.accuracy=80;
-					randyMove.basePower=0;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.FIXED_DAMAGE;
-					randyMove.sideEffectAcc=80;
-					randyMove.moveType=Type.PSYCHIC;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case QUICK_ATTACK:
-					randyMove.accuracy=100;
-					randyMove.basePower=40;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.QUICK_ATTACK;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case RAGE:
-					randyMove.accuracy=100;
-					randyMove.basePower=20;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.FURY;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case RAZOR_LEAF:
-					randyMove.accuracy=95;
-					randyMove.basePower=55;
-					randyMove.pp=25;
-					randyMove.sideEffect=Side_Effect.HIGH_CRIT;
-					randyMove.sideEffectAcc=95;
-					randyMove.moveType=Type.GRASS;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case RAZOR_WIND:
-					randyMove.accuracy=75;
-					randyMove.basePower=80;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.CHARGE;
-					randyMove.sideEffectAcc=75;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case RECOVER:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.RECOVERY;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case REFLECT:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.PSYCHIC;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case REST:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.RECOVERY;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case ROAR:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.ROAR;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case ROCK_SLIDE:
-					randyMove.accuracy=90;
-					randyMove.basePower=75;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.ROCK;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case ROCK_THROW:
-					randyMove.accuracy=90;
-					randyMove.basePower=50;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.ROCK;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case ROLLING_KICK:
-					randyMove.accuracy=85;
-					randyMove.basePower=60;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.SUBSTATUS;
-					randyMove.sideEffectAcc=30;
-					randyMove.moveType=Type.FIGHTING;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.substatus=Substatus.FLINCH;
-					break;
-				case SAND_ATTACK:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.GROUND;
-					randyMove.mainEffect=Primary_Effect.LOWER_STAT;
-					break;
-				case SCRATCH:
-					randyMove.accuracy=100;
-					randyMove.basePower=40;
-					randyMove.pp=35;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case SCREECH:
-					randyMove.accuracy=85;
-					randyMove.basePower=0;
-					randyMove.pp=40;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=85;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.LOWER_STAT;
-					break;
-				case SEISMIC_TOSS:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.FIXED_DAMAGE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.FIGHTING;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case SELFDESTRUCT:
-					randyMove.accuracy=100;
-					randyMove.basePower=130;
-					randyMove.pp=5;
-					randyMove.sideEffect=Side_Effect.FAINT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case SHARPEN:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.RAISE_STAT;
-					break;
-				case SING:
-					randyMove.accuracy=55;
-					randyMove.basePower=0;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=55;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.INFLICT_STATUS;
-					randyMove.status=Status.SLP;
-					break;
-				case SKULL_BASH:
-					randyMove.accuracy=100;
-					randyMove.basePower=100;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.CHARGE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case SKY_ATTACK:
-					randyMove.accuracy=90;
-					randyMove.basePower=140;
-					randyMove.pp=5;
-					randyMove.sideEffect=Side_Effect.CHARGE;
-					randyMove.sideEffectAcc=90;
-					randyMove.moveType=Type.FLYING;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case SLAM:
-					randyMove.accuracy=80;
-					randyMove.basePower=75;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=80;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case SLASH:
-					randyMove.accuracy=100;
-					randyMove.basePower=70;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.HIGH_CRIT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case SLEEP_POWDER:
-					randyMove.accuracy=75;
-					randyMove.basePower=0;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=75;
-					randyMove.moveType=Type.GRASS;
-					randyMove.mainEffect=Primary_Effect.INFLICT_STATUS;
-					randyMove.status=Status.SLP;
-					break;
-				case SLUDGE:
-					randyMove.accuracy=100;
-					randyMove.basePower=65;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=30;
-					randyMove.moveType=Type.POISON;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.PSN;
-					break;
-				case SMOG:
-					randyMove.accuracy=70;
-					randyMove.basePower=20;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=40;
-					randyMove.moveType=Type.POISON;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.PSN;
-					break;
-				case SMOKESCREEN:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.LOWER_STAT;
-					break;
-				case SOFTBOILED:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.RECOVERY;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case SOLARBEAM:
-					randyMove.accuracy=100;
-					randyMove.basePower=120;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.CHARGE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.GRASS;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case SONIC_BOOM:
-					randyMove.accuracy=90;
-					randyMove.basePower=20;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.FIXED_DAMAGE;
-					randyMove.sideEffectAcc=90;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case SPIKE_CANNON:
-					randyMove.accuracy=100;
-					randyMove.basePower=20;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.MULTI_HIT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case SPLASH:
-					randyMove.accuracy=0;
-					randyMove.basePower=0;
-					randyMove.pp=40;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=0;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case SPORE:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.GRASS;
-					randyMove.mainEffect=Primary_Effect.INFLICT_STATUS;
-					randyMove.status=Status.SLP;
-					break;
-				case STOMP:
-					randyMove.accuracy=100;
-					randyMove.basePower=65;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.SUBSTATUS;
-					randyMove.sideEffectAcc=30;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.substatus=Substatus.FLINCH;
-					break;
-				case STRENGTH:
-					randyMove.accuracy=100;
-					randyMove.basePower=80;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case STRING_SHOT:
-					randyMove.accuracy=95;
-					randyMove.basePower=0;
-					randyMove.pp=40;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=95;
-					randyMove.moveType=Type.BUG;
-					randyMove.mainEffect=Primary_Effect.LOWER_STAT;
-					break;
-				case NONE:
-				case STRUGGLE:
-					randyMove.accuracy=100;
-					randyMove.basePower=50;
-					randyMove.pp=256;
-					randyMove.sideEffect=Side_Effect.RECOIL;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case STUN_SPORE:
-					randyMove.accuracy=75;
-					randyMove.basePower=0;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=75;
-					randyMove.moveType=Type.GRASS;
-					randyMove.mainEffect=Primary_Effect.INFLICT_STATUS;
-					randyMove.status=Status.PAR;
-					break;
-				case SUBMISSION:
-					randyMove.accuracy=80;
-					randyMove.basePower=80;
-					randyMove.pp=25;
-					randyMove.sideEffect=Side_Effect.RECOIL;
-					randyMove.sideEffectAcc=80;
-					randyMove.moveType=Type.FIGHTING;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case SUBSTITUTE:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.SUBSTITUTE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case SUPER_FANG:
-					randyMove.accuracy=90;
-					randyMove.basePower=0;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.FIXED_DAMAGE;
-					randyMove.sideEffectAcc=90;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case SUPERSONIC:
-					randyMove.accuracy=55;
-					randyMove.basePower=0;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.SUBSTATUS;
-					randyMove.sideEffectAcc=55;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.INFLICT_STATUS;
-					randyMove.substatus=Substatus.CONFU;
-					break;
-				case SURF:
-					randyMove.accuracy=100;
-					randyMove.basePower=95;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.WATER;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case SWIFT:
-					randyMove.accuracy=100;
-					randyMove.basePower=60;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.SWIFT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case SWORDS_DANCE:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.RAISE_STAT;
-					break;
-				case TAIL_WHIP:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.LOWER_STAT;
-					break;
-				case TAKE_DOWN:
-					randyMove.accuracy=85;
-					randyMove.basePower=90;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.RECOIL;
-					randyMove.sideEffectAcc=85;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case TELEPORT:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.PSYCHIC;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case THRASH:
-					randyMove.accuracy=100;
-					randyMove.basePower=90;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.FURY;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case THUNDER:
-					randyMove.accuracy=70;
-					randyMove.basePower=120;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.ELECTRIC;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.PAR;
-					break;
-				case THUNDER_WAVE:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.ELECTRIC;
-					randyMove.mainEffect=Primary_Effect.INFLICT_STATUS;
-					randyMove.status=Status.PAR;
-					break;
-				case THUNDERBOLT:
-					randyMove.accuracy=100;
-					randyMove.basePower=95;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.ELECTRIC;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.PAR;
-					break;
-				case THUNDERPUNCH:
-					randyMove.accuracy=100;
-					randyMove.basePower=75;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.ELECTRIC;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.PAR;
-					break;
-				case THUNDERSHOCK:
-					randyMove.accuracy=100;
-					randyMove.basePower=40;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=10;
-					randyMove.moveType=Type.ELECTRIC;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					randyMove.status=Status.PAR;
-					break;
-				case TOXIC:
-					randyMove.accuracy=85;
-					randyMove.basePower=0;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.STATUS;
-					randyMove.sideEffectAcc=85;
-					randyMove.moveType=Type.POISON;
-					randyMove.mainEffect=Primary_Effect.INFLICT_STATUS;
-					randyMove.status=Status.PSN;
-					break;
-				case TRANSFORM:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.TRANSFORM;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case TRI_ATTACK:
-					randyMove.accuracy=100;
-					randyMove.basePower=80;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case TWINEEDLE:
-					randyMove.accuracy=100;
-					randyMove.basePower=25;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.MULTI_HIT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.BUG;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case VICEGRIP:
-					randyMove.accuracy=100;
-					randyMove.basePower=55;
-					randyMove.pp=30;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case VINE_WHIP:
-					randyMove.accuracy=100;
-					randyMove.basePower=35;
-					randyMove.pp=10;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.GRASS;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case WATER_GUN:
-					randyMove.accuracy=100;
-					randyMove.basePower=40;
-					randyMove.pp=25;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.WATER;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case WATERFALL:
-					randyMove.accuracy=100;
-					randyMove.basePower=80;
-					randyMove.pp=15;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.WATER;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case WHIRLWIND:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.ROAR;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.SPECIAL;
-					break;
-				case WING_ATTACK:
-					randyMove.accuracy=100;
-					randyMove.basePower=35;
-					randyMove.pp=35;
-					randyMove.sideEffect=Side_Effect.NONE;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.FLYING;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-				case WITHDRAW:
-					randyMove.accuracy=100;
-					randyMove.basePower=0;
-					randyMove.pp=40;
-					randyMove.sideEffect=Side_Effect.STAT;
-					randyMove.sideEffectAcc=100;
-					randyMove.moveType=Type.WATER;
-					randyMove.mainEffect=Primary_Effect.RAISE_STAT;
-					break;
-				case WRAP:
-					randyMove.accuracy=85;
-					randyMove.basePower=15;
-					randyMove.pp=20;
-					randyMove.sideEffect=Side_Effect.MULTI_TURN;
-					randyMove.sideEffectAcc=85;
-					randyMove.moveType=Type.NORMAL;
-					randyMove.mainEffect=Primary_Effect.DAMAGE;
-					break;
-			}
-		}
-		Move randy = Move.STRUGGLE;
-		randy.accuracy=100;
-		randy.basePower=50;
-		randy.pp=256;
-		randy.sideEffect=Side_Effect.RECOIL;
-		randy.sideEffectAcc=100;
-		randy.moveType=Type.NORMAL;
-		randy.mainEffect=Primary_Effect.DAMAGE;
 	}
 }

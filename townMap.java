@@ -21,7 +21,7 @@ public class townMap extends JFrame implements ActionListener, MouseMotionListen
 		mouse = new Point();
 		thingInt = 0;
 		this.setTitle("Town Map");
-    	this.setSize(195,250);
+    	this.setSize(195,239);
    		this.setResizable(false);
    		this.setLayout(null);
  		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);

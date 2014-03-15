@@ -62,7 +62,6 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 	Trainer trainer;
 	private Image enemyTrainerImage;
 	private Image userTrainerImage;
-	private Image[] pokeBalls = new Image[5];
 	Image icon;
 
 
@@ -347,21 +346,6 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 
 		url = Pokemon.class.getResource("Sprites/BattleSprites/switchBox.png");
 		battleImages[13] = Toolkit.getDefaultToolkit().getImage(url);
-
-		url = Pokemon.class.getResource("Sprites/balls/poke.png");
-		pokeBalls[0] = Toolkit.getDefaultToolkit().getImage(url);
-
-		url = Pokemon.class.getResource("Sprites/balls/great.png");
-		pokeBalls[1] = Toolkit.getDefaultToolkit().getImage(url);
-
-		url = Pokemon.class.getResource("Sprites/balls/ultra.png");
-		pokeBalls[2] = Toolkit.getDefaultToolkit().getImage(url);
-
-		url = Pokemon.class.getResource("Sprites/balls/master.png");
-		pokeBalls[3] = Toolkit.getDefaultToolkit().getImage(url);
-
-		url = Pokemon.class.getResource("Sprites/balls/omega.png");
-		pokeBalls[4] = Toolkit.getDefaultToolkit().getImage(url);
 
 		DONE_IMPORTING=true;
 	}
@@ -721,7 +705,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 						menuSetting = MenuSetting.ATTACK;
 						else
 						{
-							Battle.setUserCommand(0);
+							Battle.setUserCommand(1);
 							Inventory.inventoryWindow.closeInventory();
 							System.out.println("Use struggle?");
 						}
@@ -975,23 +959,24 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 				switch(Battle.pokeball.type)
 				{
 					case POKE_BALL:
-						g.drawImage(pokeBalls[0],420,100,50,50,this);
+						g.setColor(Color.RED);
 						break;
 					case GREAT_BALL:
-						g.drawImage(pokeBalls[1],420,100,50,50,this);
+						g.setColor(Color.BLUE);
 						break;
 					case ULTRA_BALL:
-						g.drawImage(pokeBalls[2],420,100,50,50,this);
+						g.setColor(Color.YELLOW);
 						break;
 					case MASTER_BALL:
-						g.drawImage(pokeBalls[3],420,100,50,50,this);
+						g.setColor(Color.MAGENTA);
 						break;
 					case OMEGA_BALL:
-						g.drawImage(pokeBalls[4],420,100,50,50,this);
+						g.setColor(Color.BLACK);
 						break;
 
 				}
 
+				g.fillOval(420,100,50,50);
 			}
 			else if (!Mechanics.awayFromBattle[1]&&enemyPokemon[enemySelected].health >0&&!tryingToCatch)
 			{
@@ -1158,90 +1143,63 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 				}
 				break;
 			case ATTACK:
-				g.setColor(new Color(255,0,0,100));
-
-				if (JokemonDriver.name.equalsIgnoreCase("Red")||JokemonDriver.name.equalsIgnoreCase("Wasabi"))
-					g.setColor(Color.RED);
-				if (JokemonDriver.name.equalsIgnoreCase("Yellow"))
-					g.setColor(Color.YELLOW);
-				if (JokemonDriver.name.equalsIgnoreCase("Green")||JokemonDriver.name.equalsIgnoreCase("Justinian"))
-					g.setColor(Color.GREEN);
-				if (JokemonDriver.name.equalsIgnoreCase("Blue")||JokemonDriver.name.equalsIgnoreCase("Camtendo"))
-					g.setColor(Color.BLUE);
-				if (JokemonDriver.name.equalsIgnoreCase("Gold"))
-					g.setColor(Color.ORANGE);
-				if (JokemonDriver.name.equalsIgnoreCase("Silver"))
-					g.setColor(Color.LIGHT_GRAY);
-				if (JokemonDriver.name.equalsIgnoreCase("Black"))
-					g.setColor(Color.BLACK);
-				if (JokemonDriver.name.equalsIgnoreCase("Pink"))
-					g.setColor(Color.PINK);
-				if (JokemonDriver.name.equalsIgnoreCase("Magenta"))
-					g.setColor(Color.MAGENTA);
-				if (JokemonDriver.name.equalsIgnoreCase("Cyan")||JokemonDriver.name.equalsIgnoreCase("Patches"))
-					g.setColor(Color.CYAN);
-				if (JokemonDriver.name.equalsIgnoreCase("Rainbow")||JokemonDriver.name.equalsIgnoreCase("Joe"))
-					g.setColor(new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256)));
-
-
-				switch(cursorLocation.move)
-				{
-					case 1:
-						g.fillRect(30,470,295,25);
-						break;
-					case 2:
-						g.fillRect(30,495,295,25);
-						break;
-					case 3:
-						g.fillRect(30,520,295,25);
-						break;
-					case 4:
-						g.fillRect(30,545,295,25);
-						break;
-				}
-				
-				
 				if (Mechanics.moveDisabled[0] != 0)
-				paintPokeFont(g,playerPokemon[userSelected].toString(playerPokemon[userSelected].move[0]),30,475,18);
+				paintPokeFont(g,playerPokemon[userSelected].toString(playerPokemon[userSelected].move[0]),60,475,18);
 				else
-				paintPokeFont(g,"DISABLED",30,475,18);
+				paintPokeFont(g,"DISABLED",60,475,18);
 
 				if (playerPokemon[userSelected].move[1] != Pokemon.Move.NONE)
 				{
 					if (Mechanics.moveDisabled[0] != 1)
-					paintPokeFont(g,playerPokemon[userSelected].toString(playerPokemon[userSelected].move[1]),30,500,18);
+					paintPokeFont(g,playerPokemon[userSelected].toString(playerPokemon[userSelected].move[1]),60,500,18);
 					else
-					paintPokeFont(g,"DISABLED",30,500,18);
+					paintPokeFont(g,"DISABLED",60,500,18);
 				}
 
 				if (playerPokemon[userSelected].move[2] != Pokemon.Move.NONE)
 				{
 					if (Mechanics.moveDisabled[0] != 2)
-					paintPokeFont(g,playerPokemon[userSelected].toString(playerPokemon[userSelected].move[2]),30,525,18);
+					paintPokeFont(g,playerPokemon[userSelected].toString(playerPokemon[userSelected].move[2]),60,525,18);
 					else
-					paintPokeFont(g,"DISABLED",30,525,18);
+					paintPokeFont(g,"DISABLED",60,525,18);
 				}
 
 
 				if (playerPokemon[userSelected].move[3] != Pokemon.Move.NONE)
 				{
 					if (Mechanics.moveDisabled[0] != 3)
-					paintPokeFont(g,playerPokemon[userSelected].toString(playerPokemon[userSelected].move[3]),30,550,18);
+					paintPokeFont(g,playerPokemon[userSelected].toString(playerPokemon[userSelected].move[3]),60,550,18);
 					else
-					paintPokeFont(g,"DISABLED",30,550,18);
+					paintPokeFont(g,"DISABLED",60,550,18);
 				}
 
 
-				g.drawImage(battleImages[12],335,465,250,120,this);
-				paintPokeFont(g,playerPokemon[userSelected].move[cursorLocation.move-1].moveType.toString(),365,510,18);
+				switch(cursorLocation.move)
+				{
+					case 1:
+						g.drawImage(battleImages[11],35,475,21,21,this);
+						break;
+					case 2:
+						g.drawImage(battleImages[11],35,500,21,21,this);
+						break;
+					case 3:
+						g.drawImage(battleImages[11],35,525,21,21,this);
+						break;
+					case 4:
+						g.drawImage(battleImages[11],35,550,21,21,this);
+						break;
+				}
 
-				int pp = playerPokemon[userSelected].TRUE_PP[cursorLocation.move-1];
+				g.drawImage(battleImages[12],315,465,270,120,this);
+				paintPokeFont(g,playerPokemon[userSelected].move[cursorLocation.move-1].moveType.toString(),345,510,18);
+
+				int pp = playerPokemon[userSelected].move[cursorLocation.move-1].pp;
 				if (pp > 9)
 				paintPokeFont(g,pp + "",450,540,18);
 				else
 				paintPokeFont(g,pp + "",470,540,18);
 
-				paintPokeFont(g,playerPokemon[userSelected].TRUE_PPMAX[cursorLocation.move-1] + "",510,540,18);
+				paintPokeFont(g,playerPokemon[userSelected].move[cursorLocation.move-1].ppMax + "",510,540,18);
 
 				break;
 			case SWITCH:

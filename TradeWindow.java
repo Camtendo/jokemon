@@ -249,7 +249,6 @@ public class TradeWindow extends JFrame implements ActionListener
     	if (resetButton == e.getSource())
     	{
     		jf.setVisible(false);
-    		JokemonDriver.cancelSwitch = true;
     	}
     }
     public static void main(String[] args)
@@ -453,9 +452,9 @@ public class TradeWindow extends JFrame implements ActionListener
 				outTacular.flush();
 				
 				//Booleans
-				//outTacular.writeUTF(""+JokemonDriver.partyPokemon[JokemonDriver.offerIndex].IS_TRADED);
-				//outTacular.flush();
-				temp.IS_TRADED=true;
+				outTacular.writeUTF(""+JokemonDriver.partyPokemon[JokemonDriver.offerIndex].IS_TRADED);
+				outTacular.flush();
+				temp.IS_TRADED=Boolean.parseBoolean(inTacular.readUTF());
 
 				JokemonDriver.partyPokemon[JokemonDriver.offerIndex]=new  Pokemon(temp.species, temp.move[0], temp.move[1], temp.move[2], temp.move[3], temp.level,
 				temp.HP_IV,  temp.ATK_IV, temp.DEF_IV, temp.SPCL_IV, temp.SPEED_IV,
@@ -584,9 +583,9 @@ public class TradeWindow extends JFrame implements ActionListener
 				temp.TRUE_PPMAX[3]=Integer.parseInt(inTacular.readUTF(),2);
 				
 				//Booleans
-				//outTacular.writeUTF(""+JokemonDriver.partyPokemon[JokemonDriver.offerIndex].IS_TRADED);
-				//outTacular.flush();
-				temp.IS_TRADED=true;
+				outTacular.writeUTF(""+JokemonDriver.partyPokemon[JokemonDriver.offerIndex].IS_TRADED);
+				outTacular.flush();
+				temp.IS_TRADED=Boolean.parseBoolean(inTacular.readUTF());
 
 				JokemonDriver.partyPokemon[JokemonDriver.offerIndex]=new  Pokemon(temp.species, temp.move[0], temp.move[1], temp.move[2], temp.move[3], temp.level,
 				temp.HP_IV,  temp.ATK_IV, temp.DEF_IV, temp.SPCL_IV, temp.SPEED_IV,
