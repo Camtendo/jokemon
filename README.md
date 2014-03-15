@@ -1,4 +1,4 @@
-jokemon
+jokemon (Java + Pokemon)
 =======
 
 This project was a set of two games (Peaches and Cream) made as a super project in high school by four devs. The code is **awful**, but I decided to host it so that people can help make it better!
