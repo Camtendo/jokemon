@@ -3,6 +3,13 @@ jokemon
 
 This project was a set of two games (Peaches and Cream) made as a super project in high school by four devs. The code is **awful**, but I decided to host it so that people can help make it better!
 
+Website and Downloads
+=====================
+http://pokemonjavaversion.webs.com/
+###Individual versions (v1.1):
+* [Peaches Version](https://dl.dropboxusercontent.com/u/35469595/Peaches.rar)
+* [Cream Version](https://dl.dropboxusercontent.com/u/35469595/Cream.rar)
+
 How to Run
 ========
 Within the project directory:
