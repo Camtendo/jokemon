@@ -27,7 +27,7 @@ public class YesNoWindow extends JFrame implements ActionListener
     	this.setSize(400,100);
    		this.setResizable(false);
    		this.setLayout(null);
- 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+ 		  this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
    		this.setVisible(false);
    		visible = false;
    		this.setLocationRelativeTo(null);

@@ -1176,7 +1176,16 @@ public final class Battle
 				ynWin.addMessage("What? "+user[i].nickname+" is evolving!","Allow Evolution?");
 				while(ynWin.isVisible())
 				{
-
+					System.out.println("Wating for evolution decision...");
+					try
+					{
+						Thread.sleep(1000);
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}
+					
 				}
 				if(ynWin.getYes())
 				{
