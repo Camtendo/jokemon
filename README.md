@@ -1,7 +1,7 @@
 jokemon (Java + Pokemon)
 =======
 
-This project was a set of two games (Peaches and Cream) made as a super project in high school by four devs. The code is **awful**, but I decided to host it so that people can help make it better!
+This project was a set of two games (Peaches and Cream) made as a super project in high school by four devs. The code is **awful**, but I decided to host it so that people can help make it better! NOTE: I plan on running the project through IntelliJ in early April 2014 to get some free refactoring. :)
 
 Website and Downloads
 =====================
