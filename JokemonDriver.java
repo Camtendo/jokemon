@@ -38,21 +38,24 @@ import java.util.Scanner;
 
 public class JokemonDriver extends JPanel implements Runnable,KeyListener
 {
-	public final boolean DEBUG=false;
+	public final boolean DEBUG=true;
 	public final boolean DONATE=false;
 	//Pick Correct Version and TitleScreen at compile time
 
-	public final static String VERSION="Peaches";
-	TitleScreen_Peaches title=new TitleScreen_Peaches();
+	//public final static String VERSION="Peaches";
+	//TitleScreen_Peaches title=new TitleScreen_Peaches();
 
-	//public static final String VERSION="Cream";
-	//TitleScreen_Cream title=new TitleScreen_Cream();
+	public static final String VERSION="Cream";
+	TitleScreen_Cream title=new TitleScreen_Cream();
 
 	static Image icon,loading;
 	static File file=new File("savedata");
 	static boolean titleScreen=true;
 	static boolean makeTheArea = false;
+	static boolean cancelSwitch = false;
+	public static boolean mute = false;
 	private townMap map = new townMap();
+	private InventoryWindow iWin;
 
 	//Location Enums
 	public enum Area
@@ -180,7 +183,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	boolean forceBike=false;
 	boolean invokeBicycle=false;
 	boolean invokeMap=false;
-	static AudioClip surfSong, bikeSong;
+	static AudioClip surfSong;
+	static AudioClip bikeSong;
 
 	//NPC Trainer Vars
 	int numTrainers=2;
@@ -206,6 +210,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	static boolean fishing=false;
 	static int repelSteps=0;
 	boolean showCredits=false;
+	private final Image BACK = Toolkit.getDefaultToolkit().getImage(Item.class.getResource("Sprites/background.jpg"));
 
 	//Point for leaving and entering buildings
 	static Point returnPoint = new Point(5,38);
@@ -215,7 +220,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 	//Game Vars
 	static String name="John";
-	static String rivalName="Julian";
+	static String rivalName="Jacob";
 	static int timesBeatRival=0;
 	static boolean justBeatRival=false;
 	static int badges=0;
@@ -264,6 +269,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	public static void main(String[] jokes)
 	{
 		JokemonDriver j=new JokemonDriver();
+		Pokemon.createAllMoves();
 		j.initTiles();
 		j.initCharSprites();
 		j.loadAudio();
@@ -308,7 +314,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 			return;
 		}
-		
+
 		if(showCredits)
 		{
 			g.setColor(new Color(255,126,0,title.creditInt%256));
@@ -454,9 +460,9 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		g.drawImage(icon,80,85,16,16,this);
 
 		g.drawString("Pick a minigame (Data will be saved when game starts!!!)",100,70);
-		
+
 		String str="";
-		
+
 		switch(minigameInt)
 		{
 			case 0:
@@ -624,8 +630,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	//Draws all components of the trade process
 	public void drawTrade(Graphics g)
 	{
-		g.setColor(new Color(255,126,0,200));
-		g.fillRect(0,0,getWidth(),getHeight());
+		//g.setColor(new Color(255,126,0,200));
+		g.drawImage(BACK,0,0,getWidth(),getHeight(),this);
 
 		g.setFont(new Font("Sanserif",Font.BOLD,18));
 		g.setColor(Color.WHITE);
@@ -706,7 +712,36 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			if(i==pauseMenuInt)
 				strHeight=36;
 			g.setFont(new Font("Sanserif",Font.BOLD,strHeight));
+			if (i != 3)
 			g.drawString(pauseMenu[i],(i*800)/5,50);
+			else
+			{
+				if (name.equalsIgnoreCase("Red")||name.equalsIgnoreCase("Wasabi"))
+					g.setColor(Color.RED);
+				if (name.equalsIgnoreCase("Yellow"))
+					g.setColor(Color.YELLOW);
+				if (name.equalsIgnoreCase("Green")||name.equalsIgnoreCase("Justinian"))
+					g.setColor(Color.GREEN);
+				if (name.equalsIgnoreCase("Blue")||name.equalsIgnoreCase("Camtendo"))
+					g.setColor(Color.BLUE);
+				if (name.equalsIgnoreCase("Gold"))
+					g.setColor(Color.ORANGE);
+				if (name.equalsIgnoreCase("Silver"))
+					g.setColor(Color.LIGHT_GRAY);
+				if (name.equalsIgnoreCase("Black"))
+					g.setColor(Color.BLACK);
+				if (name.equalsIgnoreCase("Pink"))
+					g.setColor(Color.PINK);
+				if (name.equalsIgnoreCase("Magenta"))
+					g.setColor(Color.MAGENTA);
+				if (name.equalsIgnoreCase("Cyan")||name.equalsIgnoreCase("Patches"))
+					g.setColor(Color.CYAN);
+				if (name.equalsIgnoreCase("Rainbow")||name.equalsIgnoreCase("Joe"))
+					g.setColor(new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256)));
+
+				g.drawString(pauseMenu[i],(i*800)/5,50);
+				g.setColor(Color.WHITE);
+			}
 		}
 
 		switch(pauseMenuInt)
@@ -743,7 +778,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					{
 						g.drawString(str[i],600,i*20+200);
 					}
-					
+
 					g.setFont(new Font("Sanserif",Font.BOLD,10));
 					g.drawString(Pokedex.descriptions[pokedexInt-1],220,400);
 				}
@@ -971,28 +1006,28 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			}
 		}
 		catch(Exception e){e.printStackTrace();}
-		
+
 		URL u=JokemonDriver.class.getResource("Sprites/Badges/bug.png");
 		badgeImg[0]=Toolkit.getDefaultToolkit().getImage(u);
-		
+
 		u=JokemonDriver.class.getResource("Sprites/Badges/grass.png");
 		badgeImg[1]=Toolkit.getDefaultToolkit().getImage(u);
-		
+
 		u=JokemonDriver.class.getResource("Sprites/Badges/electric.png");
 		badgeImg[2]=Toolkit.getDefaultToolkit().getImage(u);
-		
+
 		u=JokemonDriver.class.getResource("Sprites/Badges/fighting.png");
 		badgeImg[3]=Toolkit.getDefaultToolkit().getImage(u);
-		
+
 		u=JokemonDriver.class.getResource("Sprites/Badges/normal.png");
 		badgeImg[4]=Toolkit.getDefaultToolkit().getImage(u);
-		
+
 		u=JokemonDriver.class.getResource("Sprites/Badges/ice.png");
 		badgeImg[5]=Toolkit.getDefaultToolkit().getImage(u);
-		
+
 		u=JokemonDriver.class.getResource("Sprites/Badges/psychic.png");
 		badgeImg[6]=Toolkit.getDefaultToolkit().getImage(u);
-		
+
 		u=JokemonDriver.class.getResource("Sprites/Badges/ghost.png");
 		badgeImg[7]=Toolkit.getDefaultToolkit().getImage(u);
 	}
@@ -1030,8 +1065,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	public void debug()
 	{
 		new ItemTest();
-		partyPokemon[0]=new Pokemon(Pokemon.Species.MEWTWO,Pokemon.Move.PSYCHIC,Pokemon.Move.ICE_BEAM,Pokemon.Move.THUNDERBOLT,Pokemon.Move.RECOVER,100);
-		partyPokemon[1]=new Pokemon(Pokemon.Species.MEW,Pokemon.Move.SURF,Pokemon.Move.STRENGTH,Pokemon.Move.FLY,Pokemon.Move.CUT,100);
+		partyPokemon[0]=new Pokemon(Pokemon.Species.MEWTWO,Pokemon.Move.PSYCHIC,Pokemon.Move.ICE_BEAM,Pokemon.Move.TRANSFORM,Pokemon.Move.RECOVER,200);
+		partyPokemon[1]=new Pokemon(Pokemon.Species.MEW,Pokemon.Move.SURF,Pokemon.Move.STRENGTH,Pokemon.Move.FLY,Pokemon.Move.CUT,200);
 		partyPokemon[0].setMaxStats();
 		partyPokemon[1].setMaxStats();
 	}
@@ -1117,8 +1152,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			case Enumville:
 			case Mount_Java:
 			case Nested_Village:
-			case Peach_City:
-			case Cream_City:
+			
 			case Polymorph_Town:
 			case Recursive_Hot_Springs:
 			case Streamreader_Hotel:
@@ -1130,9 +1164,23 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				enemy[0]=Mechanics.randomEncounter(Pokemon.Species.CATERPIE,20,5,Pokemon.Species.WEEDLE,20,5,Pokemon.Species.PIDGEY,20,5,
 				Pokemon.Species.RATTATA,30,5,Pokemon.Species.SPEAROW,10,5);
 				break;
+			case Peach_City:
+			case Cream_City:
+				if(surfing)
+				enemy[0]=Mechanics.randomEncounter(Pokemon.Species.GYARADOS,20,Mechanics.getHighestLevel(partyPokemon),Pokemon.Species.TENTACRUEL,20,Mechanics.getHighestLevel(partyPokemon),
+				Pokemon.Species.SEAKING,20,Mechanics.getHighestLevel(partyPokemon),Pokemon.Species.MAGIKARP,30,Mechanics.getHighestLevel(partyPokemon),
+				Pokemon.Species.STARMIE,10,Mechanics.getHighestLevel(partyPokemon));
+			else
+				enemy[0]=Mechanics.randomEncounter(Pokemon.Species.KANGASKHAN,20,Mechanics.getHighestLevel(partyPokemon),Pokemon.Species.BUTTERFREE,20,Mechanics.getHighestLevel(partyPokemon),
+				Pokemon.Species.PIDGEOT,20,Mechanics.getHighestLevel(partyPokemon),Pokemon.Species.RATICATE,30,Mechanics.getHighestLevel(partyPokemon),
+				Pokemon.Species.FEAROW,10,Mechanics.getHighestLevel(partyPokemon));
+				break;
 			case Route_0:
-				enemy[0]=Mechanics.randomEncounter(Pokemon.Species.CATERPIE,20,5,Pokemon.Species.WEEDLE,20,5,Pokemon.Species.PIDGEY,20,5,
-				Pokemon.Species.RATTATA,30,5,Pokemon.Species.SPEAROW,10,5);
+				if (!surfing)
+					enemy[0]=Mechanics.randomEncounter(Pokemon.Species.CATERPIE,20,5,Pokemon.Species.WEEDLE,20,5,Pokemon.Species.PIDGEY,20,5,
+					Pokemon.Species.RATTATA,30,5,Pokemon.Species.SPEAROW,10,5);
+				else
+					enemy[0]=new Pokemon(Pokemon.Species.MAGIKARP);
 				break;
 			case Route_1:
 				if(!surfing)
@@ -1197,52 +1245,52 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					System.out.println(randy);
 					if (randy == 0)
 					{
-						enemy[0]=new Pokemon(Pokemon.Species.JIGGLYPUFF, Pokemon.Move.BUBBLEBEAM, Pokemon.Move.HYPER_BEAM, Pokemon.Move.SOLARBEAM, Pokemon.Move.FLAMETHROWER, 1, 255, 255, 255, 255, 255,
+						enemy[0]=new Pokemon(Pokemon.Species.JIGGLYPUFF, Pokemon.Move.BUBBLEBEAM, Pokemon.Move.HYPER_BEAM, Pokemon.Move.SOLARBEAM, Pokemon.Move.FLAMETHROWER, 5, 255, 255, 255, 255, 255,
 						"JIGGLYBEAMZ", Pokemon.Status.OK, -1, "JUSTINIANFTW");
 					}
 					else if (randy == 1)
 					{
-						enemy[0]=new Pokemon(Pokemon.Species.CATERPIE, Pokemon.Move.SING, Pokemon.Move.SELFDESTRUCT, Pokemon.Move.NONE, Pokemon.Move.NONE, 1, 255, 255, 255, 255, 255,
+						enemy[0]=new Pokemon(Pokemon.Species.CATERPIE, Pokemon.Move.SING, Pokemon.Move.SELFDESTRUCT, Pokemon.Move.NONE, Pokemon.Move.NONE, 5, 255, 255, 255, 255, 255,
 						"TROLLERPIE", Pokemon.Status.OK, -1, "JUSTINIANFTW");
 					}
 					else if (randy == 2)
 					{
-						enemy[0]=new Pokemon(Pokemon.Species.PORYGON, Pokemon.Move.TAIL_WHIP, Pokemon.Move.LEER, Pokemon.Move.SCREECH, Pokemon.Move.CONFUSION, 1, 255, 255, 255, 255, 255,
+						enemy[0]=new Pokemon(Pokemon.Species.PORYGON, Pokemon.Move.TAIL_WHIP, Pokemon.Move.LEER, Pokemon.Move.SCREECH, Pokemon.Move.CONFUSION, 5, 255, 255, 255, 255, 255,
 						"FAILRYGON", Pokemon.Status.OK, -1, "JUSTINIANFTW");
 					}
 					else if (randy == 3)
 					{
-						enemy[0]=new Pokemon(Pokemon.Species.SNORLAX, Pokemon.Move.KARATE_CHOP, Pokemon.Move.LOW_KICK, Pokemon.Move.MEGA_PUNCH, Pokemon.Move.HI_JUMP_KICK, 1, 255, 255, 255, 255, 255,
+						enemy[0]=new Pokemon(Pokemon.Species.SNORLAX, Pokemon.Move.KARATE_CHOP, Pokemon.Move.LOW_KICK, Pokemon.Move.MEGA_PUNCH, Pokemon.Move.HI_JUMP_KICK, 5, 255, 255, 255, 255, 255,
 						"EPICLAX", Pokemon.Status.OK, -1, "JUSTINIANFTW");
 					}
 					else if (randy == 4)
 					{
-						enemy[0]=new Pokemon(Pokemon.Species.BUTTERFREE, Pokemon.Move.SPORE, Pokemon.Move.POISONPOWDER, Pokemon.Move.SING, Pokemon.Move.THUNDER_WAVE, 1, 255, 255, 255, 255, 255,
+						enemy[0]=new Pokemon(Pokemon.Species.BUTTERFREE, Pokemon.Move.SPORE, Pokemon.Move.POISONPOWDER, Pokemon.Move.SING, Pokemon.Move.THUNDER_WAVE, 5, 255, 255, 255, 255, 255,
 						"MARGARINEFREE", Pokemon.Status.OK, -1, "JUSTINIANFTW");
 					}
 					else if (randy == 5)
 					{
-						enemy[0]=new Pokemon(Pokemon.Species.DITTO, Pokemon.Move.FIRE_BLAST, Pokemon.Move.HYDRO_PUMP, Pokemon.Move.SOLARBEAM, Pokemon.Move.TRANSFORM, 1, 255, 255, 255, 255, 255,
+						enemy[0]=new Pokemon(Pokemon.Species.DITTO, Pokemon.Move.FIRE_BLAST, Pokemon.Move.HYDRO_PUMP, Pokemon.Move.SOLARBEAM, Pokemon.Move.TRANSFORM, 5, 255, 255, 255, 255, 255,
 						"DITTOR", Pokemon.Status.OK, -1, "JUSTINIANFTW");
 					}
 					else if (randy == 6)
 					{
-						enemy[0]=new Pokemon(Pokemon.Species.DRAGONITE, Pokemon.Move.FIRE_BLAST, Pokemon.Move.EARTHQUAKE, Pokemon.Move.RECOVER, Pokemon.Move.DRAGON_RAGE, 1, 255, 255, 255, 255, 255,
+						enemy[0]=new Pokemon(Pokemon.Species.DRAGONITE, Pokemon.Move.FIRE_BLAST, Pokemon.Move.EARTHQUAKE, Pokemon.Move.RECOVER, Pokemon.Move.DRAGON_RAGE, 5, 255, 255, 255, 255, 255,
 						"ULTYNITE", Pokemon.Status.OK, -1, "JUSTINIANFTW");
 					}
 					else if (randy == 7)
 					{
-						enemy[0]=new Pokemon(Pokemon.Species.LAPRAS, Pokemon.Move.FLY, Pokemon.Move.DIG, Pokemon.Move.NONE, Pokemon.Move.NONE, 1, 255, 255, 255, 255, 255,
+						enemy[0]=new Pokemon(Pokemon.Species.LAPRAS, Pokemon.Move.FLY, Pokemon.Move.DIG, Pokemon.Move.NONE, Pokemon.Move.NONE, 5, 255, 255, 255, 255, 255,
 						"WTF", Pokemon.Status.OK, -1, "JUSTINIANFTW");
 					}
 					else if (randy == 8)
 					{
-						enemy[0]=new Pokemon(Pokemon.Species.CATERPIE, Pokemon.Move.SING, Pokemon.Move.SELFDESTRUCT, Pokemon.Move.NONE, Pokemon.Move.NONE, 1, 255, 255, 255, 255, 255,
+						enemy[0]=new Pokemon(Pokemon.Species.CATERPIE, Pokemon.Move.SING, Pokemon.Move.SELFDESTRUCT, Pokemon.Move.NONE, Pokemon.Move.NONE, 5, 255, 255, 255, 255, 255,
 						"TROLLERPIE", Pokemon.Status.OK, -1, "JUSTINIANFTW");
 					}
 					else if (randy == 9)
 					{
-						enemy[0]=new Pokemon(Pokemon.Species.PORYGON, Pokemon.Move.TAIL_WHIP, Pokemon.Move.LEER, Pokemon.Move.SCREECH, Pokemon.Move.CONFUSION, 1, 255, 255, 255, 255, 255,
+						enemy[0]=new Pokemon(Pokemon.Species.PORYGON, Pokemon.Move.TAIL_WHIP, Pokemon.Move.LEER, Pokemon.Move.SCREECH, Pokemon.Move.CONFUSION, 5, 255, 255, 255, 255, 255,
 						"FAILRYGON", Pokemon.Status.OK, -1, "JUSTINIANFTW");
 					}
 				}
@@ -1479,11 +1527,11 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		jf.setVisible(true);
 		jf.toFront();
 
-		if(surfing)
+		if(surfing && !mute)
 			surfSong.loop();
-		else if(bicycling&&!forceBike)
+		else if(bicycling&&!forceBike&&!mute)
 			bikeSong.loop();
-		else
+		else if (!mute)
 			bgm.loop();
 
 		fishing=false;
@@ -1615,7 +1663,9 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	//Returns next objective based on game progress
 	public String getCurrentObjective()
 	{
-		if(objectiveComplete[11])
+		if (objectiveComplete[11] && Pokedex.completed())
+			return "Jokemon Grandmaster";
+		else if(objectiveComplete[11])
 			return "Complete the Pokedex!";
 		else if(objectiveComplete[10])
 			return "Wasn't Babb said to be an awesome battler?";
@@ -1651,7 +1701,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 		if(encounter||trainerEnc)
 			return;
-			
+
 		if(showCredits)
 			return;
 
@@ -2036,6 +2086,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						{
 							bicycling=false;
 							bikeSong.stop();
+							if(!mute)
 							bgm.loop();
 						}
 					}
@@ -2114,6 +2165,30 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					performingAction=true;
 				}
 				break;
+			case 'n':
+			case 'N':
+				if (!mute && !titleScreen)
+				{
+					mute=true;
+					bgm.stop();
+					bikeSong.stop();
+					surfSong.stop();
+				}
+				else
+				{
+					if(surfing)
+					surfSong.loop();
+					else if(bicycling&&!forceBike)
+					{
+						bikeSong.loop();
+					}
+					else
+					{
+						bgm.loop();
+					}
+					mute=false;
+				}
+				break;
 			//Spacebar
 			case 32:
 				if(titleScreen)
@@ -2145,7 +2220,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 							break;
 						case 2:
 							Battle.user=partyPokemon;
-							InventoryWindow iWin=new InventoryWindow();
+							iWin=new InventoryWindow();
 							iWin.openInventory(InventoryWindow.State.OVERWORLD);
 							for(int i=0; i<6; i++)
 							{
@@ -2184,6 +2259,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
       			{
       				paused=!paused;
       				togglingPokemon=false;
+      				if (iWin != null)
+      					iWin.closeInventory();
       				currentObjective=getCurrentObjective();
       			}
 
@@ -2223,6 +2300,10 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 		int levelBoost=0;
 
+		numItems=1;
+		mapItems=new Item[numItems];
+		foundItem=new boolean[numItems];
+
 		boolean omgBoolean = false;
 		for (int i = 0; i<trainer.length; i++)
 			trainer[i] = null;
@@ -2240,6 +2321,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				//Trainer Declaration
 				numTrainers=8;
 				trainer=new Trainer[numTrainers];
+
 
 				trainer[0]=new Trainer(Trainer.TrainerType.BABE,"Jillian",Pokemon.Species.PIDGEY,Pokemon.Species.RATTATA,5);
 				trainer[0].setHostile(false);
@@ -2319,12 +2401,14 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				}
 
 				//Item Declaration
-				numItems=2;
+				numItems=4;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
 
 				mapItems[0]=new Item(Item.Type.POTION,new Point(37,4));
 				mapItems[1]=new Item(Item.Type.ANTIDOTE,new Point(4,40));
+				mapItems[2]=new Item(Item.Type.MOON_STONE,new Point(36,27));
+				mapItems[3]=new Item(Item.Type.MOON_STONE,new Point(43,35));
 
 				loadItemData();
 				for(int i=0; i<foundItem.length; i++)
@@ -2344,13 +2428,14 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (badges == 0)
 				numTrainers=7;
 				else
-				numTrainers=5;
+				numTrainers=6;
 				trainer=new Trainer[numTrainers];
-				numItems=1;
-				mapItems=new Item[numItems];
-				foundItem=new boolean[numItems];
 
-				trainer[0]=new Trainer(Trainer.TrainerType.NEWB,"Buford",Pokemon.Species.CATERPIE,5);
+
+				if(objectiveComplete[10])
+					levelBoost=50;
+
+				trainer[0]=new Trainer(Trainer.TrainerType.NEWB,"Buford",Pokemon.Species.CATERPIE,5+levelBoost);
 				trainer[0].setHostile(true);
 				trainer[0].setLocation(6,11);
 				trainer[0].setPreMessage("Hey Trainer! When you see another trainer, you have to battle! Let's go!");
@@ -2364,7 +2449,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[1].setPostMessage("Be careful walking in grass. Wild Pokemon are roaming around.");
 				trainer[1].setDirection(180);
 
-				trainer[2]=new Trainer(Trainer.TrainerType.KEYBOARDER,"Mac",Pokemon.Species.MAGIKARP,Pokemon.Species.MAGIKARP,5);
+				trainer[2]=new Trainer(Trainer.TrainerType.KEYBOARDER,"Mac",Pokemon.Species.MAGIKARP,Pokemon.Species.MAGIKARP,5+levelBoost);
 				trainer[2].setHostile(true);
 				trainer[2].setLocation(14,30);
 				trainer[2].setPreMessage("Hey kid, let's battle. I just caught some Pokemon.");
@@ -2372,7 +2457,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(270);
 				trainer[2].setViewRange(1);
 
-				trainer[3]=new Trainer(Trainer.TrainerType.CYPHER,"Penelope",Pokemon.Species.MAGIKARP,10);
+				trainer[3]=new Trainer(Trainer.TrainerType.CYPHER,"Penelope",Pokemon.Species.MAGIKARP,10+levelBoost);
 				trainer[3].setHostile(true);
 				trainer[3].setLocation(23,39);
 				trainer[3].setPreMessage("Girls like to fish too you know!");
@@ -2401,7 +2486,14 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					trainer[6].setDirection(180);
 				}
 
+				numItems=4;
+				mapItems=new Item[numItems];
+				foundItem=new boolean[numItems];
+
 				mapItems[0]=new Item(Item.Type.POTION,new Point(43,19));
+				mapItems[1]=new Item(Item.Type.SUPER_POTION,new Point(11,39));
+				mapItems[2]=new Item(Item.Type.THUNDER_STONE,new Point(54,29));
+				mapItems[3]=new Item(Item.Type.PARALYZE_HEAL,new Point(34,11));
 
 				loadItemData();
 				for(int i=0; i<foundItem.length; i++)
@@ -2420,9 +2512,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
-				numItems=1;
-				mapItems=new Item[numItems];
-				foundItem=new boolean[numItems];
+
 
 				trainer[0]=new Trainer(Trainer.TrainerType.BABE,"Nikki",Pokemon.Species.CATERPIE,5);
 				trainer[0].setHostile(false);
@@ -2471,7 +2561,15 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					trainer[4].setDirection(270);
 				}
 
-				mapItems[0]=new Item(Item.Type.SUPER_POTION,new Point(47,34));
+				numItems=4;
+				mapItems=new Item[numItems];
+				foundItem=new boolean[numItems];
+
+				mapItems[0]=new Item(Item.Type.OMEGA_BALL,new Point(47,34));
+				mapItems[1]=new Item(Item.Type.POKE_BALL,new Point(35,20));
+				mapItems[2]=new Item(Item.Type.SODA_POP,new Point(12,10));
+				mapItems[3]=new Item(Item.Type.WATER_STONE,new Point(10,60));
+
 
 				loadItemData();
 				for(int i=0; i<foundItem.length; i++)
@@ -2510,9 +2608,12 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					trainer[6].setPostMessage("Scram!");
 					trainer[6].setDirection(0);
 				}
-				numItems=2;
+				numItems=4;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
+
+				if(objectiveComplete[10])
+					levelBoost=50;
 
 				trainer[0]=new Trainer(Trainer.TrainerType.DEBUGGER,"Ishmael",Pokemon.Species.CATERPIE,5);
 				trainer[0].setHostile(false);
@@ -2522,7 +2623,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[0].setDirection(180);
 				//trainer[0].setViewRange(2);
 
-				trainer[1]=new Trainer(Trainer.TrainerType.PROGRAMMER,"Zeke",Pokemon.Species.PIDGEY,Pokemon.Species.RATTATA,15);
+				trainer[1]=new Trainer(Trainer.TrainerType.PROGRAMMER,"Zeke",Pokemon.Species.PIDGEY,Pokemon.Species.RATTATA,15+levelBoost);
 				trainer[1].setHostile(true);
 				trainer[1].setLocation(11,13);
 				trainer[1].setPreMessage("You have badges! You must be good!");
@@ -2530,7 +2631,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[1].setDirection(0);
 				trainer[1].setViewRange(4);
 
-				trainer[2]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Mike",Pokemon.Species.METAPOD,Pokemon.Species.BULBASAUR,15);
+				trainer[2]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Mike",Pokemon.Species.METAPOD,Pokemon.Species.BULBASAUR,15+levelBoost);
 				trainer[2].setHostile(true);
 				trainer[2].setLocation(22,36);
 				trainer[2].setPreMessage("I like to ride my bicycle.");
@@ -2538,7 +2639,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(180);
 				trainer[2].setViewRange(4);
 
-				trainer[3]=new Trainer(Trainer.TrainerType.BABE,"Isabella",Pokemon.Species.PIKACHU,18);
+				trainer[3]=new Trainer(Trainer.TrainerType.BABE,"Isabella",Pokemon.Species.PIKACHU,18+levelBoost);
 				trainer[3].setHostile(true);
 				trainer[3].setLocation(11,33);
 				trainer[3].setPreMessage("Check out my cuddly Pokemon!");
@@ -2546,7 +2647,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[3].setDirection(180);
 				trainer[3].setViewRange(3);
 
-				trainer[4]=new Trainer(Trainer.TrainerType.CODER,"Jimbo",Pokemon.Species.SLOWPOKE,14);
+				trainer[4]=new Trainer(Trainer.TrainerType.CODER,"Jimbo",Pokemon.Species.SLOWPOKE,14+levelBoost);
 				trainer[4].setHostile(true);
 				trainer[4].setLocation(30,5);
 				trainer[4].setPreMessage("Don't act like you didn't see me.");
@@ -2556,6 +2657,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 				mapItems[0]=new Item(Item.Type.POKE_BALL,new Point(25,50));
 				mapItems[1]=new Item(Item.Type.BURN_HEAL,new Point(4,46));
+				mapItems[2]=new Item(Item.Type.FULL_HEAL,new Point(26,4));
+				mapItems[3]=new Item(Item.Type.POTION,new Point(2,6));
 
 				loadItemData();
 				for(int i=0; i<foundItem.length; i++)
@@ -2572,13 +2675,16 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				url=JokemonDriver.class.getResource("Music/Locations/0d_routes2.mid");
 				bgm=JApplet.newAudioClip(url);
 
+				if(objectiveComplete[10])
+					levelBoost=50;
+
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
 				numItems=4;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
 
-				trainer[0]=new Trainer(Trainer.TrainerType.DEBUGGER,"Tobey",Pokemon.Species.PIDGEY,16);
+				trainer[0]=new Trainer(Trainer.TrainerType.DEBUGGER,"Tobey",Pokemon.Species.PIDGEY,16+levelBoost);
 				trainer[0].setHostile(true);
 				trainer[0].setLocation(6,31);
 				trainer[0].setPreMessage("My name really is Tobey.");
@@ -2586,7 +2692,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[0].setDirection(180);
 				trainer[0].setViewRange(2);
 
-				trainer[1]=new Trainer(Trainer.TrainerType.NEWB,"Brian Healy",Pokemon.Species.FARFETCH_D,Pokemon.Species.FARFETCH_D,Pokemon.Species.FARFETCH_D,Pokemon.Species.FARFETCH_D,10);
+				trainer[1]=new Trainer(Trainer.TrainerType.NEWB,"Brian Healy",Pokemon.Species.FARFETCH_D,Pokemon.Species.FARFETCH_D,Pokemon.Species.FARFETCH_D,Pokemon.Species.FARFETCH_D,10+levelBoost);
 				trainer[1].setHostile(true);
 				trainer[1].setLocation(7,38);
 				trainer[1].setPreMessage("Is there such a thing as beginner's luck?");
@@ -2594,7 +2700,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[1].setDirection(90);
 				trainer[1].setViewRange(2);
 
-				trainer[2]=new Trainer(Trainer.TrainerType.JAVA,"GRUNT",Pokemon.Species.RATTATA,Pokemon.Species.BULBASAUR,15);
+				trainer[2]=new Trainer(Trainer.TrainerType.JAVA,"GRUNT",Pokemon.Species.RATTATA,Pokemon.Species.BULBASAUR,15+levelBoost);
 				trainer[2].setHostile(true);
 				trainer[2].setLocation(23,38);
 				trainer[2].setPreMessage("Have you heard of Team Java?");
@@ -2602,7 +2708,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(90);
 				trainer[2].setViewRange(2);
 
-				trainer[3]=new Trainer(Trainer.TrainerType.CYPHER,"Bella",Pokemon.Species.RATTATA,Pokemon.Species.BELLSPROUT,18);
+				trainer[3]=new Trainer(Trainer.TrainerType.CYPHER,"Bella",Pokemon.Species.RATTATA,Pokemon.Species.BELLSPROUT,18+levelBoost);
 				trainer[3].setHostile(true);
 				trainer[3].setLocation(28,31);
 				trainer[3].setPreMessage("HEY KID! LET'S BATTLE!!!");
@@ -2610,7 +2716,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[3].setDirection(180);
 				trainer[3].setViewRange(4);
 
-				trainer[4]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Lancelot",Pokemon.Species.DODUO,Pokemon.Species.PIDGEY,14);
+				trainer[4]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Lancelot",Pokemon.Species.DODUO,Pokemon.Species.PIDGEY,14+levelBoost);
 				trainer[4].setHostile(true);
 				trainer[4].setLocation(44,43);
 				trainer[4].setPreMessage("I almost got my bike stuck! Good thing you saw me.");
@@ -2715,26 +2821,19 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				url=JokemonDriver.class.getResource("Music/Locations/0c_shop.mid");
 				bgm=JApplet.newAudioClip(url);
 
-				numTrainers=2;
+				numTrainers=1;
 				trainer=new Trainer[numTrainers];
 				numItems=0;
 				mapItems=new Item[numItems];
 
-				trainer[0]=new Trainer(Trainer.TrainerType.HACKER,"Marty",Pokemon.Species.MEOWTH,5);
-				trainer[0].setHostile(false);
-				trainer[0].setLocation(1,4);
-				//trainer[0].setPreMessage("");
-				trainer[0].setPostMessage("Welcome!");
-				trainer[0].setDirection(0);
-				trainer[0].setViewRange(1);
 
-				trainer[1]=new Trainer(Trainer.TrainerType.NEWB,"Braxton",Pokemon.Species.CATERPIE,5);
-				trainer[1].setHostile(false);
-				trainer[1].setLocation(8,2);
+				trainer[0]=new Trainer(Trainer.TrainerType.NEWB,"Braxton",Pokemon.Species.CATERPIE,5);
+				trainer[0].setHostile(false);
+				trainer[0].setLocation(8,2);
 				//trainer[0].setPreMessage("");
-				trainer[1].setPostMessage("I shop all the time! I love this island!");
-				trainer[1].setDirection(270);
-				trainer[1].setViewRange(1);
+				trainer[0].setPostMessage("I shop all the time! I love this island!");
+				trainer[0].setDirection(270);
+				trainer[0].setViewRange(1);
 				break;
 			case Route_3:
 				tileSet = OUTDOORS;
@@ -2747,11 +2846,14 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
-				numItems=2;
+				numItems=7;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
 
-				trainer[0]=new Trainer(Trainer.TrainerType.NEWB,"Tony",Pokemon.Species.TAUROS,Pokemon.Species.RATTATA,14);
+				if(objectiveComplete[10])
+					levelBoost=50;
+
+				trainer[0]=new Trainer(Trainer.TrainerType.NEWB,"Tony",Pokemon.Species.TAUROS,Pokemon.Species.RATTATA,14+levelBoost);
 				trainer[0].setHostile(true);
 				trainer[0].setLocation(44,33);
 				trainer[0].setPreMessage("Did that old guy give you HM 1 too?");
@@ -2765,7 +2867,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[1].setPostMessage("You're going to need a Pokemon that can SURF to cross Route 11.");
 				trainer[1].setDirection(90);
 
-				trainer[2]=new Trainer(Trainer.TrainerType.KEYBOARDER,"Melvin",Pokemon.Species.PIKACHU,Pokemon.Species.PIDGEOTTO,18);
+				trainer[2]=new Trainer(Trainer.TrainerType.KEYBOARDER,"Melvin",Pokemon.Species.PIKACHU,Pokemon.Species.PIDGEOTTO,18+levelBoost);
 				trainer[2].setHostile(true);
 				trainer[2].setLocation(14,27);
 				trainer[2].setPreMessage("The sun is really bright here.");
@@ -2773,7 +2875,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(180);
 				trainer[2].setViewRange(4);
 
-				trainer[3]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Hombre",Pokemon.Species.ODDISH,16);
+				trainer[3]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Hombre",Pokemon.Species.ODDISH,16+levelBoost);
 				trainer[3].setHostile(true);
 				trainer[3].setLocation(39,18);
 				trainer[3].setPreMessage("I'm going to run you over!");
@@ -2801,6 +2903,11 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 				mapItems[0]=new Item(Item.Type.SUPER_POTION,new Point(44,15));
 				mapItems[1]=new Item(Item.Type.GREAT_BALL,new Point(11,2));
+				mapItems[2]=new Item(Item.Type.NUGGET,new Point(25,10));
+				mapItems[3]=new Item(Item.Type.BURN_HEAL,new Point(30,36));
+				mapItems[4]=new Item(Item.Type.FULL_HEAL,new Point(17,32));
+				mapItems[5]=new Item(Item.Type.POTION,new Point(3,57));
+				mapItems[6]=new Item(Item.Type.MOON_STONE,new Point(26,21));
 
 				loadItemData();
 				for(int i=0; i<foundItem.length; i++)
@@ -2819,7 +2926,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
-				numItems=1;
+				numItems=5;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
 
@@ -2860,6 +2967,10 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[4].setDirection(90);
 
 				mapItems[0]=new Item(Item.Type.GREAT_BALL,new Point(19,60));
+				mapItems[1]=new Item(Item.Type.SUPER_POTION,new Point(54,56));
+				mapItems[2]=new Item(Item.Type.CALCIUM,new Point(47,36));
+				mapItems[3]=new Item(Item.Type.RARE_CANDY,new Point(36,21));
+				mapItems[4]=new Item(Item.Type.THUNDER_STONE,new Point(20,2));
 
 				loadItemData();
 				for(int i=0; i<foundItem.length; i++)
@@ -2887,11 +2998,14 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
-				numItems=2;
+				numItems=5;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
 
-				trainer[0]=new Trainer(Trainer.TrainerType.NEWB,"Copycat",Pokemon.Species.DITTO,Pokemon.Species.DITTO,Pokemon.Species.DITTO,20);
+				if(objectiveComplete[10])
+					levelBoost=50;
+
+				trainer[0]=new Trainer(Trainer.TrainerType.NEWB,"Copycat",Pokemon.Species.DITTO,Pokemon.Species.DITTO,Pokemon.Species.DITTO,20+levelBoost);
 				trainer[0].setHostile(true);
 				trainer[0].setLocation(20,68);
 				trainer[0].setPreMessage("Let's battle!");
@@ -2899,7 +3013,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[0].setDirection(180);
 				trainer[0].setViewRange(2);
 
-				trainer[1]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Miguel",Pokemon.Species.GEODUDE,Pokemon.Species.TAUROS,20);
+				trainer[1]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Miguel",Pokemon.Species.GEODUDE,Pokemon.Species.TAUROS,20+levelBoost);
 				trainer[1].setHostile(true);
 				trainer[1].setLocation(4,58);
 				trainer[1].setPreMessage("On your way to Mount Java?");
@@ -2907,7 +3021,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[1].setDirection(0);
 				trainer[1].setViewRange(5);
 
-				trainer[2]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Lucien",Pokemon.Species.RATICATE,Pokemon.Species.PIDGEOTTO,22);
+				trainer[2]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Lucien",Pokemon.Species.RATICATE,Pokemon.Species.PIDGEOTTO,22+levelBoost);
 				trainer[2].setHostile(true);
 				trainer[2].setLocation(2,49);
 				trainer[2].setPreMessage("I'm tired, but not too tired for a battle!");
@@ -2915,7 +3029,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(0);
 				trainer[2].setViewRange(3);
 
-				trainer[3]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Otto",Pokemon.Species.GLOOM,Pokemon.Species.FEAROW,24);
+				trainer[3]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Otto",Pokemon.Species.GLOOM,Pokemon.Species.FEAROW,24+levelBoost);
 				trainer[3].setHostile(true);
 				trainer[3].setLocation(17,35);
 				trainer[3].setPreMessage("This bike definitely helps for long travels!");
@@ -2931,6 +3045,9 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 				mapItems[0]=new Item(Item.Type.IRON,new Point(36,54));
 				mapItems[1]=new Item(Item.Type.REVIVE,new Point(32,42));
+				mapItems[2]=new Item(Item.Type.HYPER_POTION,new Point(5,10));
+				mapItems[3]=new Item(Item.Type.GREAT_BALL,new Point(5,30));
+				mapItems[4]=new Item(Item.Type.GREAT_BALL,new Point(27,5));
 
 				loadItemData();
 				for(int i=0; i<foundItem.length; i++)
@@ -2947,9 +3064,9 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				url=JokemonDriver.class.getResource("Music/Locations/3_mount_java.mid");
 				bgm=JApplet.newAudioClip(url);
 
-				numTrainers=5;
+				numTrainers=6;
 				trainer=new Trainer[numTrainers];
-				numItems=1;
+				numItems=3;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
 
@@ -2989,7 +3106,15 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[4].setPostMessage("Dude, I really hate caves.");
 				trainer[4].setDirection(270);
 
+				trainer[5]=new Trainer(Trainer.TrainerType.PROFESSOR,"Hint",Pokemon.Species.CATERPIE,5);
+				trainer[5].setHostile(false);
+				trainer[5].setLocation(12,47);
+				trainer[5].setPostMessage("Dude, if you have four badges you need to go back to Route 3 and go east through Public Cave");
+				trainer[5].setDirection(270);
+
 				mapItems[0]=new Item(Item.Type.ULTRA_BALL,new Point(30,42));
+				mapItems[1]=new Item(Item.Type.MAX_ELIXER,new Point(17,13));
+				mapItems[2]=new Item(Item.Type.MOUNTAIN_DEW,new Point(47,33));
 
 				loadItemData();
 				for(int i=0; i<foundItem.length; i++)
@@ -3008,11 +3133,14 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
-				numItems=3;
+				numItems=4;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
 
-				trainer[0]=new Trainer(Trainer.TrainerType.ENGINEER,"Trevor",Pokemon.Species.NINETALES,Pokemon.Species.PINSIR,Pokemon.Species.DRATINI,20);
+				if(objectiveComplete[10])
+					levelBoost=50;
+
+				trainer[0]=new Trainer(Trainer.TrainerType.ENGINEER,"Trevor",Pokemon.Species.NINETALES,Pokemon.Species.PINSIR,Pokemon.Species.DRATINI,20+levelBoost);
 				trainer[0].setHostile(true);
 				trainer[0].setLocation(21,36);
 				trainer[0].setPreMessage("Ahh...so we meet again my young padawan.");
@@ -3020,7 +3148,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[0].setDirection(0);
 				trainer[0].setViewRange(4);
 
-				trainer[1]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Bart",Pokemon.Species.RATTATA,Pokemon.Species.PIKACHU,20);
+				trainer[1]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Bart",Pokemon.Species.RATTATA,Pokemon.Species.GRAVELER,20+levelBoost);
 				trainer[1].setHostile(true);
 				trainer[1].setLocation(14,22);
 				trainer[1].setPreMessage("Mount Java is close! I'll beat you there!");
@@ -3028,7 +3156,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[1].setDirection(180);
 				trainer[1].setViewRange(3);
 
-				trainer[2]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Lucien",Pokemon.Species.RATICATE,Pokemon.Species.PIDGEOTTO,22);
+				trainer[2]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Lucien",Pokemon.Species.RATICATE,Pokemon.Species.PIDGEOTTO,22+levelBoost);
 				trainer[2].setHostile(true);
 				trainer[2].setLocation(2,49);
 				trainer[2].setPreMessage("I'm tired, but not too tired for a battle!");
@@ -3036,7 +3164,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(0);
 				trainer[2].setViewRange(3);
 
-				trainer[3]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Oscar",Pokemon.Species.WEEPINBELL,Pokemon.Species.PIDGEOTTO,Pokemon.Species.RATTATA,24);
+				trainer[3]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Oscar",Pokemon.Species.WEEPINBELL,Pokemon.Species.PIDGEOTTO,Pokemon.Species.RATTATA,24+levelBoost);
 				trainer[3].setHostile(true);
 				trainer[3].setLocation(27,12);
 				trainer[3].setPreMessage("I saw a spikey red-head nearby. You know him?");
@@ -3068,6 +3196,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				mapItems[0]=new Item(Item.Type.PROTEIN,new Point(69,27));
 				mapItems[1]=new Item(Item.Type.ULTRA_BALL,new Point(68,2));
 				mapItems[2]=new Item(Item.Type.AWAKENING,new Point(46,4));
+				mapItems[3]=new Item(Item.Type.CALCIUM,new Point(11,7));
 
 				loadItemData();
 				for(int i=0; i<foundItem.length; i++)
@@ -3090,7 +3219,10 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
 
-				trainer[0]=new Trainer(Trainer.TrainerType.ENGINEER,"Bradley S.",Pokemon.Species.MAGNETON,Pokemon.Species.DROWZEE,Pokemon.Species.DUGTRIO,25);
+				if(objectiveComplete[10])
+					levelBoost=50;
+
+				trainer[0]=new Trainer(Trainer.TrainerType.ENGINEER,"Bradley S.",Pokemon.Species.MAGNETON,Pokemon.Species.DROWZEE,Pokemon.Species.DUGTRIO,25+levelBoost);
 				trainer[0].setHostile(true);
 				trainer[0].setLocation(57,11);
 				trainer[0].setPreMessage("Whazup loser?");
@@ -3098,7 +3230,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[0].setDirection(270);
 				trainer[0].setViewRange(4);
 
-				trainer[1]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Thomas",Pokemon.Species.RATICATE,Pokemon.Species.TAUROS,26);
+				trainer[1]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Thomas",Pokemon.Species.RATICATE,Pokemon.Species.TAUROS,26+levelBoost);
 				trainer[1].setHostile(true);
 				trainer[1].setLocation(45,9);
 				trainer[1].setPreMessage("Hey! Did you see? This route has a Pokemon Center!");
@@ -3106,7 +3238,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[1].setDirection(90);
 				trainer[1].setViewRange(3);
 
-				trainer[2]=new Trainer(Trainer.TrainerType.CODER,"Lando",Pokemon.Species.RATICATE,Pokemon.Species.PIDGEOTTO,27);
+				trainer[2]=new Trainer(Trainer.TrainerType.CODER,"Lando",Pokemon.Species.RATICATE,Pokemon.Species.PIDGEOTTO,27+levelBoost);
 				trainer[2].setHostile(true);
 				trainer[2].setLocation(29,7);
 				trainer[2].setPreMessage("I'm on my way to battle Joe! Outta my way!");
@@ -3114,7 +3246,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(0);
 				trainer[2].setViewRange(1);
 
-				trainer[3]=new Trainer(Trainer.TrainerType.HACKER,"Riley",Pokemon.Species.WEEPINBELL,Pokemon.Species.PIDGEOTTO,Pokemon.Species.RATICATE,24);
+				trainer[3]=new Trainer(Trainer.TrainerType.HACKER,"Riley",Pokemon.Species.WEEPINBELL,Pokemon.Species.PIDGEOTTO,Pokemon.Species.RATICATE,24+levelBoost);
 				trainer[3].setHostile(true);
 				trainer[3].setLocation(28,20);
 				trainer[3].setPreMessage("This sun is giving me a sunburn!");
@@ -3122,7 +3254,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[3].setDirection(270);
 				trainer[3].setViewRange(3);
 
-				trainer[4]=new Trainer(Trainer.TrainerType.KEYBOARDER,"Huey",Pokemon.Species.CHARIZARD,38);
+				trainer[4]=new Trainer(Trainer.TrainerType.KEYBOARDER,"Huey",Pokemon.Species.CHARIZARD,38+levelBoost);
 				trainer[4].setHostile(true);
 				trainer[4].setLocation(31,29);
 				trainer[4].setPreMessage("Check out my Pokemon!");
@@ -3186,12 +3318,50 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				url=JokemonDriver.class.getResource("Music/Locations/0d_routes4.mid");
 				bgm=JApplet.newAudioClip(url);
 
-				numTrainers=0;
+				numTrainers=3;
 				trainer=new Trainer[numTrainers];
-				numItems=0;
+				numItems=5;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
+
+				if (objectiveComplete[10])
+					levelBoost=50;
+
+				mapItems[0]=new Item(Item.Type.FIRE_STONE,new Point(38,33));
+				mapItems[1]=new Item(Item.Type.ULTRA_BALL,new Point(18,19));
+				mapItems[2]=new Item(Item.Type.IRON,new Point(19,18));
+				mapItems[3]=new Item(Item.Type.ETHER,new Point(19,19));
+				mapItems[4]=new Item(Item.Type.ELIXER,new Point(51,11));
+
+				trainer[0]=new Trainer(Trainer.TrainerType.NEWB,"Twin 1",Pokemon.Species.CHARIZARD,38+levelBoost);
+				trainer[0].setHostile(true);
+				trainer[0].setLocation(51,5);
+				trainer[0].setPreMessage("You found our secret spot!");
+				trainer[0].setPostMessage("Aww..");
+				trainer[0].setDirection(180);
+				trainer[0].setViewRange(3);
+
+				trainer[1]=new Trainer(Trainer.TrainerType.NEWB,"Twin 2",Pokemon.Species.BLASTOISE,38+levelBoost);
+				trainer[1].setHostile(true);
+				trainer[1].setLocation(51,6);
+				trainer[1].setPreMessage("You found our secret spot!");
+				trainer[1].setPostMessage("Aww..");
+				trainer[1].setDirection(180);
+				trainer[1].setViewRange(3);
+
+				trainer[2]=new Trainer(Trainer.TrainerType.NEWB,"Twin 3",Pokemon.Species.VENUSAUR,38+levelBoost);
+				trainer[2].setHostile(true);
+				trainer[2].setLocation(51,7);
+				trainer[2].setPreMessage("You found our secret spot!");
+				trainer[2].setPostMessage("Aww..");
+				trainer[2].setDirection(180);
+				trainer[2].setViewRange(3);
+
 				loadItemData();
+				for(int i=0; i<foundItem.length; i++)
+				{
+					mapItems[i].found=foundItem[i];
+				}
 				break;
 			case Route_ARRAYINDEXOUTOFBOUNDSEXCEPTION:
 				tileSet = OUTDOORS;
@@ -3201,7 +3371,19 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				createMap("Articuno.tilemap");
 				url=JokemonDriver.class.getResource("Music/Locations/0d_routes4.mid");
 				bgm=JApplet.newAudioClip(url);
+				numTrainers=0;
+				trainer=new Trainer[numTrainers];
+				numItems=1;
+				mapItems=new Item[numItems];
+				foundItem=new boolean[numItems];
+
+				mapItems[0]=new Item(Item.Type.ULTRA_BALL,new Point(22,14));
+
 				loadItemData();
+				for(int i=0; i<foundItem.length; i++)
+				{
+					mapItems[i].found=foundItem[i];
+				}
 				break;
 			case Route_9:
 				tileSet = OUTDOORS;
@@ -3214,11 +3396,14 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
-				numItems=3;
+				numItems=5;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
 
-				trainer[0]=new Trainer(Trainer.TrainerType.ENGINEER,"Smithy",Pokemon.Species.GEODUDE,Pokemon.Species.MEOWTH,Pokemon.Species.ABRA,25);
+				if(objectiveComplete[10])
+					levelBoost=50;
+
+				trainer[0]=new Trainer(Trainer.TrainerType.ENGINEER,"Smithy",Pokemon.Species.GEODUDE,Pokemon.Species.MEOWTH,Pokemon.Species.ABRA,25+levelBoost);
 				trainer[0].setHostile(true);
 				trainer[0].setLocation(9,20);
 				trainer[0].setPreMessage("I jumped over Snorlax to get here. What about you?");
@@ -3226,7 +3411,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[0].setDirection(90);
 				trainer[0].setViewRange(2);
 
-				trainer[1]=new Trainer(Trainer.TrainerType.JAVA,"GRUNT",Pokemon.Species.RATICATE,Pokemon.Species.EKANS,26);
+				trainer[1]=new Trainer(Trainer.TrainerType.JAVA,"GRUNT",Pokemon.Species.RATICATE,Pokemon.Species.EKANS,26+levelBoost);
 				trainer[1].setHostile(true);
 				trainer[1].setLocation(17,15);
 				trainer[1].setPreMessage("You insolent brat! Bow to Team Java! We will take this island!");
@@ -3234,7 +3419,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[1].setDirection(0);
 				trainer[1].setViewRange(3);
 
-				trainer[2]=new Trainer(Trainer.TrainerType.CODER,"Luke",Pokemon.Species.PONYTA,Pokemon.Species.PIDGEOTTO,27);
+				trainer[2]=new Trainer(Trainer.TrainerType.CODER,"Luke",Pokemon.Species.PONYTA,Pokemon.Species.PIDGEOTTO,27+levelBoost);
 				trainer[2].setHostile(true);
 				trainer[2].setLocation(32,23);
 				trainer[2].setPreMessage("I think that Pokemon battles are like chess matches.");
@@ -3242,7 +3427,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(180);
 				trainer[2].setViewRange(4);
 
-				trainer[3]=new Trainer(Trainer.TrainerType.HACKER,"Rick",Pokemon.Species.WEEPINBELL,Pokemon.Species.PIDGEOTTO,Pokemon.Species.HORSEA,24);
+				trainer[3]=new Trainer(Trainer.TrainerType.HACKER,"Rick",Pokemon.Species.WEEPINBELL,Pokemon.Species.PIDGEOTTO,Pokemon.Species.HORSEA,24+levelBoost);
 				trainer[3].setHostile(true);
 				trainer[3].setLocation(23,32);
 				trainer[3].setPreMessage("Om nom nom. Do you eat sushi?");
@@ -3250,7 +3435,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[3].setDirection(0);
 				trainer[3].setViewRange(3);
 
-				trainer[4]=new Trainer(Trainer.TrainerType.BABE,"Sandra",Pokemon.Species.HYPNO,Pokemon.Species.BEEDRILL,26);
+				trainer[4]=new Trainer(Trainer.TrainerType.BABE,"Sandra",Pokemon.Species.HYPNO,Pokemon.Species.BEEDRILL,26+levelBoost);
 				trainer[4].setHostile(true);
 				trainer[4].setLocation(18,79);
 				trainer[4].setPreMessage("Hey guess what?!?!");
@@ -3262,6 +3447,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				mapItems[0]=new Item(Item.Type.FIRE_STONE,new Point(35,63));
 				mapItems[1]=new Item(Item.Type.MAX_POTION,new Point(28,85));
 				mapItems[2]=new Item(Item.Type.LEAF_STONE,new Point(4,78));
+				mapItems[3]=new Item(Item.Type.MOON_STONE,new Point(27,71));
+				mapItems[4]=new Item(Item.Type.HYPER_POTION,new Point(17,41));
 
 				loadItemData();
 				for(int i=0; i<foundItem.length; i++)
@@ -3292,7 +3479,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[0].setDirection(270);
 				trainer[0].setViewRange(0);
 
-				trainer[1]=new Trainer(Trainer.TrainerType.PROGRAMMER,"Hansel",Pokemon.Species.RATTATA,Pokemon.Species.PIKACHU,20);
+				trainer[1]=new Trainer(Trainer.TrainerType.PROGRAMMER,"Hansel",Pokemon.Species.RATTATA,Pokemon.Species.EEVEE,20);
 				trainer[1].setHostile(false);
 				trainer[1].setLocation(10,34);
 				//trainer[1].setPreMessage("Mount Java is close! I'll beat you there!");
@@ -3358,11 +3545,14 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
-				numItems=0;
+				numItems=3;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
 
-				trainer[0]=new Trainer(Trainer.TrainerType.DEBUGGER,"Metro",Pokemon.Species.SEEL,Pokemon.Species.PERSIAN,Pokemon.Species.CLEFAIRY,32);
+				if(objectiveComplete[10])
+					levelBoost=50;
+
+				trainer[0]=new Trainer(Trainer.TrainerType.DEBUGGER,"Metro",Pokemon.Species.SEEL,Pokemon.Species.PERSIAN,Pokemon.Species.CLEFAIRY,32+levelBoost);
 				trainer[0].setHostile(true);
 				trainer[0].setLocation(20,14);
 				trainer[0].setPreMessage("You say get 'em?");
@@ -3370,7 +3560,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[0].setDirection(180);
 				trainer[0].setViewRange(2);
 
-				trainer[1]=new Trainer(Trainer.TrainerType.JAVA,"GRUNT",Pokemon.Species.RATICATE,Pokemon.Species.WEEZING,34);
+				trainer[1]=new Trainer(Trainer.TrainerType.JAVA,"GRUNT",Pokemon.Species.RATICATE,Pokemon.Species.WEEZING,34+levelBoost);
 				trainer[1].setHostile(true);
 				trainer[1].setLocation(17,18);
 				trainer[1].setPreMessage("Team Java is getting this island back. Get out of our way!");
@@ -3378,15 +3568,15 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[1].setDirection(0);
 				trainer[1].setViewRange(2);
 
-				trainer[2]=new Trainer(Trainer.TrainerType.CODER,"Lex",Pokemon.Species.HITMONLEE,Pokemon.Species.GRAVELER,36);
+				trainer[2]=new Trainer(Trainer.TrainerType.CODER,"Lex",Pokemon.Species.HITMONLEE,Pokemon.Species.GRAVELER,36+levelBoost);
 				trainer[2].setHostile(true);
-				trainer[2].setLocation(32,23);
+				trainer[2].setLocation(20,22);
 				trainer[2].setPreMessage("I'm your Kryptonite!");
 				trainer[2].setPostMessage("You're not Superman are you?");
-				trainer[2].setDirection(0);
+				trainer[2].setDirection(180);
 				trainer[2].setViewRange(4);
 
-				trainer[3]=new Trainer(Trainer.TrainerType.HACKER,"Wayne",Pokemon.Species.POLIWHIRL,Pokemon.Species.CHANSEY,Pokemon.Species.PINSIR,32);
+				trainer[3]=new Trainer(Trainer.TrainerType.HACKER,"Wayne",Pokemon.Species.POLIWHIRL,Pokemon.Species.CHANSEY,Pokemon.Species.PINSIR,32+levelBoost);
 				trainer[3].setHostile(true);
 				trainer[3].setLocation(17,26);
 				trainer[3].setPreMessage("Dude, we have to battle! ");
@@ -3394,7 +3584,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[3].setDirection(0);
 				trainer[3].setViewRange(2);
 
-				trainer[4]=new Trainer(Trainer.TrainerType.CYPHER,"Shelley",Pokemon.Species.GROWLITHE,Pokemon.Species.VENONAT,31);
+				trainer[4]=new Trainer(Trainer.TrainerType.CYPHER,"Shelley",Pokemon.Species.GROWLITHE,Pokemon.Species.VENONAT,31+levelBoost);
 				trainer[4].setHostile(true);
 				trainer[4].setLocation(16,34);
 				trainer[4].setPreMessage("I see you!!!");
@@ -3403,7 +3593,15 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[4].setDirection(0);
 				trainer[4].setViewRange(5);
 
+				mapItems[0]=new Item(Item.Type.REVIVE,new Point(23,23));
+				mapItems[1]=new Item(Item.Type.MAX_ETHER,new Point(3,20));
+				mapItems[2]=new Item(Item.Type.ULTRA_BALL,new Point(35,11));
+
 				loadItemData();
+				for(int i=0; i<foundItem.length; i++)
+				{
+					mapItems[i].found=foundItem[i];
+				}
 				break;
 			case Route_11:
 				tileSet = OUTDOORS;
@@ -3414,13 +3612,16 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				url=JokemonDriver.class.getResource("Music/Locations/0d_routes5.mid");
 				bgm=JApplet.newAudioClip(url);
 
-				numTrainers=4;
+				numTrainers=5;
 				trainer=new Trainer[numTrainers];
-				numItems=3;
+				numItems=5;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
 
-				trainer[0]=new Trainer(Trainer.TrainerType.PROFESSOR,"Smith",Pokemon.Species.DRATINI,35);
+				if(objectiveComplete[10])
+					levelBoost=50;
+
+				trainer[0]=new Trainer(Trainer.TrainerType.PROFESSOR,"Smith",Pokemon.Species.DRATINI,35+levelBoost);
 				trainer[0].setHostile(true);
 				trainer[0].setLocation(10,2);
 				trainer[0].setPreMessage("Would you like to see my rare Pokemon?");
@@ -3428,7 +3629,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[0].setDirection(270);
 				trainer[0].setViewRange(3);
 
-				trainer[1]=new Trainer(Trainer.TrainerType.PROGRAMMER,"Zimmer",Pokemon.Species.RATTATA,Pokemon.Species.PIKACHU,38);
+				trainer[1]=new Trainer(Trainer.TrainerType.PROGRAMMER,"Zimmer",Pokemon.Species.RATTATA,Pokemon.Species.PINSIR,38+levelBoost);
 				trainer[1].setHostile(true);
 				trainer[1].setLocation(10,34);
 				trainer[1].setPreMessage("Enumville is nearby. You're not stopping me!");
@@ -3436,7 +3637,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[1].setDirection(90);
 				trainer[1].setViewRange(3);
 
-				trainer[2]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Letty",Pokemon.Species.RATICATE,Pokemon.Species.PIDGEOTTO,34);
+				trainer[2]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Letty",Pokemon.Species.RATICATE,Pokemon.Species.PIDGEOTTO,34+levelBoost);
 				trainer[2].setHostile(true);
 				trainer[2].setLocation(21,20);
 				trainer[2].setPreMessage("Hey kid, give me your money.");
@@ -3444,7 +3645,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(180);
 				trainer[2].setViewRange(3);
 
-				trainer[3]=new Trainer(Trainer.TrainerType.BABE,"Lucy",Pokemon.Species.NIDORINO,Pokemon.Species.NIDORINA,Pokemon.Species.OMASTAR,36);
+				trainer[3]=new Trainer(Trainer.TrainerType.BABE,"Lucy",Pokemon.Species.NIDORINO,Pokemon.Species.NIDORINA,Pokemon.Species.OMASTAR,36+levelBoost);
 				trainer[3].setHostile(true);
 				trainer[3].setLocation(62,26);
 				trainer[3].setPreMessage("Hey there cutie. Let's battle.");
@@ -3452,9 +3653,19 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[3].setDirection(270);
 				trainer[3].setViewRange(3);
 
+				trainer[4]=new Trainer(Trainer.TrainerType.HACKER,"Shane",Pokemon.Species.RAICHU,Pokemon.Species.PIDGEOT,Pokemon.Species.GENGAR,36+levelBoost);
+				trainer[4].setHostile(true);
+				trainer[4].setLocation(39,3);
+				trainer[4].setPreMessage("Woa dude.. lets fight.");
+				trainer[4].setPostMessage("Totally radical dude!");
+				trainer[4].setDirection(270);
+				trainer[4].setViewRange(3);
+
 				mapItems[0]=new Item(Item.Type.REVIVE,new Point(9,35));
 				mapItems[1]=new Item(Item.Type.ANTIDOTE,new Point(3,10));
 				mapItems[2]=new Item(Item.Type.NUGGET,new Point(19,3));
+				mapItems[3]=new Item(Item.Type.MOON_STONE,new Point(16,33));
+				mapItems[4]=new Item(Item.Type.ELIXER,new Point(52,2));
 
 				loadItemData();
 				for(int i=0; i<foundItem.length; i++)
@@ -3473,9 +3684,12 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 				numTrainers=3;
 				trainer=new Trainer[numTrainers];
-				numItems=1;
+				numItems=2;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
+
+				if(objectiveComplete[10])
+					levelBoost=50;
 
 				trainer[0]=new Trainer(Trainer.TrainerType.NEWB,"Smith",Pokemon.Species.DRATINI,35);
 				trainer[0].setHostile(false);
@@ -3485,7 +3699,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[0].setDirection(270);
 				trainer[0].setViewRange(3);
 
-				trainer[1]=new Trainer(Trainer.TrainerType.PROGRAMMER,"Zidane",Pokemon.Species.RATTATA,Pokemon.Species.PIKACHU,38);
+				trainer[1]=new Trainer(Trainer.TrainerType.PROGRAMMER,"Zidane",Pokemon.Species.RATTATA,Pokemon.Species.PSYDUCK,38);
 				trainer[1].setHostile(false);
 				trainer[1].setLocation(13,34);
 				trainer[1].setPreMessage("Enumville is nearby. You're not stopping me!");
@@ -3493,7 +3707,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[1].setDirection(90);
 				trainer[1].setViewRange(3);
 
-				trainer[2]=new Trainer(Trainer.TrainerType.ENGINEER,"Jasau",Pokemon.Species.RATICATE,Pokemon.Species.PIDGEOTTO,34);
+				trainer[2]=new Trainer(Trainer.TrainerType.ENGINEER,"Jasau",Pokemon.Species.RATICATE,Pokemon.Species.PIDGEOTTO,34+levelBoost);
 				trainer[2].setHostile(true);
 				trainer[2].setLocation(29,27);
 				trainer[2].setPreMessage("Hey kid, give me your money.");
@@ -3502,6 +3716,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setViewRange(3);
 
 				mapItems[0]=new Item(Item.Type.MAX_REPEL,new Point(20,9));
+				mapItems[1]=new Item(Item.Type.ULTRA_BALL,new Point(32,9));
 
 				loadItemData();
 				for(int i=0; i<foundItem.length; i++)
@@ -3520,11 +3735,25 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
-				numItems=0;
+				numItems=6;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
 
+				if(objectiveComplete[10])
+					levelBoost=50;
+					
+				mapItems[0]=new Item(Item.Type.MAX_POTION,new Point(4,66));
+				mapItems[1]=new Item(Item.Type.ELIXER,new Point(5,66));
+				mapItems[2]=new Item(Item.Type.ULTRA_BALL,new Point(24,44));
+				mapItems[3]=new Item(Item.Type.HYPER_POTION,new Point(33,25));
+				mapItems[4]=new Item(Item.Type.ETHER,new Point(8,12));
+				mapItems[5]=new Item(Item.Type.FULL_RESTORE,new Point(40,9));
+
 				loadItemData();
+				for(int i=0; i<foundItem.length; i++)
+				{
+					mapItems[i].found=foundItem[i];
+				}
 				break;
 			case Polymorph_Town:
 				tileSet = OUTDOORS;
@@ -3537,7 +3766,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
-				numItems=1;
+				numItems=3;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
 
@@ -3549,7 +3778,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[0].setDirection(270);
 				trainer[0].setViewRange(0);
 
-				trainer[1]=new Trainer(Trainer.TrainerType.DEBUGGER,"Perry",Pokemon.Species.RATTATA,Pokemon.Species.PIKACHU,20);
+				trainer[1]=new Trainer(Trainer.TrainerType.DEBUGGER,"Perry",Pokemon.Species.RATTATA,Pokemon.Species.BUTTERFREE,20);
 				trainer[1].setHostile(false);
 				trainer[1].setLocation(30,44);
 				//trainer[1].setPreMessage("Mount Java is close! I'll beat you there!");
@@ -3581,7 +3810,9 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[4].setDirection(0);
 				trainer[4].setViewRange(0);
 
-				mapItems[0]=new Item(Item.Type.MAX_REVIVE,new Point(13,28));
+				mapItems[0]=new Item(Item.Type.MAX_REVIVE,new Point(16,30));
+				mapItems[1]=new Item(Item.Type.MASTER_BALL,new Point(17,9));
+				mapItems[2]=new Item(Item.Type.SUPER_POTION,new Point(35,52));
 
 				loadItemData();
 				for(int i=0; i<foundItem.length; i++)
@@ -3613,11 +3844,25 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				url=JokemonDriver.class.getResource("Music/Locations/0d_routes.mid");
 				bgm=JApplet.newAudioClip(url);
 
+				if(objectiveComplete[10])
+					levelBoost=50;
+
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
-				numItems=0;
+				numItems=5;
 				mapItems=new Item[numItems];
+				
+				mapItems[0]=new Item(Item.Type.ULTRA_BALL,new Point(32,8));
+				mapItems[1]=new Item(Item.Type.HYPER_POTION,new Point(59,43));
+				mapItems[2]=new Item(Item.Type.MAX_REVIVE,new Point(36,32));
+				mapItems[3]=new Item(Item.Type.ETHER,new Point(11,14));
+				mapItems[4]=new Item(Item.Type.BEER,new Point(15,30));
+				
 				loadItemData();
+				for(int i=0; i<foundItem.length; i++)
+				{
+					mapItems[i].found=foundItem[i];
+				}
 				break;
 			case Route_7:
 				tileSet = OUTDOORS;
@@ -3631,6 +3876,9 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer=new Trainer[numTrainers];
 				numItems=0;
 				mapItems=new Item[numItems];
+
+				if(objectiveComplete[10])
+					levelBoost=50;
 
 				if(badges!=8)
 				{
@@ -3686,6 +3934,10 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				}
 
 				loadItemData();
+				for(int i=0; i<foundItem.length; i++)
+				{
+					mapItems[i].found=foundItem[i];
+				}
 				break;
 			case Null_Zone:
 				tileSet = OUTDOORS;
@@ -3705,7 +3957,13 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				createMap("Champion.tilemap");
 				url=JokemonDriver.class.getResource("Music/Locations/0g_champions_walk.mid");
 				bgm=JApplet.newAudioClip(url);
+				numItems=0;
+				mapItems=new Item[numItems];
 				loadItemData();
+				for(int i=0; i<foundItem.length; i++)
+				{
+					mapItems[i].found=foundItem[i];
+				}
 				break;
 			case Victory_Road:
 				tileSet = OUTDOORS;
@@ -3821,18 +4079,10 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				numItems=0;
 				mapItems=new Item[numItems];
 
-				if(returnArea==Area.Villa_Del_Joe&&houseInt%5==0)
-				{
-					trainer[0]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Bike Enthusiast",true);
-					trainer[0].setHostile(false);
-					trainer[0].setLocation(3,2);
-					//trainer[0].setPreMessage("");
-					trainer[0].setPostMessage("Vroom vrooom!!! I love bicycles! If you've got 3 badges, you've got a bike too, dude!");
-					trainer[0].setDirection(270);
-					trainer[0].setViewRange(0);
-				}
-				else
-				switch(houseInt%5)
+				if(objectiveComplete[10])
+					levelBoost=50;
+
+				switch(houseInt)
 				{
 					default:
 						trainer[0]=new Trainer(Trainer.TrainerType.CODER,"Krillin",Pokemon.Species.CATERPIE,5);
@@ -3879,6 +4129,114 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						trainer[0].setDirection(270);
 						trainer[0].setViewRange(0);
 						break;
+					case 4:
+						trainer[0]=new Trainer(Trainer.TrainerType.PROGRAMMER,"Dude",Pokemon.Species.EEVEE,15+levelBoost);
+						trainer[0].setHostile(true);
+						trainer[0].setLocation(3,2);
+						trainer[0].setPreMessage("I bet you weren't expecting a battle!");
+						trainer[0].setPostMessage("Aww...");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 5:
+						trainer[0]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Gerald",Pokemon.Species.CATERPIE,5);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("I never want to leave my bikey!");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 6:
+						trainer[0]=new Trainer(Trainer.TrainerType.PRODIGY,"Silver",Pokemon.Species.CATERPIE,5);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("Have you seen Gold? Ever since he left Johto I haven't seen him.");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 7:
+						trainer[0]=new Trainer(Trainer.TrainerType.ENGINEER,"That one guy",Pokemon.Species.CATERPIE,5);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("Don't you ever knock?");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 8:
+						trainer[0]=new Trainer(Trainer.TrainerType.JAVA,"Xavier",Pokemon.Species.EKANS,5+levelBoost);
+						trainer[0].setHostile(true);
+						trainer[0].setLocation(3,2);
+						trainer[0].setPreMessage("Oh no! You found me!");
+						trainer[0].setPostMessage("Um... I'm on vacation.");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 9:
+						trainer[0]=new Trainer(Trainer.TrainerType.PROFESSOR,"Magikarp",Pokemon.Species.MAGIKARP,100+levelBoost);
+						trainer[0].setHostile(true);
+						trainer[0].setLocation(3,2);
+						trainer[0].setPreMessage("I study the worthless Pokemon called Magikarp!");
+						trainer[0].setPostMessage("Stupid Magikarp...");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 10:
+						trainer[0]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Bike Enthusiast",true);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("Vroom vrooom!!! I love bicycles! If you've got 3 badges, you've got a bike too, dude!");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 11:
+						trainer[0]=new Trainer(Trainer.TrainerType.BABE,"Eva",Pokemon.Species.MAGIKARP,100);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("GET OUT!!!11!");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 12:
+						trainer[0]=new Trainer(Trainer.TrainerType.NEWB,"Drake",Pokemon.Species.DITTO,25+levelBoost);
+						trainer[0].setHostile(true);
+						trainer[0].setLocation(3,2);
+						trainer[0].setPreMessage("I'm amazing.");
+						trainer[0].setPostMessage("But copying good people always works...");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 13:
+						trainer[0]=new Trainer(Trainer.TrainerType.DEBUGGER,"Poo",Pokemon.Species.MAGIKARP,100);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("Why did I have to get named after an Earthbound character.");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 14:
+						trainer[0]=new Trainer(Trainer.TrainerType.HACKER,"Mr.Music",Pokemon.Species.MAGIKARP,100);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("I love the song outside! It's Snowman from Mother 3!");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 15:
+						trainer[0]=new Trainer(Trainer.TrainerType.CYPHER,"Laina",Pokemon.Species.MAGIKARP,100);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("Well this is house 16.. hi");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
 				}
 				break;
 			case Rival_House:
@@ -3887,21 +4245,44 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 9;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("RivalHouse.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
-				bgm=JApplet.newAudioClip(url);
+				if (timesBeatRival<=4)
+				{
+					url=JokemonDriver.class.getResource("Music/Locations/house.mid");
+					bgm=JApplet.newAudioClip(url);
+				}
+				else
+				{
+					url=JokemonDriver.class.getResource("Music/PowerTrainers/TrueRival.mid");
+					bgm=JApplet.newAudioClip(url);
+				}
 
 				numTrainers=1;
 				trainer=new Trainer[numTrainers];
 				numItems=0;
 				mapItems=new Item[numItems];
 
-				trainer[0]=new Trainer(Trainer.TrainerType.CYPHER,rivalName+"'s Sister",Pokemon.Species.CATERPIE,5);
-				trainer[0].setHostile(false);
-				trainer[0].setLocation(5,5);
-				//trainer[0].setPreMessage("");
-				trainer[0].setPostMessage("Hey "+name+"! "+rivalName+" isn't here right now.");
-				trainer[0].setDirection(270);
-				trainer[0].setViewRange(0);
+				if(timesBeatRival>4)
+				{
+					numTrainers=1;
+					trainer=new Trainer[numTrainers];
+					trainer[0]=new Trainer(Trainer.TrainerType.RIVAL,rivalName,Pokemon.Species.RAICHU,Pokemon.Species.VENUSAUR,Pokemon.Species.BLASTOISE,Pokemon.Species.CHARIZARD,Pokemon.Species.SNORLAX,Pokemon.Species.LAPRAS,100);
+					trainer[0].setHostile(true);
+					trainer[0].setLocation(5,5);
+					trainer[0].setPreMessage("Well care for yet another go sport?");
+					trainer[0].setPostMessage("Well you beat me up, and become the champion. I'm starting to grow quite fond of your skills " + name + ".");
+					trainer[0].setDirection(270);
+					trainer[0].setViewRange(0);
+				}
+				else
+				{
+					trainer[0]=new Trainer(Trainer.TrainerType.CYPHER,rivalName+"'s Sister",Pokemon.Species.CATERPIE,5);
+					trainer[0].setHostile(false);
+					trainer[0].setLocation(5,5);
+					//trainer[0].setPreMessage("");
+					trainer[0].setPostMessage("Hey "+name+"! "+rivalName+" isn't here right now.");
+					trainer[0].setDirection(270);
+					trainer[0].setViewRange(0);
+				}
 				break;
 			case Gym_1:
 				tileSet = INDOORS;
@@ -3917,7 +4298,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				numItems=0;
 				mapItems=new Item[numItems];
 
-				if(objectiveComplete[10])
+				if(houseInt == 1)
 					levelBoost=50;
 
 				trainer[0]=new Trainer(Trainer.TrainerType.ENGINEER,"Jeffery",Pokemon.Species.CATERPIE,5);
@@ -3944,13 +4325,23 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(0);
 				trainer[2].setViewRange(1);
 
-				if(objectiveComplete[10]||badges==0&&objectiveComplete[0])
+				if(houseInt == 0&&badges==0&&objectiveComplete[0])
 				{
-					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jenny",Pokemon.Species.BUTTERFREE,Pokemon.Species.BEEDRILL,Pokemon.Species.SCYTHER,Pokemon.Species.PINSIR,12+levelBoost);
+					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jenny",Pokemon.Species.BUTTERFREE,Pokemon.Species.BEEDRILL,Pokemon.Species.SCYTHER,12+levelBoost);
 					trainer[3].setHostile(true);
 					trainer[3].setLocation(9,1);
 					trainer[3].setPreMessage("Hello "+name+"! I've heard a lot about you! Apparently you're one of the better trainers to come to the island. Bug Pokemon are my specialty! They are very powerful. Do you have what it takes to win? Let's find out!");
 					trainer[3].setPostMessage("Excellent job "+name+"! I award you the ABSTRACT BADGE and this TM containing RAZOR WIND! Head on to the next Gym! Good luck with your journey!");
+					trainer[3].setDirection(270);
+					trainer[3].setViewRange(0);
+				}
+				else if (houseInt == 1)
+				{
+					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jenny",Pokemon.Species.BUTTERFREE,Pokemon.Species.BEEDRILL,Pokemon.Species.SCYTHER,Pokemon.Species.PINSIR,12+levelBoost);
+					trainer[3].setHostile(true);
+					trainer[3].setLocation(9,1);
+					trainer[3].setPreMessage("I remember when you first started in Stringville " + name + ". You have grown so much stronger since then, and even became chamion. I should've known, but how about a little rematch?");
+					trainer[3].setPostMessage("Wow, beaten again. I've heard that the other Gym leaders got stronger too, so you still have quite a challenge ahead of you " + name + "!");
 					trainer[3].setDirection(270);
 					trainer[3].setViewRange(0);
 				}
@@ -3979,7 +4370,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				numItems=0;
 				mapItems=new Item[numItems];
 
-				if(objectiveComplete[10])
+				if(houseInt == 1)
 					levelBoost=50;
 
 				trainer[0]=new Trainer(Trainer.TrainerType.ENGINEER,"Jeffery",Pokemon.Species.CATERPIE,5);
@@ -4006,13 +4397,23 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(180);
 				trainer[2].setViewRange(2);
 
-				if(objectiveComplete[10]||badges==1)
+				if(houseInt == 0&&badges==1)
 				{
 					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jimmy",Pokemon.Species.TANGELA,Pokemon.Species.PARAS,Pokemon.Species.EXEGGUTOR,Pokemon.Species.BELLSPROUT,Pokemon.Species.ODDISH,18+levelBoost);
 					trainer[3].setHostile(true);
 					trainer[3].setLocation(18,3);
 					trainer[3].setPreMessage("Ah "+name+". Jenny told me that you are a formidable opponent. You bested her with Pokemon prowess. I won't be toppled so easily though. Grass Pokemon are very majestic. Let me show you!");
 					trainer[3].setPostMessage("Congrats "+name+"! Here, take the NATIVE BADGE! It is a sign of your bond with your Pokemon! Take this TM containing SOLARBEAM as well. It should help you on the remainder of your quest.");
+					trainer[3].setDirection(0);
+					trainer[3].setViewRange(0);
+				}
+				else if (houseInt == 1)
+				{
+					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jimmy",Pokemon.Species.TANGELA,Pokemon.Species.PARAS,Pokemon.Species.EXEGGUTOR,Pokemon.Species.BELLSPROUT,Pokemon.Species.ODDISH,18+levelBoost);
+					trainer[3].setHostile(true);
+					trainer[3].setLocation(18,3);
+					trainer[3].setPreMessage("So, I've heard that you are the new champion " + name + ", but I've also gotten better since I last saw you.");
+					trainer[3].setPostMessage("I always love a good fight. Thanks for visiting again now that you've become chamion " + name + ".");
 					trainer[3].setDirection(0);
 					trainer[3].setViewRange(0);
 				}
@@ -4041,7 +4442,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				numItems=0;
 				mapItems=new Item[numItems];
 
-				if(objectiveComplete[10])
+				if(houseInt == 1)
 					levelBoost=50;
 
 				trainer[0]=new Trainer(Trainer.TrainerType.ENGINEER,"Jeffery",Pokemon.Species.CATERPIE,5);
@@ -4052,7 +4453,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[0].setDirection(270);
 				trainer[0].setViewRange(0);
 
-				trainer[1]=new Trainer(Trainer.TrainerType.HACKER,"Dusty",Pokemon.Species.PIKACHU,Pokemon.Species.VOLTORB,20+levelBoost);
+				trainer[1]=new Trainer(Trainer.TrainerType.HACKER,"Dusty",Pokemon.Species.MAGNEMITE,Pokemon.Species.VOLTORB,20+levelBoost);
 				trainer[1].setHostile(true);
 				trainer[1].setLocation(5,8);
 				trainer[1].setPreMessage("I'm going to shock you up!");
@@ -4068,13 +4469,23 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(180);
 				trainer[2].setViewRange(2);
 
-				if(objectiveComplete[10]||badges==2)
+				if(houseInt == 0&&badges==2)
 				{
 					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jace",Pokemon.Species.RAICHU,Pokemon.Species.ELECTABUZZ,Pokemon.Species.VOLTORB,Pokemon.Species.JOLTEON,Pokemon.Species.MAGNETON,24+levelBoost);
 					trainer[3].setHostile(true);
 					trainer[3].setLocation(10,1);
 					trainer[3].setPreMessage(name+"! You're becoming a very popular trainer on this island! Many other trainers are beginning to talk about you! Some think you'll even get an opportunity to battle Joe! Not if I can help it! I'll put a shock to your system!");
 					trainer[3].setPostMessage("You short circuited me "+name+"! Great job! I'll award you the STATIC BADGE and TM 24 with THUNDERBOLT. Use it well. Go all the way to Joe kiddo. I believe in you.");
+					trainer[3].setDirection(270);
+					trainer[3].setViewRange(0);
+				}
+				else if (houseInt == 1)
+				{
+					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jace",Pokemon.Species.RAICHU,Pokemon.Species.ELECTABUZZ,Pokemon.Species.VOLTORB,Pokemon.Species.JOLTEON,Pokemon.Species.MAGNETON,24+levelBoost);
+					trainer[3].setHostile(true);
+					trainer[3].setLocation(10,1);
+					trainer[3].setPreMessage("Shocking... your back to see me again? As if you didn't get enough of a thrill beating me the first time " + name + ". Well, I have trained quite a bit so here I go!");
+					trainer[3].setPostMessage("Your performance was electrifying " + name + "! To think you've grown that much in this short amount of time.");
 					trainer[3].setDirection(270);
 					trainer[3].setViewRange(0);
 				}
@@ -4103,7 +4514,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				numItems=0;
 				mapItems=new Item[numItems];
 
-				if(objectiveComplete[10])
+				if(houseInt == 1)
 					levelBoost=50;
 
 				trainer[0]=new Trainer(Trainer.TrainerType.ENGINEER,"Jeffery",Pokemon.Species.CATERPIE,5);
@@ -4130,13 +4541,23 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(270);
 				trainer[2].setViewRange(4);
 
-				if(objectiveComplete[10]||badges==3)
+				if(houseInt == 0&&badges==3)
 				{
 					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jin",Pokemon.Species.PRIMEAPE,Pokemon.Species.MACHAMP,Pokemon.Species.HITMONLEE,Pokemon.Species.HITMONCHAN,Pokemon.Species.POLIWRATH,32+levelBoost);
 					trainer[3].setHostile(true);
 					trainer[3].setLocation(9,4);
 					trainer[3].setPreMessage(name+"! Your reputation grows ever higher! Just like the grass after a long rain! I will show you the power of physical strength. My Pokemon's bodies have undergone heavy training. Bring it on! Hyaaah!!!");
 					trainer[3].setPostMessage(name+"! You are very strong young one! I don't know what your training routine is, but it seems to work! Here take the SUPER BADGE and this TM containing SUBMISSION! Hyaaah!");
+					trainer[3].setDirection(270);
+					trainer[3].setViewRange(0);
+				}
+				else if (houseInt == 1)
+				{
+					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jin",Pokemon.Species.PRIMEAPE,Pokemon.Species.MACHAMP,Pokemon.Species.HITMONLEE,Pokemon.Species.HITMONCHAN,Pokemon.Species.POLIWRATH,32+levelBoost);
+					trainer[3].setHostile(true);
+					trainer[3].setLocation(9,4);
+					trainer[3].setPreMessage("I've been through some rigorous training since I last saw you " + name + ". So, are you ready?");
+					trainer[3].setPostMessage("You managed to beat me once again. No matter how much training I go through, your skill will always be superior. You are a worthy champion indeed " + name + ".");
 					trainer[3].setDirection(270);
 					trainer[3].setViewRange(0);
 				}
@@ -4165,7 +4586,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				numItems=0;
 				mapItems=new Item[numItems];
 
-				if(objectiveComplete[10])
+				if(houseInt == 1)
 					levelBoost=50;
 
 				trainer[0]=new Trainer(Trainer.TrainerType.ENGINEER,"Jeffery",Pokemon.Species.CATERPIE,5);
@@ -4192,13 +4613,23 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(180);
 				trainer[2].setViewRange(4);
 
-				if(objectiveComplete[10]||badges==4)
+				if(houseInt == 0 && badges==4)
 				{
 					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jordan",Pokemon.Species.CLEFABLE,Pokemon.Species.WIGGLYTUFF,Pokemon.Species.PERSIAN,Pokemon.Species.LICKITUNG,Pokemon.Species.CHANSEY,39+levelBoost);
 					trainer[3].setHostile(true);
 					trainer[3].setLocation(9,6);
 					trainer[3].setPreMessage("Is that you, "+name+"? Hehehe. You're cuter than I thought you'd be. I'm Jordan. I love NORMAL type Pokemon. They're so cuddly, but strong too! But enough talk, let's battle!");
 					trainer[3].setPostMessage("Oh pooh. You beat me "+name+". Your Pokemon must have really strong bonds with you. I adore that! Well, here. Take the NULL BADGE and this TM for HYPER BEAM. Come see me again sometime cutie!");
+					trainer[3].setDirection(270);
+					trainer[3].setViewRange(0);
+				}
+				else if (houseInt == 1)
+				{
+					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jordan",Pokemon.Species.CLEFABLE,Pokemon.Species.WIGGLYTUFF,Pokemon.Species.PERSIAN,Pokemon.Species.LICKITUNG,Pokemon.Species.CHANSEY,39+levelBoost);
+					trainer[3].setHostile(true);
+					trainer[3].setLocation(9,6);
+					trainer[3].setPreMessage("You actually came to see me again " + name + "! You better not have been slacking off with your training now that you're the champion!");
+					trainer[3].setPostMessage("Dang you beat me again. Tee hee! You're so cute when you get serious " + name + "!");
 					trainer[3].setDirection(270);
 					trainer[3].setViewRange(0);
 				}
@@ -4227,7 +4658,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				numItems=0;
 				mapItems=new Item[numItems];
 
-				if(objectiveComplete[10])
+				if(houseInt == 1)
 					levelBoost=50;
 
 				trainer[0]=new Trainer(Trainer.TrainerType.ENGINEER,"Jeffery",Pokemon.Species.CATERPIE,5);
@@ -4254,13 +4685,23 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(90);
 				trainer[2].setViewRange(1);
 
-				if(objectiveComplete[10]||badges==5)
+				if(houseInt == 0 && badges==5)
 				{
 					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Joy",Pokemon.Species.DEWGONG,Pokemon.Species.CLOYSTER,Pokemon.Species.LAPRAS,Pokemon.Species.JYNX,43+levelBoost);
 					trainer[3].setHostile(true);
 					trainer[3].setLocation(10,5);
 					trainer[3].setPreMessage(name+". Hello. It's a pleasure to finally meet you. I heard you were very strong. Is that true? My ICE Pokemon are extremely strong. They will pose a challenge for you. We'll freeze you to the bone.");
 					trainer[3].setPostMessage("Darn it. You really are as good as everyone says. I guess I should give you some rewards, huh? Ok. Here. Take the TRANSIENT BADGE and this TM for ICE BEAM. Ok. Be on your way.");
+					trainer[3].setDirection(270);
+					trainer[3].setViewRange(0);
+				}
+				else if (houseInt == 1)
+				{
+					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Joy",Pokemon.Species.DEWGONG,Pokemon.Species.CLOYSTER,Pokemon.Species.LAPRAS,Pokemon.Species.JYNX,43+levelBoost);
+					trainer[3].setHostile(true);
+					trainer[3].setLocation(10,5);
+					trainer[3].setPreMessage("Ice to meet you again. Get it? I said ice instead of nice haha. Oh well, this Gym still is just as cold as my old one so can we finish this quick?");
+					trainer[3].setPostMessage("Well you beat me again. You truly are worthy of being the champion.");
 					trainer[3].setDirection(270);
 					trainer[3].setViewRange(0);
 				}
@@ -4289,7 +4730,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				numItems=0;
 				mapItems=new Item[numItems];
 
-				if(objectiveComplete[10])
+				if(houseInt == 1)
 					levelBoost=50;
 
 				trainer[0]=new Trainer(Trainer.TrainerType.ENGINEER,"Jeffery",Pokemon.Species.CATERPIE,5);
@@ -4316,13 +4757,23 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(180);
 				trainer[2].setViewRange(2);
 
-				if(objectiveComplete[10]||badges==6)
+				if(houseInt == 0 && badges==6)
 				{
 					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"James",Pokemon.Species.MR_MIME,Pokemon.Species.HYPNO,Pokemon.Species.ALAKAZAM,Pokemon.Species.JYNX,48+levelBoost);
 					trainer[3].setHostile(true);
 					trainer[3].setLocation(9,4);
 					trainer[3].setPreMessage("Wait. Don't say anything. You're "+name+". I can read your brain waves. You've come to battle me for a badge. Don't act surprised. When you train with PSYCHIC Pokemon as much as I do, you learn a thing or two. Anyhoo, let's battle. Mind will always prevail over matter.");
 					trainer[3].setPostMessage("...I did not see that coming. Wow. Congratulations. Here is the INTERFACE BADGE and this TM for PSYCHIC. Let me leave you with one more prediction. I sense that you will beat the great Joe.");
+					trainer[3].setDirection(270);
+					trainer[3].setViewRange(0);
+				}
+				else if (houseInt == 1)
+				{
+					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"James",Pokemon.Species.MR_MIME,Pokemon.Species.HYPNO,Pokemon.Species.ALAKAZAM,Pokemon.Species.JYNX,48+levelBoost);
+					trainer[3].setHostile(true);
+					trainer[3].setLocation(9,4);
+					trainer[3].setPreMessage("Well well well, if it isn't the brand new champion himself. Welcome back " + name + " it is an honor to battle you once again.");
+					trainer[3].setPostMessage("You beat me once again. This time however, I could sense it coming.");
 					trainer[3].setDirection(270);
 					trainer[3].setViewRange(0);
 				}
@@ -4351,7 +4802,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				numItems=0;
 				mapItems=new Item[numItems];
 
-				if(objectiveComplete[10])
+				if(houseInt == 1)
 					levelBoost=50;
 
 				trainer[0]=new Trainer(Trainer.TrainerType.ENGINEER,"Jeffery",Pokemon.Species.CATERPIE,5);
@@ -4378,13 +4829,23 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(90);
 				trainer[2].setViewRange(1);
 
-				if(objectiveComplete[10]||badges==7)
+				if(houseInt == 0 && badges==7)
 				{
 					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jessica",Pokemon.Species.NIDOKING,Pokemon.Species.NIDOQUEEN,Pokemon.Species.WEEZING,Pokemon.Species.ARBOK,Pokemon.Species.GENGAR,Pokemon.Species.MUK,52+levelBoost);
 					trainer[3].setHostile(true);
 					trainer[3].setLocation(9,2);
 					trainer[3].setPreMessage(name+"! Your quest is drawing near its end! You now have seven of Joe's eight required badges! I hold the last one. You may feel that the other gym leaders posed little or no threat. Not me. If you want this badge, you're going to have to earn it!");
 					trainer[3].setPostMessage("Incredible! You fainted all of my Pokemon! You really are something! I must give you the FINAL BADGE and the TM for TOXIC. Go now "+name+" to take on the Elite Four and Joe!...Or at least you should, but there's something about Team Java screwing stuff up.");
+					trainer[3].setDirection(270);
+					trainer[3].setViewRange(0);
+				}
+				else if (houseInt == 1)
+				{
+					trainer[3]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jessica",Pokemon.Species.NIDOKING,Pokemon.Species.NIDOQUEEN,Pokemon.Species.WEEZING,Pokemon.Species.ARBOK,Pokemon.Species.GENGAR,Pokemon.Species.MUK,52+levelBoost);
+					trainer[3].setHostile(true);
+					trainer[3].setLocation(9,2);
+					trainer[3].setPreMessage("Well " + name + ", you managed to beat me once, but I got a lot tougher since then. Do you have what it takes?");
+					trainer[3].setPostMessage("Well done. I would expect no less from the new Champion. Congratulations " + name + ". ");
 					trainer[3].setDirection(270);
 					trainer[3].setViewRange(0);
 				}
@@ -4407,12 +4868,12 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				createMap("Jincradiotower.tilemap");
 				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
 				bgm=JApplet.newAudioClip(url);
-				
+
 				numTrainers=6;
 				trainer=new Trainer[numTrainers];
 				numItems=0;
 				mapItems=new Item[numItems];
-				
+
 				trainer[0]=new Trainer(Trainer.TrainerType.ENGINEER,"Hans",Pokemon.Species.CATERPIE,5);
 				trainer[0].setHostile(false);
 				trainer[0].setLocation(15,1);
@@ -4420,7 +4881,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[0].setPostMessage("Sorry, but we've banned everyone from our broadcasting tower in case Team Java were to break in.");
 				trainer[0].setDirection(270);
 				trainer[0].setViewRange(0);
-				
+
 				trainer[1]=new Trainer(Trainer.TrainerType.HACKER,"Plant Dude",Pokemon.Species.CATERPIE,5);
 				trainer[1].setHostile(false);
 				trainer[1].setLocation(10,1);
@@ -4428,7 +4889,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[1].setPostMessage("These plants are so pretty!");
 				trainer[1].setDirection(180);
 				trainer[1].setViewRange(0);
-				
+
 				trainer[2]=new Trainer(Trainer.TrainerType.BABE,"Courtney",Pokemon.Species.CATERPIE,5);
 				trainer[2].setHostile(false);
 				trainer[2].setLocation(3,4);
@@ -4436,7 +4897,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setPostMessage("Welcome to the J.Inc Radio Tower! Sorry we aren't allowing anyone to be above this floor.");
 				trainer[2].setDirection(270);
 				trainer[2].setViewRange(0);
-				
+
 				trainer[3]=new Trainer(Trainer.TrainerType.CYPHER,"Janet",Pokemon.Species.CATERPIE,5);
 				trainer[3].setHostile(false);
 				trainer[3].setLocation(0,2);
@@ -4444,7 +4905,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[3].setPostMessage("What girls can't use computers?");
 				trainer[3].setDirection(90);
 				trainer[3].setViewRange(0);
-				
+
 				trainer[4]=new Trainer(Trainer.TrainerType.BABE,"Janet",Pokemon.Species.CATERPIE,5);
 				trainer[4].setHostile(false);
 				trainer[4].setLocation(8,7);
@@ -4452,7 +4913,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[4].setPostMessage("What girls can't use computers?");
 				trainer[4].setDirection(90);
 				trainer[4].setViewRange(0);
-				
+
 				trainer[5]=new Trainer(Trainer.TrainerType.BABE,"Janet",Pokemon.Species.CATERPIE,5);
 				trainer[5].setHostile(false);
 				trainer[5].setLocation(12,7);
@@ -4460,7 +4921,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[5].setPostMessage("What girls can't use computers?");
 				trainer[5].setDirection(90);
 				trainer[5].setViewRange(0);
-				
+
 				break;
 			case Intville:
 				tileSet = OUTDOORS;
@@ -4621,13 +5082,16 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				url=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
 				bgm=JApplet.newAudioClip(url);
 
+				if(objectiveComplete[10])
+					levelBoost=50;
+
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
 				numItems=4;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
 
-				trainer[0]=new Trainer(Trainer.TrainerType.DEBUGGER,"Moose",Pokemon.Species.WEEDLE,16);
+				trainer[0]=new Trainer(Trainer.TrainerType.DEBUGGER,"Moose",Pokemon.Species.WEEDLE,16+levelBoost);
 				trainer[0].setHostile(true);
 				trainer[0].setLocation(20,30);
 				trainer[0].setPreMessage("I love catching bugs, but I'll take a break to battle.");
@@ -4635,7 +5099,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[0].setDirection(270);
 				trainer[0].setViewRange(3);
 
-				trainer[1]=new Trainer(Trainer.TrainerType.NEWB,"Quincy",Pokemon.Species.WEEDLE,Pokemon.Species.CATERPIE,Pokemon.Species.METAPOD,10);
+				trainer[1]=new Trainer(Trainer.TrainerType.NEWB,"Quincy",Pokemon.Species.WEEDLE,Pokemon.Species.CATERPIE,Pokemon.Species.METAPOD,10+levelBoost);
 				trainer[1].setHostile(true);
 				trainer[1].setLocation(28,28);
 				trainer[1].setPreMessage("I think I'm lost...");
@@ -4643,7 +5107,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[1].setDirection(0);
 				trainer[1].setViewRange(2);
 
-				trainer[2]=new Trainer(Trainer.TrainerType.CODER,"Grant",Pokemon.Species.RATTATA,Pokemon.Species.BEEDRILL,15);
+				trainer[2]=new Trainer(Trainer.TrainerType.CODER,"Grant",Pokemon.Species.RATTATA,Pokemon.Species.BEEDRILL,15+levelBoost);
 				trainer[2].setHostile(true);
 				trainer[2].setLocation(24,22);
 				trainer[2].setPreMessage("I bet I can beat you in a battle.");
@@ -4651,7 +5115,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(0);
 				trainer[2].setViewRange(2);
 
-				trainer[3]=new Trainer(Trainer.TrainerType.NEWB,"Kid",Pokemon.Species.RATTATA,Pokemon.Species.METAPOD,17);
+				trainer[3]=new Trainer(Trainer.TrainerType.NEWB,"Kid",Pokemon.Species.RATTATA,Pokemon.Species.METAPOD,17+levelBoost);
 				trainer[3].setHostile(true);
 				trainer[3].setLocation(16,7);
 				trainer[3].setPreMessage("BOOOO!!!");
@@ -4659,7 +5123,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[3].setDirection(90);
 				trainer[3].setViewRange(4);
 
-				trainer[4]=new Trainer(Trainer.TrainerType.HACKER,"Benji",Pokemon.Species.EKANS,Pokemon.Species.PIDGEY,14);
+				trainer[4]=new Trainer(Trainer.TrainerType.HACKER,"Benji",Pokemon.Species.EKANS,Pokemon.Species.PIDGEY,14+levelBoost);
 				trainer[4].setHostile(true);
 				trainer[4].setLocation(24,4);
 				trainer[4].setPreMessage("I really hate this dumb forest.");
@@ -4691,8 +5155,11 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer=new Trainer[numTrainers];
 				numItems=0;
 				mapItems=new Item[numItems];
-				
-				switch(houseInt%5)
+
+				if(objectiveComplete[10])
+					levelBoost=50;
+
+				switch(houseInt)
 				{
 					default:
 						trainer[0]=new Trainer(Trainer.TrainerType.CODER,"Krillin",Pokemon.Species.CATERPIE,5);
@@ -4748,10 +5215,73 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						trainer[0].setDirection(270);
 						trainer[0].setViewRange(0);
 						break;
+					case 5:
+						trainer[0]=new Trainer(Trainer.TrainerType.NEWB,"Meme",Pokemon.Species.CATERPIE,20+levelBoost);
+						trainer[0].setHostile(true);
+						trainer[0].setLocation(3,2);
+						trainer[0].setPreMessage("I've got Pokeballs of steel.");
+						trainer[0].setPostMessage("But it's the pokemon that matter.");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 6:
+						trainer[0]=new Trainer(Trainer.TrainerType.PROFESSOR,"Gustav",Pokemon.Species.CATERPIE,5);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("My brother is so weird. He lives on route 1.");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 7:
+						trainer[0]=new Trainer(Trainer.TrainerType.KEYBOARDER,"Lol",Pokemon.Species.CATERPIE,5);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("FAILSAUCE!");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 8:
+						trainer[0]=new Trainer(Trainer.TrainerType.NEWB,"Martin",Pokemon.Species.CATERPIE,5);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("You just lost the game. LOLOLOLOL!!!!");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 9:
+						trainer[0]=new Trainer(Trainer.TrainerType.KEYBOARDER,"Reed",Pokemon.Species.CATERPIE,5);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("Dude... my keyboard just broke......");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 10:
+						trainer[0]=new Trainer(Trainer.TrainerType.JAVA,"Johan",Pokemon.Species.CATERPIE,5);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("HEIL JAVA!");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 11:
+						trainer[0]=new Trainer(Trainer.TrainerType.CODER,"Doofus",Pokemon.Species.CATERPIE,5+levelBoost);
+						trainer[0].setHostile(true);
+						trainer[0].setLocation(3,2);
+						trainer[0].setPreMessage("Code!");
+						trainer[0].setPostMessage("I like code");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
 				}
 				if (houseInt >= 9000)
 				{
-					trainer[0]=new Trainer(Trainer.TrainerType.HACKER,"Glitchmaster",Pokemon.Species.MISSINGNO,Pokemon.Species.MISSINGNO,Pokemon.Species.MISSINGNO,100);
+					trainer[0]=new Trainer(Trainer.TrainerType.HACKER,"Glitchmaster",Pokemon.Species.MISSINGNO,Pokemon.Species.MISSINGNO,Pokemon.Species.MISSINGNO,100+levelBoost);
 					trainer[0].setHostile(true);
 					trainer[0].setLocation(3,2);
 					trainer[0].setPreMessage("I AM THE GLITCHMASTER");
@@ -4775,8 +5305,12 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				numItems=0;
 				mapItems=new Item[numItems];
 
-				if(returnArea==Area.Nested_Village&&houseInt%5==0)
+				if(objectiveComplete[10])
+					levelBoost=50;
+
+				switch(houseInt)
 				{
+					case 0:
 						trainer[0]=new Trainer(Trainer.TrainerType.PROFESSOR,"Cutter",true);
 						trainer[0].setHostile(false);
 						trainer[0].setLocation(3,2);
@@ -4784,32 +5318,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						trainer[0].setPostMessage("Hello sonny. I think you should take this HM. It contains CUT. Press SPACEBAR next to a small tree and your Pokemon will cut it down. It will help you go further. Whenever you feel that you are stuck on your journey, talk to everyone. Who knows what you'll find.");
 						trainer[0].setDirection(270);
 						trainer[0].setViewRange(0);
-				}
-				else if(returnArea==Area.Mount_Java&&houseInt%5==0)
-				{
-						trainer[0]=new Trainer(Trainer.TrainerType.PROFESSOR,"Flyer",true);
-						trainer[0].setHostile(false);
-						trainer[0].setLocation(3,2);
-						//trainer[0].setPreMessage("");
-						trainer[0].setPostMessage("Hello sonny. Back in my day, I used to take to the skies with Pokemon. I want to share that with you. Here, take this HM. Press 'F' to activate the Fly Menu after teaching a Pokemon.");
-						trainer[0].setDirection(270);
-						trainer[0].setViewRange(0);
-				}
-				else if(houseInt==14&&returnArea==Area.Route_9)
-				{
-						trainer[0]=new Trainer(Trainer.TrainerType.PROFESSOR,"Name Rater",true);
-						trainer[0].setHostile(false);
-						trainer[0].setLocation(3,2);
-						//trainer[0].setPreMessage("");
-						trainer[0].setPostMessage("Hello there lad. If the first Pokemon in your party was caught by you, I can change its nickname for you.");
-						trainer[0].setDirection(270);
-						trainer[0].setViewRange(0);
-				}
-				else
-
-				switch(houseInt%5)
-				{
-					case 3:
+						break;
+					case 1:
 						trainer[0]=new Trainer(Trainer.TrainerType.CODER,"Krillin",Pokemon.Species.CATERPIE,5);
 						trainer[0].setHostile(false);
 						trainer[0].setLocation(3,2);
@@ -4827,7 +5337,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						trainer[0].setDirection(270);
 						trainer[0].setViewRange(0);
 						break;
-					case 1:
+					case 3:
 						trainer[0]=new Trainer(Trainer.TrainerType.NEWB,"Nigel",Pokemon.Species.CATERPIE,5);
 						trainer[0].setHostile(false);
 						trainer[0].setLocation(3,2);
@@ -4836,7 +5346,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						trainer[0].setDirection(270);
 						trainer[0].setViewRange(0);
 						break;
-					case 0:
+					case 10:
 						trainer[0]=new Trainer(Trainer.TrainerType.PROFESSOR,"Erwin",Pokemon.Species.CATERPIE,5);
 						trainer[0].setHostile(false);
 						trainer[0].setLocation(3,2);
@@ -4845,12 +5355,101 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						trainer[0].setDirection(270);
 						trainer[0].setViewRange(0);
 						break;
-					default:
-						trainer[0]=new Trainer(Trainer.TrainerType.HACKER,"Bischoff",Pokemon.Species.CATERPIE,5);
+					case 5:
+						trainer[0]=new Trainer(Trainer.TrainerType.CODER,"Website",Pokemon.Species.CATERPIE,5);
 						trainer[0].setHostile(false);
 						trainer[0].setLocation(3,2);
 						//trainer[0].setPreMessage("");
-						trainer[0].setPostMessage("Joe is way too rich. I heard that he is only a kid too. So lucky.");
+						trainer[0].setPostMessage("www.pokemonjavaversion.webs.com");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 6:
+						trainer[0]=new Trainer(Trainer.TrainerType.BABE,"Whatsherface",Pokemon.Species.VOLTORB,Pokemon.Species.SANDSLASH,25+levelBoost);
+						trainer[0].setHostile(true);
+						trainer[0].setLocation(3,2);
+						trainer[0].setPreMessage("Your face is a pokemon!");
+						trainer[0].setPostMessage("My face is a pokemon!");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 7:
+						trainer[0]=new Trainer(Trainer.TrainerType.PROGRAMMER,"Joeseph",Pokemon.Species.CATERPIE,5);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("How is Mr. Babb stronger than Joe?");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 8:
+						trainer[0]=new Trainer(Trainer.TrainerType.PRODIGY,"Sapphire",Pokemon.Species.CATERPIE,5);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("Hoenn is surrounded by water so I feel right at home here!");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 9:
+						trainer[0]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Mayson",Pokemon.Species.CATERPIE,5);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("I want to ride my Bycicle, I want to ride my Bike!");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 4:
+						trainer[0]=new Trainer(Trainer.TrainerType.PROFESSOR,"Flyer",true);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("Hello sonny. Back in my day, I used to take to the skies with Pokemon. I want to share that with you. Here, take this HM. Press 'F' to activate the Fly Menu after teaching a Pokemon.");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 11:
+						trainer[0]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Leecher",Pokemon.Species.CATERPIE,5);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("I pick up chicks on my bike!");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 12:
+						trainer[0]=new Trainer(Trainer.TrainerType.CYPHER,"Sarah",Pokemon.Species.CATERPIE,5);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("Nerdy Bikers are such idiots. They almost ran over my Bulbasaur!");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 13:
+						trainer[0]=new Trainer(Trainer.TrainerType.PROFESSOR,"Karter",Pokemon.Species.CATERPIE,5);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("Have you ever played Mortal Kombat? Why do they sitch combat to kombat?");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+						break;
+					case 14:
+						trainer[0]=new Trainer(Trainer.TrainerType.PROFESSOR,"Name Rater",true);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("Hello there lad. If the first Pokemon in your party was caught by you, I can change its nickname for you.");
+						trainer[0].setDirection(270);
+						trainer[0].setViewRange(0);
+					default:
+						trainer[0]=new Trainer(Trainer.TrainerType.PROFESSOR,"Name Rater",Pokemon.Species.CATERPIE,5);
+						trainer[0].setHostile(false);
+						trainer[0].setLocation(3,2);
+						//trainer[0].setPreMessage("");
+						trainer[0].setPostMessage("Enter the new nickname for your Pokemon!");
 						trainer[0].setDirection(270);
 						trainer[0].setViewRange(0);
 						break;
@@ -4884,7 +5483,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[1].setPostMessage("No newbs allowed up here man.");
 				trainer[1].setDirection(270);
 				trainer[1].setViewRange(0);
-				
+
 				trainer[2]=new Trainer(Trainer.TrainerType.ELITE,"Patches",Pokemon.Species.CATERPIE,5);
 				trainer[2].setHostile(false);
 				trainer[2].setLocation(13,45);
@@ -4892,7 +5491,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setPostMessage("Tron is so much better than this game. You should play it. NOW!");
 				trainer[2].setDirection(0);
 				trainer[2].setViewRange(0);
-				
+
 				trainer[3]=new Trainer(Trainer.TrainerType.HACKER,"John",Pokemon.Species.CATERPIE,5);
 				trainer[3].setHostile(false);
 				trainer[3].setLocation(10,43);
@@ -4900,7 +5499,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[3].setPostMessage("Dang it, I can't hack into this.");
 				trainer[3].setDirection(180);
 				trainer[3].setViewRange(0);
-				
+
 				trainer[4]=new Trainer(Trainer.TrainerType.NEWB,"Beta Tester",Pokemon.Species.CATERPIE,5);
 				trainer[4].setHostile(false);
 				trainer[4].setLocation(7,45);
@@ -4908,7 +5507,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[4].setPostMessage("Exploiting glitches before the game is even made is fun and annoying to the developers!");
 				trainer[4].setDirection(0);
 				trainer[4].setViewRange(0);
-				
+
 				trainer[5]=new Trainer(Trainer.TrainerType.ELITE,"Camtendo",Pokemon.Species.CATERPIE,5);
 				trainer[5].setHostile(false);
 				trainer[5].setLocation(8,26);
@@ -4916,7 +5515,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[5].setPostMessage("It's so awesome that we finally got this game made!");
 				trainer[5].setDirection(90);
 				trainer[5].setViewRange(0);
-				
+
 				trainer[6]=new Trainer(Trainer.TrainerType.ELITE,"Justinian",Pokemon.Species.CATERPIE,5);
 				trainer[6].setHostile(false);
 				trainer[6].setLocation(8,29);
@@ -4924,7 +5523,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[6].setPostMessage("I programmed our AI's to fight in the Elite 4 without us! Pretty genious huh?");
 				trainer[6].setDirection(90);
 				trainer[6].setViewRange(0);
-				
+
 				trainer[7]=new Trainer(Trainer.TrainerType.BABE,"Natalie",Pokemon.Species.CATERPIE,5);
 				trainer[7].setHostile(false);
 				trainer[7].setLocation(7,29);
@@ -4932,7 +5531,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[7].setPostMessage("Justinian is always busy programming, but when he is I study Eevee's. Isn't he amazing?");
 				trainer[7].setDirection(0);
 				trainer[7].setViewRange(0);
-				
+
 				trainer[8]=new Trainer(Trainer.TrainerType.ELITE,"WasabiSauce",Pokemon.Species.CATERPIE,5);
 				trainer[8].setHostile(false);
 				trainer[8].setLocation(14,29);
@@ -4940,7 +5539,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[8].setPostMessage("Why is Patches so obsessed with Tron?");
 				trainer[8].setDirection(90);
 				trainer[8].setViewRange(0);
-				
+
 				trainer[9]=new Trainer(Trainer.TrainerType.BABE,"WasabiSauce",Pokemon.Species.CATERPIE,5);
 				trainer[9].setHostile(false);
 				trainer[9].setLocation(10,8);
@@ -4948,7 +5547,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[9].setPostMessage("Why is Patches so obsessed with Tron?");
 				trainer[9].setDirection(270);
 				trainer[9].setViewRange(0);
-				
+
 				trainer[10]=new Trainer(Trainer.TrainerType.BABE,"Nicole",Pokemon.Species.CATERPIE,5);
 				trainer[10].setHostile(false);
 				trainer[10].setLocation(6,11);
@@ -4956,7 +5555,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[10].setPostMessage("Hello! Welcome to the J.Inc tower! Home and workplace of all the members of J.Inc!");
 				trainer[10].setDirection(0);
 				trainer[10].setViewRange(0);
-				
+
 				trainer[11]=new Trainer(Trainer.TrainerType.NEWB,"Nazi",Pokemon.Species.CATERPIE,5);
 				trainer[11].setHostile(false);
 				trainer[11].setLocation(15,11);
@@ -4964,7 +5563,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[11].setPostMessage("ICH HABE EINE KATZE IN MEINE HOSE!");
 				trainer[11].setDirection(0);
 				trainer[11].setViewRange(0);
-				
+
 				trainer[12]=new Trainer(Trainer.TrainerType.DEBUGGER,"Hobo",Pokemon.Species.CATERPIE,5);
 				trainer[12].setHostile(false);
 				trainer[12].setLocation(15,10);
@@ -4990,17 +5589,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				numItems=0;
 				mapItems=new Item[numItems];
 
-				if(returnArea==Area.Villa_Del_Joe&&houseInt%5==0)
-				{
-					trainer[0]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Bike Enthusiast",true);
-					trainer[0].setHostile(false);
-					trainer[0].setLocation(3,2);
-					//trainer[0].setPreMessage("");
-					trainer[0].setPostMessage("Vroom vrooom!!! I love bicycles! If you've got 3 badges, you've got a bike too, dude!");
-					trainer[0].setDirection(270);
-					trainer[0].setViewRange(0);
-				}
-				else
+
 				switch(houseInt%5)
 				{
 					default:
@@ -5064,17 +5653,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				numItems=0;
 				mapItems=new Item[numItems];
 
-				if(returnArea==Area.Villa_Del_Joe&&houseInt%5==0)
-				{
-					trainer[0]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Bike Enthusiast",true);
-					trainer[0].setHostile(false);
-					trainer[0].setLocation(3,2);
-					//trainer[0].setPreMessage("");
-					trainer[0].setPostMessage("Vroom vrooom!!! I love bicycles! If you've got 3 badges, you've got a bike too, dude!");
-					trainer[0].setDirection(270);
-					trainer[0].setViewRange(0);
-				}
-				else
+
 				switch(houseInt%5)
 				{
 					default:
@@ -5138,17 +5717,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				numItems=0;
 				mapItems=new Item[numItems];
 
-				if(returnArea==Area.Villa_Del_Joe&&houseInt%5==0)
-				{
-					trainer[0]=new Trainer(Trainer.TrainerType.NERDY_BIKER,"Bike Enthusiast",true);
-					trainer[0].setHostile(false);
-					trainer[0].setLocation(3,2);
-					//trainer[0].setPreMessage("");
-					trainer[0].setPostMessage("Vroom vrooom!!! I love bicycles! If you've got 3 badges, you've got a bike too, dude!");
-					trainer[0].setDirection(270);
-					trainer[0].setViewRange(0);
-				}
-				else
 				switch(houseInt%5)
 				{
 					default:
@@ -5209,12 +5777,15 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
-				numItems=2;
+				numItems=5;
 				mapItems=new Item[numItems];
 				foundItem=new boolean[numItems];
 
 				mapItems[0]=new Item(Item.Type.REDBULL,new Point(11,60));
 				mapItems[1]=new Item(Item.Type.MOUNTAIN_DEW,new Point(12,60));
+				mapItems[2]=new Item(Item.Type.HYPER_POTION,new Point(71,84));
+				mapItems[3]=new Item(Item.Type.NUGGET,new Point(62,80));
+				mapItems[4]=new Item(Item.Type.GREAT_BALL,new Point(51,60));
 
 				loadItemData();
 				for(int i=0; i<foundItem.length; i++)
@@ -5411,6 +5982,10 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[9].setViewRange(1);
 
 				loadItemData();
+				for(int i=0; i<foundItem.length; i++)
+				{
+					mapItems[i].found=foundItem[i];
+				}
 				break;
 			case Mountain_Dew_Paradise:
 				tileSet = INDOORS;
@@ -5669,8 +6244,49 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 12;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Lighthouse.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/1_stringville.mid");
+				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
 				bgm=JApplet.newAudioClip(url);
+
+				numTrainers=3;
+				trainer=new Trainer[numTrainers];
+				numItems=1;
+				mapItems=new Item[numItems];
+				foundItem=new boolean[numItems];
+
+				if (objectiveComplete[10])
+					levelBoost=50;
+
+				trainer[0]=new Trainer(Trainer.TrainerType.DEBUGGER,"Jared",Pokemon.Species.CATERPIE,Pokemon.Species.METAPOD,Pokemon.Species.BUTTERFREE,10+levelBoost);
+				trainer[0].setHostile(true);
+				trainer[0].setLocation(8,8);
+				trainer[0].setPreMessage("We all train here to try and get stronger for the Gym!");
+				trainer[0].setPostMessage("Dang it, need to grind more.");
+				trainer[0].setDirection(180);
+				trainer[0].setViewRange(4);
+
+				trainer[1]=new Trainer(Trainer.TrainerType.CYPHER,"Justine",Pokemon.Species.JIGGLYPUFF,Pokemon.Species.CLEFAIRY,10+levelBoost);
+				trainer[1].setHostile(true);
+				trainer[1].setLocation(3,5);
+				trainer[1].setPreMessage("I would love to be able to show off my badges!");
+				trainer[1].setPostMessage("If only I had some.. why do Boys have to be so good at this game.");
+				trainer[1].setDirection(0);
+				trainer[1].setViewRange(4);
+
+				trainer[2]=new Trainer(Trainer.TrainerType.KEYBOARDER,"Drake",Pokemon.Species.CHARMANDER,Pokemon.Species.SQUIRTLE,Pokemon.Species.BULBASAUR,8+levelBoost);
+				trainer[2].setHostile(true);
+				trainer[2].setLocation(5,2);
+				trainer[2].setPreMessage("CAPS LOCK IS STUCK!");
+				trainer[2].setPostMessage("MY KEYBOARD IS BROKEN!");
+				trainer[2].setDirection(270);
+				trainer[2].setViewRange(4);
+
+				mapItems[0]=new Item(Item.Type.MOON_STONE,new Point(1,2));
+
+				loadItemData();
+				for(int i=0; i<foundItem.length; i++)
+				{
+					mapItems[i].found=foundItem[i];
+				}
 				break;
 			case Lighthouse_F2:
 				tileSet = INDOORS;
@@ -5678,8 +6294,50 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 12;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Lighthouse2.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/1_stringville.mid");
+				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
 				bgm=JApplet.newAudioClip(url);
+
+				numTrainers=3;
+				trainer=new Trainer[numTrainers];
+				numItems=1;
+				mapItems=new Item[numItems];
+				foundItem=new boolean[numItems];
+
+				if (objectiveComplete[10])
+					levelBoost=50;
+
+				trainer[0]=new Trainer(Trainer.TrainerType.DEBUGGER,"Jared",Pokemon.Species.CATERPIE,Pokemon.Species.METAPOD,Pokemon.Species.BUTTERFREE,10+levelBoost);
+				trainer[0].setHostile(true);
+				trainer[0].setLocation(5,10);
+				trainer[0].setPreMessage("There's nothing behind my back!");
+				trainer[0].setPostMessage("Dang it, go ahead and keep it.");
+				trainer[0].setDirection(90);
+				trainer[0].setViewRange(4);
+
+				trainer[1]=new Trainer(Trainer.TrainerType.CODER,"Braunsen",Pokemon.Species.MAGIKARP,20+levelBoost);
+				trainer[1].setHostile(true);
+				trainer[1].setLocation(10,5);
+				trainer[1].setPreMessage("I will own you!");
+				trainer[1].setPostMessage("Oops, forgot to evolve this.");
+				trainer[1].setDirection(180);
+				trainer[1].setViewRange(6);
+
+				trainer[2]=new Trainer(Trainer.TrainerType.JAVA,"Noobie",Pokemon.Species.VOLTORB,Pokemon.Species.EKANS,10+levelBoost);
+				trainer[2].setHostile(true);
+				trainer[2].setLocation(1,7);
+				trainer[2].setPreMessage("Victory is mine!");
+				trainer[2].setPostMessage("Too bad they never trained us.");
+				trainer[2].setDirection(0);
+				trainer[2].setViewRange(6);
+
+				mapItems[0]=new Item(Item.Type.ETHER,new Point(5,11));
+
+				loadItemData();
+				for(int i=0; i<foundItem.length; i++)
+				{
+					mapItems[i].found=foundItem[i];
+				}
+
 				break;
 			case MegaMart:
 				tileSet = INDOORS;
@@ -5687,7 +6345,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 80;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("MegaMart.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/1_stringville.mid");
+				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
 				bgm=JApplet.newAudioClip(url);
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
@@ -5701,7 +6359,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 20;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Power_Plant.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/1_stringville.mid");
+				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
 				bgm=JApplet.newAudioClip(url);
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
@@ -5731,13 +6389,21 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				createMap("Elite_4.tilemap");
 				url=JokemonDriver.class.getResource("Music/Locations/9_hall_of_champions.mid");
 				bgm=JApplet.newAudioClip(url);
-
-				numTrainers=5;
+				
+				if (!objectiveComplete[10])
+				numTrainers=7;
+				else if (houseInt != 5)
+				numTrainers=11;
+				else
+				numTrainers=12;
 				trainer=new Trainer[numTrainers];
 				numItems=0;
 				mapItems=new Item[numItems];
+				
+				if (objectiveComplete[10])
+					levelBoost=50;
 
-				trainer[0]=new Trainer(Trainer.TrainerType.ELITE,"Camtendo",Pokemon.Species.STARMIE,Pokemon.Species.SLOWBRO,Pokemon.Species.CLOYSTER,Pokemon.Species.VAPOREON,Pokemon.Species.RHYDON,Pokemon.Species.LAPRAS,60);
+				trainer[0]=new Trainer(Trainer.TrainerType.ELITE,"Camtendo",Pokemon.Species.STARMIE,Pokemon.Species.SLOWBRO,Pokemon.Species.CLOYSTER,Pokemon.Species.VAPOREON,Pokemon.Species.RHYDON,Pokemon.Species.LAPRAS,60+levelBoost);
 				trainer[0].setHostile(true);
 				trainer[0].setLocation(27,86);
 				trainer[0].setPreMessage("Howdy there "+name+"! You've come quite a long way, haven't you? How are you enjoying the island so far? Hopefully you have. My name is Camtendo. I'm one of Joe's top trainers. Do you have what it takes to win 4 battles in a row to get to Joe? Let's find out shall we?");
@@ -5745,7 +6411,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[0].setDirection(270);
 				trainer[0].setViewRange(0);
 
-				trainer[1]=new Trainer(Trainer.TrainerType.ELITE,"WasabiSause",Pokemon.Species.ALAKAZAM,Pokemon.Species.ALAKAZAM,Pokemon.Species.EXEGGUTOR,Pokemon.Species.HYPNO,Pokemon.Species.ALAKAZAM,Pokemon.Species.ALAKAZAM,64);
+				trainer[1]=new Trainer(Trainer.TrainerType.ELITE,"WasabiSause",Pokemon.Species.ALAKAZAM,Pokemon.Species.ALAKAZAM,Pokemon.Species.EXEGGUTOR,Pokemon.Species.HYPNO,Pokemon.Species.ALAKAZAM,Pokemon.Species.ALAKAZAM,64+levelBoost);
 				trainer[1].setHostile(true);
 				trainer[1].setLocation(27,62);
 				trainer[1].setPreMessage("Something I don't know. I haven't really thought of what to say.");
@@ -5753,7 +6419,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[1].setDirection(270);
 				trainer[1].setViewRange(0);
 
-				trainer[2]=new Trainer(Trainer.TrainerType.ELITE,"Patches",Pokemon.Species.CHARIZARD,Pokemon.Species.GYARADOS,Pokemon.Species.BUTTERFREE,Pokemon.Species.DRAGONITE,Pokemon.Species.PIDGEOT,Pokemon.Species.DODRIO,68);
+				trainer[2]=new Trainer(Trainer.TrainerType.ELITE,"Patches",Pokemon.Species.CHARIZARD,Pokemon.Species.GYARADOS,Pokemon.Species.BUTTERFREE,Pokemon.Species.DRAGONITE,Pokemon.Species.PIDGEOT,Pokemon.Species.DODRIO,68+levelBoost);
 				trainer[2].setHostile(true);
 				trainer[2].setLocation(27,31);
 				trainer[2].setPreMessage("Have you played Tron yet? I made it myself!");
@@ -5761,7 +6427,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[2].setDirection(270);
 				trainer[2].setViewRange(0);
 
-				trainer[3]=new Trainer(Trainer.TrainerType.ELITE,"Justinian",Pokemon.Species.CHARIZARD,Pokemon.Species.GYARADOS,Pokemon.Species.DRAGONITE,Pokemon.Species.DRAGONITE,Pokemon.Species.DRAGONAIR,Pokemon.Species.ARCANINE,70);
+				trainer[3]=new Trainer(Trainer.TrainerType.ELITE,"Justinian",Pokemon.Species.CHARIZARD,Pokemon.Species.GYARADOS,Pokemon.Species.DRAGONITE,Pokemon.Species.DRAGONITE,Pokemon.Species.DRAGONAIR,Pokemon.Species.ARCANINE,70+levelBoost);
 				trainer[3].setHostile(true);
 				trainer[3].setLocation(28,8);
 				trainer[3].setPreMessage("How did you even get to me? Did you hack or something?");
@@ -5769,13 +6435,264 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[3].setDirection(270);
 				trainer[3].setViewRange(0);
 
-				trainer[4]=new Trainer(Trainer.TrainerType.ELITE,"Joe",Pokemon.Species.ALAKAZAM,Pokemon.Species.STARMIE,Pokemon.Species.DRAGONITE,Pokemon.Species.CHANSEY,Pokemon.Species.LAPRAS,Pokemon.Species.SNORLAX,75);
+				trainer[4]=new Trainer(Trainer.TrainerType.ELITE,"Joe",Pokemon.Species.ALAKAZAM,Pokemon.Species.STARMIE,Pokemon.Species.DRAGONITE,Pokemon.Species.CHANSEY,Pokemon.Species.LAPRAS,Pokemon.Species.SNORLAX,75+levelBoost);
 				trainer[4].setHostile(true);
 				trainer[4].setLocation(49,10);
 				trainer[4].setPreMessage("Welcome challenger! You must be the great "+name+"! I'm honored to meet you. You have done well to get this far! Your Pokemon must be really strong now. Are you ready for a battle? This will be an epic showdown! May the best trainer win!");
 				trainer[4].setPostMessage("You have trumped me! Congratulations! I hearby recognize your greatness by allowing you to "+VERSION+" City! You can continue your Pokemon enlightenment there. Just move behind me, "+name+". Job well done!");
 				trainer[4].setDirection(270);
 				trainer[4].setViewRange(0);
+				
+				if (!objectiveComplete[10])
+				{
+					trainer[5]=new Trainer(Trainer.TrainerType.DEBUGGER,"Clone 1 ",Pokemon.Species.ALAKAZAM,75);
+					trainer[5].setHostile(false);
+					trainer[5].setLocation(42,100);
+					trainer[5].setPreMessage("");
+					trainer[5].setPostMessage("You can't enter into the AI training room without beating Joe first.");
+					trainer[5].setDirection(180);
+					trainer[5].setViewRange(0);
+				
+					trainer[6]=new Trainer(Trainer.TrainerType.DEBUGGER,"Clone 2",Pokemon.Species.ALAKAZAM,75);
+					trainer[6].setHostile(false);
+					trainer[6].setLocation(42,101);
+					trainer[6].setPreMessage("");
+					trainer[6].setPostMessage("You can't enter into the AI training room without beating Joe first.");
+					trainer[6].setDirection(180);
+					trainer[6].setViewRange(0);
+				}
+				else
+				{
+					trainer[5]=new Trainer(Trainer.TrainerType.DEBUGGER,"Clone 1",Pokemon.Species.ALAKAZAM,75);
+					trainer[5].setHostile(false);
+					trainer[5].setLocation(57,112);
+					trainer[5].setPreMessage("");
+					trainer[5].setPostMessage("Welcome to the hall of AIs! Here are a new batch of them.");
+					trainer[5].setDirection(0);
+					trainer[5].setViewRange(0);
+					
+					trainer[6]=new Trainer(Trainer.TrainerType.DEBUGGER,"Clone 2",Pokemon.Species.ALAKAZAM,Mechanics.getHighestLevel(partyPokemon));
+					trainer[6].setHostile(true);
+					trainer[6].setLocation(60,111);
+					trainer[6].setPreMessage("I'm the first AI!");
+					trainer[6].setPostMessage("Don't worry, the others are harder.");
+					trainer[6].setDirection(270);
+					trainer[6].setViewRange(0);
+					
+					if (houseInt == 0)
+					{
+						trainer[7]=new Trainer(Trainer.TrainerType.CYPHER,"Bigge",Pokemon.Species.CLOYSTER,Pokemon.Species.CLEFABLE,Pokemon.Species.NINETALES,Pokemon.Species.ELECTABUZZ,Pokemon.Species.GENGAR,Pokemon.Species.BLASTOISE,Mechanics.getHighestLevel(partyPokemon));
+						trainer[7].setHostile(true);
+						trainer[7].setLocation(61,111);
+						trainer[7].setPreMessage("Feel the dent in my head!");
+						trainer[7].setPostMessage("...Well this is awkward, but you're still going to touch it!");
+						trainer[7].setDirection(270);
+						trainer[7].setViewRange(0);
+							
+						trainer[8]=new Trainer(Trainer.TrainerType.RIVAL,rivalName,Pokemon.Species.RAICHU,Pokemon.Species.VENUSAUR,Pokemon.Species.BLASTOISE,Pokemon.Species.CHARIZARD,Pokemon.Species.SNORLAX,Pokemon.Species.LAPRAS,Mechanics.getHighestLevel(partyPokemon));
+						trainer[8].setHostile(true);
+						trainer[8].setLocation(62,111);
+						trainer[8].setPreMessage("Well care for yet another go sport?");
+						trainer[8].setPostMessage("Well you beat me up, and become the champion. I'm starting to grow quite fond of your skills " + name + ".");
+						trainer[8].setDirection(270);
+						trainer[8].setViewRange(0);
+						
+						trainer[9]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jenny",Pokemon.Species.BUTTERFREE,Pokemon.Species.BEEDRILL,Pokemon.Species.SCYTHER,Pokemon.Species.PINSIR,Mechanics.getHighestLevel(partyPokemon));
+						trainer[9].setHostile(true);
+						trainer[9].setLocation(63,111);
+						trainer[9].setPreMessage("Hello "+name+"! I've heard a lot about you! Apparently you're one of the better trainers to come to the island. Bug Pokemon are my specialty! They are very powerful. Do you have what it takes to win? Let's find out!");
+						trainer[9].setPostMessage("Excellent job "+name+"! I award you the ABSTRACT BADGE and this TM containing RAZOR WIND! Head on to the next Gym! Good luck with your journey!");
+						trainer[9].setDirection(270);
+						trainer[9].setViewRange(0);
+						
+						trainer[10]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jimmy",Pokemon.Species.TANGELA,Pokemon.Species.PARAS,Pokemon.Species.EXEGGUTOR,Pokemon.Species.BELLSPROUT,Pokemon.Species.ODDISH,Mechanics.getHighestLevel(partyPokemon));
+						trainer[10].setHostile(true);
+						trainer[10].setLocation(64,111);
+						trainer[10].setPreMessage("So, I've heard that you are the new champion " + name + ", but I've also gotten better since I last saw you.");
+						trainer[10].setPostMessage("I always love a good fight. Thanks for visiting again now that you've become chamion " + name + ".");
+						trainer[10].setDirection(270);
+						trainer[10].setViewRange(0);
+					}
+					else if (houseInt == 1)
+					{
+						trainer[7]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jace",Pokemon.Species.RAICHU,Pokemon.Species.ELECTABUZZ,Pokemon.Species.VOLTORB,Pokemon.Species.JOLTEON,Pokemon.Species.MAGNETON,Mechanics.getHighestLevel(partyPokemon));
+						trainer[7].setHostile(true);
+						trainer[7].setLocation(65,111);
+						trainer[7].setPreMessage("Shocking... your back to see me again? As if you didn't get enough of a thrill beating me the first time " + name + ". Well, I have trained quite a bit so here I go!");
+						trainer[7].setPostMessage("Your performance was electrifying " + name + "! To think you've grown that much in this short amount of time.");
+						trainer[7].setDirection(270);
+						trainer[7].setViewRange(0);
+						
+						trainer[8]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jin",Pokemon.Species.PRIMEAPE,Pokemon.Species.MACHAMP,Pokemon.Species.HITMONLEE,Pokemon.Species.HITMONCHAN,Pokemon.Species.POLIWRATH,Mechanics.getHighestLevel(partyPokemon));
+						trainer[8].setHostile(true);
+						trainer[8].setLocation(66,111);
+						trainer[8].setPreMessage("I've been through some rigorous training since I last saw you " + name + ". So, are you ready?");
+						trainer[8].setPostMessage("You managed to beat me once again. No matter how much training I go through, your skill will always be superior. You are a worthy champion indeed " + name + ".");
+						trainer[8].setDirection(270);
+						trainer[8].setViewRange(0);
+						
+						trainer[9]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jordan",Pokemon.Species.CLEFABLE,Pokemon.Species.WIGGLYTUFF,Pokemon.Species.PERSIAN,Pokemon.Species.LICKITUNG,Pokemon.Species.CHANSEY,Mechanics.getHighestLevel(partyPokemon));
+						trainer[9].setHostile(true);
+						trainer[9].setLocation(67,111);
+						trainer[9].setPreMessage("You actually came to see me again " + name + "! You better not have been slacking off with your training now that you're the champion!");
+						trainer[9].setPostMessage("Dang you beat me again. Tee hee! You're so cute when you get serious " + name + "!");
+						trainer[9].setDirection(270);
+						trainer[9].setViewRange(0);
+						
+						trainer[10]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Joy",Pokemon.Species.DEWGONG,Pokemon.Species.CLOYSTER,Pokemon.Species.LAPRAS,Pokemon.Species.JYNX,Mechanics.getHighestLevel(partyPokemon));
+						trainer[10].setHostile(true);
+						trainer[10].setLocation(68,111);
+						trainer[10].setPreMessage("Ice to meet you again. Get it? I said ice instead of nice haha. Oh well, this Gym still is just as cold as my old one so can we finish this quick?");
+						trainer[10].setPostMessage("Well you beat me again. You truly are worthy of being the champion.");
+						trainer[10].setDirection(270);
+						trainer[10].setViewRange(0);
+					}
+					else if (houseInt == 2)
+					{
+						trainer[7]=new Trainer(Trainer.TrainerType.GYM_LEADER,"James",Pokemon.Species.MR_MIME,Pokemon.Species.HYPNO,Pokemon.Species.ALAKAZAM,Pokemon.Species.JYNX,Mechanics.getHighestLevel(partyPokemon));
+						trainer[7].setHostile(true);
+						trainer[7].setLocation(69,111);
+						trainer[7].setPreMessage("Well well well, if it isn't the brand new champion himself. Welcome back " + name + " it is an honor to battle you once again.");
+						trainer[7].setPostMessage("You beat me once again. This time however, I could sense it coming.");
+						trainer[7].setDirection(270);
+						trainer[7].setViewRange(0);
+						
+						trainer[8]=new Trainer(Trainer.TrainerType.GYM_LEADER,"Jessica",Pokemon.Species.NIDOKING,Pokemon.Species.NIDOQUEEN,Pokemon.Species.WEEZING,Pokemon.Species.ARBOK,Pokemon.Species.GENGAR,Pokemon.Species.MUK,Mechanics.getHighestLevel(partyPokemon));
+						trainer[8].setHostile(true);
+						trainer[8].setLocation(70,111);
+						trainer[8].setPreMessage("Well " + name + ", you managed to beat me once, but I got a lot tougher since then. Do you have what it takes?");
+						trainer[8].setPostMessage("Well done. I would expect no less from the new Champion. Congratulations " + name + ". ");
+						trainer[8].setDirection(270);
+						trainer[8].setViewRange(0);
+						
+						trainer[9]=new Trainer(Trainer.TrainerType.BABE,"Natalie",Pokemon.Species.EEVEE,Pokemon.Species.EEVEE,Pokemon.Species.EEVEE,Pokemon.Species.VAPOREON,Pokemon.Species.JOLTEON,Pokemon.Species.FLAREON,Mechanics.getHighestLevel(partyPokemon));
+						trainer[9].setHostile(true);
+						trainer[9].setLocation(71,111);
+						trainer[9].setPreMessage("Justinian may be good, but so am I!");
+						trainer[9].setPostMessage("Aww...");
+						trainer[9].setDirection(270);
+						trainer[9].setViewRange(0);
+						
+						trainer[10]=new Trainer(Trainer.TrainerType.NEWB,"Copycat",Pokemon.Species.DITTO,Pokemon.Species.DITTO,Pokemon.Species.DITTO,Mechanics.getHighestLevel(partyPokemon));
+						trainer[10].setHostile(true);
+						trainer[10].setLocation(72,111);
+						trainer[10].setPreMessage("Let's battle!");
+						trainer[10].setPostMessage("...");
+						trainer[10].setDirection(270);
+						trainer[10].setViewRange(0);
+					}
+					else if (houseInt == 3)
+					{
+						trainer[7]=new Trainer(Trainer.TrainerType.PROGRAMMER,"Triixster",Pokemon.Species.CHARIZARD,Pokemon.Species.BLASTOISE,Pokemon.Species.VENUSAUR,Pokemon.Species.DRAGONITE,Pokemon.Species.AERODACTYL,Pokemon.Species.RAICHU,Mechanics.getHighestLevel(partyPokemon));
+						trainer[7].setHostile(true);
+						trainer[7].setLocation(73,111);
+						trainer[7].setPreMessage("Whatever.");
+						trainer[7].setPostMessage("Whatever.");
+						trainer[7].setDirection(270);
+						trainer[7].setViewRange(0);
+						
+						trainer[8]=new Trainer(Trainer.TrainerType.CODER,"Cloward",Pokemon.Species.NIDOKING,Pokemon.Species.PIDGEOT,Pokemon.Species.ARCANINE,Pokemon.Species.GYARADOS,Pokemon.Species.HITMONLEE,Pokemon.Species.GENGAR,Mechanics.getHighestLevel(partyPokemon));
+						trainer[8].setHostile(true);
+						trainer[8].setLocation(74,111);
+						trainer[8].setPreMessage("Get ready for the fight of your life.");
+						trainer[8].setPostMessage("You beat me! Well some people get lucky.");
+						trainer[8].setDirection(270);
+						trainer[8].setViewRange(0);
+						
+						trainer[9]=new Trainer(Trainer.TrainerType.NEWB,"Brian Healy",Pokemon.Species.FARFETCH_D,Pokemon.Species.FARFETCH_D,Pokemon.Species.FARFETCH_D,Pokemon.Species.FARFETCH_D,Mechanics.getHighestLevel(partyPokemon));
+						trainer[9].setHostile(true);
+						trainer[9].setLocation(75,111);
+						trainer[9].setPreMessage("Is there such a thing as beginner's luck?");
+						trainer[9].setPostMessage("I guess not...");
+						trainer[9].setDirection(270);
+						trainer[9].setViewRange(0);
+						
+						trainer[10]=new Trainer(Trainer.TrainerType.HACKER,"Devin F.",Pokemon.Species.MACHAMP,Pokemon.Species.GOLEM,Pokemon.Species.ALAKAZAM,Pokemon.Species.GYARADOS,Pokemon.Species.SCYTHER,Pokemon.Species.NIDOKING,Mechanics.getHighestLevel(partyPokemon));
+						trainer[10].setHostile(true);
+						trainer[10].setLocation(76,111);
+						trainer[10].setPreMessage("Get ready to lose.");
+						trainer[10].setPostMessage("I know we're in a cave, but the sun was in my eyes.");
+						trainer[10].setDirection(270);
+						trainer[10].setViewRange(0);
+					}
+					else if (houseInt == 4)
+					{
+						trainer[7]=new Trainer(Trainer.TrainerType.CODER,"Stevenson",Pokemon.Species.CUBONE,Pokemon.Species.MAROWAK,Pokemon.Species.KANGASKHAN,Mechanics.getHighestLevel(partyPokemon));
+						trainer[7].setHostile(true);
+						trainer[7].setLocation(77,111);
+						trainer[7].setPreMessage("Feel the rage!");
+						trainer[7].setPostMessage("Maybe they needed more juice...");
+						trainer[7].setDirection(270);
+						trainer[7].setViewRange(0);
+						
+						trainer[8]=new Trainer(Trainer.TrainerType.ENGINEER,"Grey",Pokemon.Species.KABUTOPS,Pokemon.Species.HITMONLEE,Pokemon.Species.GENGAR,Pokemon.Species.GYARADOS,Pokemon.Species.CHARIZARD,Pokemon.Species.GOLEM,Mechanics.getHighestLevel(partyPokemon));
+						trainer[8].setHostile(true);
+						trainer[8].setLocation(78,111);
+						trainer[8].setPreMessage("Leave.");
+						trainer[8].setPostMessage("How?");
+						trainer[8].setDirection(270);
+						trainer[8].setViewRange(0);
+						
+						trainer[9]=new Trainer(Trainer.TrainerType.PROGRAMMER,"Scoticus",Pokemon.Species.VENUSAUR,Pokemon.Species.ARCANINE,Pokemon.Species.MAROWAK,Pokemon.Species.MAGNETON,Pokemon.Species.TAUROS,Pokemon.Species.AERODACTYL,Mechanics.getHighestLevel(partyPokemon));
+						trainer[9].setHostile(true);
+						trainer[9].setLocation(79,111);
+						trainer[9].setPreMessage("I've got 99 problems but a glitch ain't one!");
+						trainer[9].setPostMessage("Well...now I have a bug to report...");
+						trainer[9].setDirection(270);
+						trainer[9].setViewRange(0);
+						
+						trainer[10]=new Trainer(Trainer.TrainerType.ELITE,"Camtendo",Pokemon.Species.STARMIE,Pokemon.Species.SLOWBRO,Pokemon.Species.CLOYSTER,Pokemon.Species.VAPOREON,Pokemon.Species.RHYDON,Pokemon.Species.LAPRAS,Mechanics.getHighestLevel(partyPokemon));
+						trainer[10].setHostile(true);
+						trainer[10].setLocation(80,111);
+						trainer[10].setPreMessage("Howdy there "+name+"! You've come quite a long way, haven't you? How are you enjoying the island so far? Hopefully you have. My name is Camtendo. I'm one of Joe's top trainers. Do you have what it takes to win 4 battles in a row to get to Joe? Let's find out shall we?");
+						trainer[10].setPostMessage("I figured as much. You're definitely worth your weight in gold. Continue on to the next trainer! Be careful, the door locks behind you!");
+						trainer[10].setDirection(270);
+						trainer[10].setViewRange(0);
+					}
+					else if (houseInt == 5)
+					{
+						trainer[7]=new Trainer(Trainer.TrainerType.ELITE,"WasabiSause",Pokemon.Species.ALAKAZAM,Pokemon.Species.ALAKAZAM,Pokemon.Species.EXEGGUTOR,Pokemon.Species.HYPNO,Pokemon.Species.ALAKAZAM,Pokemon.Species.ALAKAZAM,Mechanics.getHighestLevel(partyPokemon));
+						trainer[7].setHostile(true);
+						trainer[7].setLocation(81,111);
+						trainer[7].setPreMessage("Something I don't know. I haven't really thought of what to say.");
+						trainer[7].setPostMessage("Oh darn. Kajigga!");
+						trainer[7].setDirection(270);
+						trainer[7].setViewRange(0);
+						
+						trainer[8]=new Trainer(Trainer.TrainerType.ELITE,"Patches",Pokemon.Species.CHARIZARD,Pokemon.Species.GYARADOS,Pokemon.Species.BUTTERFREE,Pokemon.Species.DRAGONITE,Pokemon.Species.PIDGEOT,Pokemon.Species.DODRIO,Mechanics.getHighestLevel(partyPokemon));
+						trainer[8].setHostile(true);
+						trainer[8].setLocation(82,111);
+						trainer[8].setPreMessage("Have you played Tron yet? I made it myself!");
+						trainer[8].setPostMessage("Crap now go play Tron, it's so much better than this game.");
+						trainer[8].setDirection(270);
+						trainer[8].setViewRange(0);
+						
+						trainer[9]=new Trainer(Trainer.TrainerType.ELITE,"Justinian",Pokemon.Species.CHARIZARD,Pokemon.Species.GYARADOS,Pokemon.Species.DRAGONITE,Pokemon.Species.DRAGONITE,Pokemon.Species.DRAGONAIR,Pokemon.Species.ARCANINE,Mechanics.getHighestLevel(partyPokemon));
+						trainer[9].setHostile(true);
+						trainer[9].setLocation(83,111);
+						trainer[9].setPreMessage("How did you even get to me? Did you hack or something?");
+						trainer[9].setPostMessage("Well... good luck against Joe. You'll need it.");
+						trainer[9].setDirection(270);
+						trainer[9].setViewRange(0);
+						
+						trainer[10]=new Trainer(Trainer.TrainerType.ELITE,"Joe",Pokemon.Species.ALAKAZAM,Pokemon.Species.STARMIE,Pokemon.Species.DRAGONITE,Pokemon.Species.CHANSEY,Pokemon.Species.LAPRAS,Pokemon.Species.SNORLAX,205);
+						trainer[10].setHostile(true);
+						trainer[10].setLocation(84,111);
+						trainer[10].setPreMessage("Welcome challenger! You must be the great "+name+"! I'm honored to meet you. You have done well to get this far! Your Pokemon must be really strong now. Are you ready for a battle? This will be an epic showdown! May the best trainer win!");
+						trainer[10].setPostMessage("You have trumped me! Congratulations! I hearby recognize your greatness by allowing you to "+VERSION+" City! You can continue your Pokemon enlightenment there. Just move behind me, "+name+". Job well done!");
+						trainer[10].setDirection(270);
+						trainer[10].setViewRange(0);
+						
+						trainer[11]=new Trainer(Trainer.TrainerType.BABB," Bot",Pokemon.Species.MEWTWO,Pokemon.Species.MEW,Pokemon.Species.MISSINGNO,Pokemon.Species.ARTICUNO,Pokemon.Species.ZAPDOS,Pokemon.Species.MOLTRES,205);
+						trainer[11].setHostile(true);
+						trainer[11].setLocation(85,111);
+						trainer[11].setPreMessage(name+"! You've come a long way since I first spoke with you! You and your Pokemon must be very strong now! How about battling me? If you thought Joe was difficult, you haven't seen anything yet. Hahaha!");
+						trainer[11].setPostMessage("Congratulations "+name+"! You've beaten me! Even with my incredible team, your team proved to be more incredible. Well, there's not much left for you to do, except complete the Pokedex. Ideally, you'd have that done by now! Slacking are you? Here, watch the credits!");
+						trainer[11].setDirection(270);
+						trainer[11].setViewRange(0);
+					}
+				}
+				
 
 				loadItemData();
 				break;
@@ -5800,28 +6717,26 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			try
 			{
 				repaint();
-				Thread.sleep(2000);
+				if (area != Area.Pokecenter)
+				save();
+				Thread.sleep(1000);
 			}
 			catch(Exception e){e.printStackTrace();}
 		}
 
-		if(tileSet!=OUTDOORS)
-		{
-			bicycling=false;
-		}
-		else if((area==Area.Route_4&&location.y<74)||area==Area.Route_5)
+		if((area==Area.Route_4&&location.y<74)||area==Area.Route_5)
 		{
 			forceBike=true;
 			bicycling=true;
 		}
 
-		if(surfing)
-			surfSong.loop();
-		else if(bicycling&&!forceBike)
-		{
-			bikeSong.loop();
-		}
-		else
+//		if(surfing&&!mute)
+//			surfSong.loop();
+//		else if(bicycling&&!forceBike&&!mute)
+//		{
+//			bikeSong.loop();
+//		}
+		if (!mute)
 		{
 			bgm.loop();
 		}
@@ -5925,11 +6840,11 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		jf.setVisible(true);
 		jf.toFront();
 
-		if(surfing)
+		if(surfing&&!mute)
 			surfSong.loop();
-		else if(bicycling&&!forceBike)
+		else if(bicycling&&!forceBike&&!mute)
 			bikeSong.loop();
-		else
+		else if (!mute)
 			bgm.loop();
 
 		int qq = 0;
@@ -6033,20 +6948,12 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			performingAction=false;
 			return;
 		}
-		
+
 		if(invokeMap)
 		{
 			System.out.println("Invoking Town Map...");
 			map.displayMap();
-			while(map.isVisible())
-			{
-				try
-				{
-					Thread.sleep(10);
-				}
-				catch(Exception e){}
-			}
-			
+
 			invokeMap=false;
 			performingAction=false;
 			return;
@@ -6059,6 +6966,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			bgm.stop();
 			URL url=JokemonDriver.class.getResource("Music/minigame.mid");
 			AudioClip mgm=JApplet.newAudioClip(url);
+			if (!mute)
 			mgm.loop();
 
 			jf.setVisible(false);
@@ -6225,6 +7133,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 					jf.setVisible(true);
 					jf.toFront();
+					if(!mute)
 					bgm.loop();
 
 					wins++;
@@ -6252,7 +7161,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		}
 
 		//Computer
-		if(tileSet==INDOORS&&(currentArea[location.x][location.y-1]==141||currentArea[location.x][location.y-1]==19||currentArea[location.x][location.y-1]==350)&&direction==90)
+		if(location.y!=0&&tileSet==INDOORS&&(currentArea[location.x][location.y-1]==141||currentArea[location.x][location.y-1]==19||currentArea[location.x][location.y-1]==350)&&direction==90)
 		{
 			System.out.println("Invoking Computer...");
 			onComp=true;
@@ -6318,65 +7227,66 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			{
 				objectiveComplete[0]=true;
 			}
-			else if(objectiveComplete[10])
+			else if(objectiveComplete[10] && !t.hostile)
 			{
 				objectiveComplete[11]=true;
 				bgm.stop();
 				save();
+				if(!mute)
 				title.creditMusic.loop();
 				showCredits=true;
 			}
 		}
-		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.GYM_LEADER&&t.name.equals("Jenny"))
+		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.GYM_LEADER&&t.name.equals("Jenny")&& !t.hostile)
 		{
 			badges=1;
 			objectiveComplete[1]=true;
 			receiveItem(t.name);
 		}
-		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.GYM_LEADER&&t.name.equals("Jimmy"))
+		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.GYM_LEADER&&t.name.equals("Jimmy")&& !t.hostile)
 		{
 			badges=2;
 			objectiveComplete[2]=true;
 			receiveItem(t.name);
 		}
-		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.GYM_LEADER&&t.name.equals("Jace"))
+		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.GYM_LEADER&&t.name.equals("Jace")&& !t.hostile)
 		{
 			badges=3;
 			objectiveComplete[3]=true;
 			receiveItem(t.name);
 		}
-		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.GYM_LEADER&&t.name.equals("Jin"))
+		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.GYM_LEADER&&t.name.equals("Jin")&& !t.hostile)
 		{
 			badges=4;
 			objectiveComplete[4]=true;
 			receiveItem(t.name);
 		}
-		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.GYM_LEADER&&t.name.equals("Jordan"))
+		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.GYM_LEADER&&t.name.equals("Jordan")&& !t.hostile)
 		{
 			badges=5;
 			objectiveComplete[5]=true;
 			receiveItem(t.name);
 		}
-		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.GYM_LEADER&&t.name.equals("Joy"))
+		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.GYM_LEADER&&t.name.equals("Joy")&& !t.hostile)
 		{
 			badges=6;
 			objectiveComplete[6]=true;
 			receiveItem(t.name);
 		}
-		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.GYM_LEADER&&t.name.equals("James"))
+		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.GYM_LEADER&&t.name.equals("James")&& !t.hostile)
 		{
 			badges=7;
 			objectiveComplete[7]=true;
 			receiveItem(t.name);
 		}
-		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.GYM_LEADER&&t.name.equals("Jessica"))
+		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.GYM_LEADER&&t.name.equals("Jessica")&& !t.hostile)
 		{
 			badges=8;
 			objectiveComplete[8]=true;
 			receiveItem(t.name);
 		}
 
-		if(!objectiveComplete[10]&&t.type==Trainer.TrainerType.PROFESSOR&&(t.name.equals("Cutter")||t.name.equals("Flyer")||t.name.equals("Surfer")||t.name.equals("Roderick Jr.")||t.name.equals("Roderick III")||t.name.equals("Brutus")))
+		if(t.type==Trainer.TrainerType.PROFESSOR&&(t.name.equals("Cutter")||t.name.equals("Flyer")||t.name.equals("Surfer")||t.name.equals("Roderick Jr.")||t.name.equals("Roderick III")||t.name.equals("Brutus")))
 		{
 			receiveItem(t.name);
 		}
@@ -6390,30 +7300,36 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		{
 			receiveItem(t.name);
 		}
-		
+
 		if(t.name.equalsIgnoreCase("Name Rater"))
 		{
 			System.out.println("Attempting to rename Pokemon");
-			if(partyPokemon[0].idNumber==trainerIdNumber||partyPokemon[0].originalTrainer.equals(name))
+			System.out.println("Beginning rename");
+
+			do
 			{
-				System.out.println("Beginning rename");
-				
-				do
-				{
-					partyPokemon[0].nickname=(JOptionPane.showInputDialog(null, "Rename "+partyPokemon[0].nickname+"? (<10 Chars)", partyPokemon[0].nickname));
-				}
-				while(partyPokemon[0].nickname==null);
-		
-				partyPokemon[0].setNickname(partyPokemon[0].nickname);
+				partyPokemon[0].nickname=(JOptionPane.showInputDialog(null, "Rename "+partyPokemon[0].nickname+"? (<10 Chars)", partyPokemon[0].nickname));
 			}
+			while(partyPokemon[0].nickname==null);
+
+			partyPokemon[0].setNickname(partyPokemon[0].nickname);
+		}
+		
+		if (t.name.equalsIgnoreCase("Clone 1"))
+		{
+			bgm.stop();
+			houseInt++;
+			if (houseInt > 5)
+			houseInt=0;
+			createCurrentArea();
 		}
 
-		if(!objectiveComplete[10]&&t.name.equalsIgnoreCase("BOSS"))
+		if(!objectiveComplete[10]&&t.name.equalsIgnoreCase("BOSS")&& !t.hostile)
 		{
 			objectiveComplete[9]=true;
 			receiveItem(t.name);
 		}
-		if(!objectiveComplete[10]&&t.name.equalsIgnoreCase("Joe"))
+		if(!objectiveComplete[10]&&t.name.equalsIgnoreCase("Joe")&& !t.hostile)
 		{
 			objectiveComplete[10]=true;
 		}
@@ -6683,16 +7599,16 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 							surfSong.stop();
 							bikeSong.stop();
 
-							if(trainer[i].type==Trainer.TrainerType.RIVAL)
+							if(trainer[i].type==Trainer.TrainerType.RIVAL && !mute)
 								rivalEncounter.loop();
-							else if(trainer[i].type==Trainer.TrainerType.GYM_LEADER||trainer[i].type==Trainer.TrainerType.ELITE
-								||trainer[i].type==Trainer.TrainerType.BABB)
+							else if((trainer[i].type==Trainer.TrainerType.GYM_LEADER||trainer[i].type==Trainer.TrainerType.ELITE
+								||trainer[i].type==Trainer.TrainerType.BABB)&&!mute)
 								leaderEncounter.loop();
-							else if(trainer[i].type==Trainer.TrainerType.PROFESSOR||trainer[i].type==Trainer.TrainerType.JAVA)
+							else if((trainer[i].type==Trainer.TrainerType.PROFESSOR||trainer[i].type==Trainer.TrainerType.JAVA)&&!mute)
 								evilEncounter.loop();
-							else if(trainer[i].gender==1)
+							else if(trainer[i].gender==1 && !mute)
 								femaleEncounter.loop();
-							else
+							else if (!mute)
 								maleEncounter.loop();
 
 							trainerToFight=i;
@@ -6713,16 +7629,16 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 							surfSong.stop();
 							bikeSong.stop();
 
-							if(trainer[i].type==Trainer.TrainerType.RIVAL)
+							if(trainer[i].type==Trainer.TrainerType.RIVAL&&!mute)
 								rivalEncounter.loop();
-							else if(trainer[i].type==Trainer.TrainerType.GYM_LEADER||trainer[i].type==Trainer.TrainerType.ELITE
-								||trainer[i].type==Trainer.TrainerType.BABB)
+							else if((trainer[i].type==Trainer.TrainerType.GYM_LEADER||trainer[i].type==Trainer.TrainerType.ELITE
+								||trainer[i].type==Trainer.TrainerType.BABB)&&!mute)
 								leaderEncounter.loop();
-							else if(trainer[i].type==Trainer.TrainerType.PROFESSOR||trainer[i].type==Trainer.TrainerType.JAVA)
+							else if((trainer[i].type==Trainer.TrainerType.PROFESSOR||trainer[i].type==Trainer.TrainerType.JAVA)&&!mute)
 								evilEncounter.loop();
-							else if(trainer[i].gender==1)
+							else if(trainer[i].gender==1&&!mute)
 								femaleEncounter.loop();
-							else
+							else if (!mute)
 								maleEncounter.loop();
 
 							trainerToFight=i;
@@ -6743,16 +7659,16 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 							surfSong.stop();
 							bikeSong.stop();
 
-							if(trainer[i].type==Trainer.TrainerType.RIVAL)
+							if(trainer[i].type==Trainer.TrainerType.RIVAL&&!mute)
 								rivalEncounter.loop();
-							else if(trainer[i].type==Trainer.TrainerType.GYM_LEADER||trainer[i].type==Trainer.TrainerType.ELITE
-								||trainer[i].type==Trainer.TrainerType.BABB)
+							else if((trainer[i].type==Trainer.TrainerType.GYM_LEADER||trainer[i].type==Trainer.TrainerType.ELITE
+								||trainer[i].type==Trainer.TrainerType.BABB)&&!mute)
 								leaderEncounter.loop();
-							else if(trainer[i].type==Trainer.TrainerType.PROFESSOR||trainer[i].type==Trainer.TrainerType.JAVA)
+							else if((trainer[i].type==Trainer.TrainerType.PROFESSOR||trainer[i].type==Trainer.TrainerType.JAVA)&&!mute)
 								evilEncounter.loop();
-							else if(trainer[i].gender==1)
+							else if(trainer[i].gender==1&&!mute)
 								femaleEncounter.loop();
-							else
+							else if (!mute)
 								maleEncounter.loop();
 
 							trainerToFight=i;
@@ -6773,16 +7689,16 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 							surfSong.stop();
 							bikeSong.stop();
 
-							if(trainer[i].type==Trainer.TrainerType.RIVAL)
+							if(trainer[i].type==Trainer.TrainerType.RIVAL&&!mute)
 								rivalEncounter.loop();
-							else if(trainer[i].type==Trainer.TrainerType.GYM_LEADER||trainer[i].type==Trainer.TrainerType.ELITE
-								||trainer[i].type==Trainer.TrainerType.BABB)
+							else if((trainer[i].type==Trainer.TrainerType.GYM_LEADER||trainer[i].type==Trainer.TrainerType.ELITE
+								||trainer[i].type==Trainer.TrainerType.BABB)&&!mute)
 								leaderEncounter.loop();
-							else if(trainer[i].type==Trainer.TrainerType.PROFESSOR||trainer[i].type==Trainer.TrainerType.JAVA)
+							else if((trainer[i].type==Trainer.TrainerType.PROFESSOR||trainer[i].type==Trainer.TrainerType.JAVA)&&!mute)
 								evilEncounter.loop();
-							else if(trainer[i].gender==1)
+							else if(trainer[i].gender==1&&!mute)
 								femaleEncounter.loop();
-							else
+							else if (!mute)
 								maleEncounter.loop();
 
 							trainerToFight=i;
@@ -6821,6 +7737,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		bgm.stop();
 		bikeSong.stop();
 		bicycling=false;
+		if (!mute)
 		surfSong.loop();
 
 		jf.toFront();
@@ -6846,7 +7763,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			catch(Exception e){}
 		}
 
-		if(!forceBike)
+		if(!forceBike && !mute)
 		{
 			bgm.stop();
 			bikeSong.loop();
@@ -7656,7 +8573,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						break;
 					case Challenge_Cave:
 						messageBox.addMessage("You use Strength and punch the Armored Mewtwo! Its armor is glowing...","Hidden Move: Strength");
-						enemy[0]=new Pokemon(Pokemon.Species.MEWTWO,Pokemon.Move.PSYCHIC,Pokemon.Move.ICE_BEAM,Pokemon.Move.THUNDERBOLT,Pokemon.Move.REST,100);
+						enemy[0]=new Pokemon(Pokemon.Species.MEWTWO,Pokemon.Move.PSYCHIC,Pokemon.Move.ICE_BEAM,Pokemon.Move.THUNDERBOLT,Pokemon.Move.REST,200);
 						enemy[0].setNickname("Mewtrix");
 						enemy[0].setMaxStats();
 						break;
@@ -7695,13 +8612,30 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					}
 					catch(Exception e){}
 				}
-				
-				if(enemy[0].nickname.equals("Mewtrix"))
+
+				if(enemy[0].nickname.equals("Mewtrix") && area != Area.Pokecenter)
 				{
+					Pokedex.seen[149]=false;
 					bgm.stop();
 					save();
+					if(!mute)
 					title.creditMusic.loop();
 					showCredits=true;
+				}
+				else
+				{
+					Pokedex.seen[149]=false;
+					messageBox.addMessage("Dang it.. still not strong enough to defeat Mewtrix.");
+					messageBox.repaint();
+					while(messageBox.isVisible())
+					{
+						try
+						{
+							repaint();
+							Thread.sleep(10);
+						}
+						catch(Exception e){}
+					}
 				}
 				return;
 			}
@@ -7778,7 +8712,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			case Challenge_Cave:
 				i=325;
 				break;
-				
+
 		}
 
 		//Above Player
@@ -7843,13 +8777,13 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			currentArea[12][11]=294;
 			currentArea[13][11]=294;
 		}
-		else if(area==Area.Primal_Cave&&Pokedex.seen[149]&&VERSION.equals("Peaches"))
+		else if(area==Area.Primal_Cave&&Pokedex.seen[149]&&Pokedex.caught[149]&&VERSION.equals("Peaches"))
 		{
 			currentArea[10][8]=231;
 			currentArea[11][8]=231;
 			currentArea[10][7]=231;
 		}
-		else if(area==Area.Primal_Cave&&Pokedex.seen[150]&&VERSION.equals("Cream"))
+		else if(area==Area.Primal_Cave&&Pokedex.seen[150]&&Pokedex.caught[150]&&VERSION.equals("Cream"))
 		{
 			currentArea[10][8]=231;
 			currentArea[11][8]=231;
@@ -7860,6 +8794,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	public void moveBoulders()
 	{
 		boolean test=false;
+		boolean secondBoulder = (currentArea[location.x][location.y-1]==258);
 		Point point=new Point(0,0);
 		Point point2=new Point(0,0);
 
@@ -7907,7 +8842,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		location.x=point.x;
 		location.y=point.y;
 
-		if(canMove())
+		if(currentArea[point2.x][point2.y]==231)
 		{
 			location.x=temp.x;
 			location.y=temp.y;
@@ -8141,11 +9076,16 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	{
 		tWin=new TradeWindow();
 
-		while(!CONNECTED)
+		while(!CONNECTED && !cancelSwitch)
 		{
-
+			try
+			{
+				Thread.sleep(1);
+			}
+			catch(Exception ex){}
 		}
-
+		if (cancelSwitch)
+			cancelSwitch = false;
 		while(CONNECTED)
 		{
 			repaint();
@@ -8897,7 +9837,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				    a = Character.toUpperCase(a);
 				    pokemonType = a + pokemonType.substring(1,pokemonType.length());
 				}
-				
+
 		    	URL url = Pokemon.class.getResource("Sprites/pokemon/Right/" + pokemonType + ".png");
 		    	playerImages[i] = Toolkit.getDefaultToolkit().createImage(url);
 			}
@@ -8921,6 +9861,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		System.out.println();
 		System.out.println("Creating area...");
 		createCurrentArea();
+		if (!mute)
 		bgm.loop();
 	}
 
@@ -9165,7 +10106,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	{
 		BufferedReader fin, in;
 		file = "Tilemaps/" + file;
-		
+
 		try
 		{
 			fin=new BufferedReader(new FileReader(file));
@@ -9227,28 +10168,28 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			case 0:
 				for(int i=0; i<numItems; i++)
 				{
-					if(!mapItems[i].found&&mapItems[i] != null && location.x+1==mapItems[i].location.x&&location.y==mapItems[i].location.y)
+					if(mapItems[i] != null && !mapItems[i].found && location.x+1==mapItems[i].location.x&&location.y==mapItems[i].location.y)
 						return false;
 				}
 				break;
 			case 90:
 				for(int i=0; i<numItems; i++)
 				{
-					if(!mapItems[i].found&&mapItems[i] != null && location.y-1==mapItems[i].location.y&&location.x==mapItems[i].location.x)
+					if(mapItems[i] != null && !mapItems[i].found && location.y-1==mapItems[i].location.y&&location.x==mapItems[i].location.x)
 						return false;
 				}
 				break;
 			case 180:
 				for(int i=0; i<numItems; i++)
 				{
-					if(!mapItems[i].found&&mapItems[i] != null && location.x-1==mapItems[i].location.x&&location.y==mapItems[i].location.y)
+					if(mapItems[i] != null && !mapItems[i].found&& location.x-1==mapItems[i].location.x&&location.y==mapItems[i].location.y)
 						return false;
 				}
 				break;
 			case 270:
 				for(int i=0; i<numItems; i++)
 				{
-					if(!mapItems[i].found&&mapItems[i] != null && location.y+1==mapItems[i].location.y&&location.x==mapItems[i].location.x)
+					if(mapItems[i] != null && !mapItems[i].found&& location.y+1==mapItems[i].location.y&&location.x==mapItems[i].location.x)
 						return false;
 				}
 				break;
@@ -9269,6 +10210,9 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				test=currentArea[location.x][location.y-1];
 				else
 					return false;
+
+				if (tileSet == INDOORS && currentArea[location.x][location.y] == 253)
+					return false;
 				break;
 			case 180:
 				if(location.x>0)
@@ -9280,6 +10224,9 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if(location.y<getAreaHeight())
 				test=currentArea[location.x][location.y+1];
 				else
+					return false;
+
+				if (tileSet == INDOORS && location.y<getAreaHeight() && currentArea[location.x][location.y+1] == 253)
 					return false;
 				break;
 
@@ -9373,7 +10320,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				case 226:
 				case 239:
 				case 161:
-					if(surfing)
+					if(surfing && !mute)
 					{
 						surfSong.stop();
 						bgm.loop();
@@ -9555,7 +10502,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				case 356:
 				case 360:
 				case 364:
-					if(surfing)
+				case 253:
+					if(surfing && !mute)
 					{
 						surfSong.stop();
 						bgm.loop();
@@ -11681,6 +12629,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						area=Area.Elite_4;
 						location.x+=13;
 						location.y=116;
+						houseInt=0;
 						createCurrentArea();
 					}
 				}
@@ -11702,6 +12651,18 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				{
 					location.x =29;
 					location.y = 96;
+				}
+				if (location.x == 59 && location.y == 101)
+				{
+					location.x =58;
+					location.y = 109;
+					direction=270;
+				}
+				else if (location.x == 58 && location.y == 109)
+				{
+					location.x =59;
+					location.y = 101;
+					direction=180;
 				}
 				if (location.x == 27 || location.x == 28)
 				{
@@ -12439,28 +13400,29 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			createCurrentArea();
 			do
 			{
-				name =(JOptionPane.showInputDialog(null, "What is your name? (<7 chars)", name));
+				name =(JOptionPane.showInputDialog(null, "What is your name? (<10 chars)", name));
 			}
 			while(name==null);
 
-			if(name.length()>7)
-				name=name.substring(0,7);
+			if(name.length()>9)
+				name=name.substring(0,9);
 
 			do
 			{
-				rivalName =(JOptionPane.showInputDialog(null, "What is your RIVAL's name? (<7 chars)", rivalName));
+				rivalName =(JOptionPane.showInputDialog(null, "What is your RIVAL's name? (<10 chars)", rivalName));
 			}
 			while(rivalName==null);
 
-			if(rivalName.length()>7)
-				rivalName=rivalName.substring(0,7);
+			if(rivalName.length()>9)
+				rivalName=rivalName.substring(0,9);
 
 			String starter="Type your starter!";
-			while(starter==null||(!starter.equalsIgnoreCase("Bulbasaur")&&!starter.equalsIgnoreCase("Charmander")&&!starter.equalsIgnoreCase("Squirtle")))
+			while(starter==null||(!starter.equalsIgnoreCase("Bulbasaur")&&!starter.equalsIgnoreCase("Charmander")&&!starter.equalsIgnoreCase("Squirtle")&&!starter.equalsIgnoreCase("DratiniPlz")
+				&&!starter.equalsIgnoreCase("imanoob")&&!starter.equalsIgnoreCase("iwannabedaverybest")&&!starter.equalsIgnoreCase("Pikachu")&&!starter.equalsIgnoreCase("foxtrot")))
 			{
-				starter =(JOptionPane.showInputDialog(null, "Bulbasaur, Charmander, or Squirtle?", starter));
+				starter =(JOptionPane.showInputDialog(null, "Bulbasaur, Charmander, Squirtle, or Pikachu?", starter));
 			}
-
+			boolean superDuperBoolean = false;
 			if(starter.equalsIgnoreCase("Bulbasaur"))
 			{
 				partyPokemon[0]=new Pokemon(Pokemon.Species.BULBASAUR);
@@ -12479,6 +13441,46 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				Pokedex.seen(partyPokemon[0].pokedexNumber-1);
 				Pokedex.caught(partyPokemon[0].pokedexNumber-1);
 			}
+			else if(starter.equalsIgnoreCase("Pikachu"))
+			{
+				partyPokemon[0]=new Pokemon(Pokemon.Species.PIKACHU);
+				Pokedex.seen(partyPokemon[0].pokedexNumber-1);
+				Pokedex.caught(partyPokemon[0].pokedexNumber-1);
+			}
+			else if(starter.equalsIgnoreCase("DratiniPlz"))
+			{
+				partyPokemon[0]=new Pokemon(Pokemon.Species.DRATINI);
+				Pokedex.seen(partyPokemon[0].pokedexNumber-1);
+				Pokedex.caught(partyPokemon[0].pokedexNumber-1);
+			}
+			else if(starter.equalsIgnoreCase("imanoob"))
+			{
+				partyPokemon[0]=new Pokemon(Pokemon.Species.MAGIKARP);
+				Pokedex.seen(partyPokemon[0].pokedexNumber-1);
+				Pokedex.caught(partyPokemon[0].pokedexNumber-1);
+			}
+			else if(starter.equalsIgnoreCase("foxtrot"))
+			{
+				partyPokemon[0]=new Pokemon(Pokemon.Species.EEVEE);
+				Pokedex.seen(partyPokemon[0].pokedexNumber-1);
+				Pokedex.caught(partyPokemon[0].pokedexNumber-1);
+			}
+			else if(starter.equalsIgnoreCase("iwannabedaverybest"))
+			{
+				partyPokemon[0]=new Pokemon(Pokemon.Species.BULBASAUR);
+				Pokedex.seen(partyPokemon[0].pokedexNumber-1);
+				Pokedex.caught(partyPokemon[0].pokedexNumber-1);
+
+				partyPokemon[1]=new Pokemon(Pokemon.Species.CHARMANDER);
+				Pokedex.seen(partyPokemon[1].pokedexNumber-1);
+				Pokedex.caught(partyPokemon[1].pokedexNumber-1);
+
+				partyPokemon[2]=new Pokemon(Pokemon.Species.SQUIRTLE);
+				Pokedex.seen(partyPokemon[2].pokedexNumber-1);
+				Pokedex.caught(partyPokemon[2].pokedexNumber-1);
+				superDuperBoolean = true;
+
+			}
 
 			do
 			{
@@ -12486,16 +13488,48 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			}
 			while(partyPokemon[0].nickname==null);
 
-			partyPokemon[0].setNickname(partyPokemon[0].nickname);
+			if (superDuperBoolean)
+			{
+				do
+				{
+					partyPokemon[1].nickname=(JOptionPane.showInputDialog(null, "What is its nickname? (<10 Chars)", partyPokemon[1].nickname));
+				}
+				while(partyPokemon[1].nickname==null);
+				do
+				{
+					partyPokemon[2].nickname=(JOptionPane.showInputDialog(null, "What is its nickname? (<10 Chars)", partyPokemon[2].nickname));
+				}
+				while(partyPokemon[2].nickname==null);
 
+			}
+
+
+			if (superDuperBoolean)
+			{
+				partyPokemon[1].setNickname(partyPokemon[1].nickname);
+				partyPokemon[1].originalTrainer=name;
+				partyPokemon[1].idNumber=trainerIdNumber;
+
+				Pokedex.seen(partyPokemon[1].pokedexNumber-1);
+				Pokedex.caught(partyPokemon[1].pokedexNumber-1);
+
+				partyPokemon[2].setNickname(partyPokemon[2].nickname);
+				partyPokemon[2].originalTrainer=name;
+				partyPokemon[2].idNumber=trainerIdNumber;
+
+				Pokedex.seen(partyPokemon[2].pokedexNumber-1);
+				Pokedex.caught(partyPokemon[2].pokedexNumber-1);
+			}
+
+			partyPokemon[0].setNickname(partyPokemon[0].nickname);
 			partyPokemon[0].originalTrainer=name;
 			partyPokemon[0].idNumber=trainerIdNumber;
 
 			Pokedex.seen(partyPokemon[0].pokedexNumber-1);
 			Pokedex.caught(partyPokemon[0].pokedexNumber-1);
-			
+
 			Inventory.addItem(new Item(Item.Type.TOWN_MAP,1));
-			
+
 			if(DONATE)
 			{
 				Inventory.money=10000;
