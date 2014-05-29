@@ -15,9 +15,9 @@ public class Mart extends JFrame implements ActionListener
 	private JButton information;
 	private JButton closeButton;
 	private JButton buySellButton;
-	private JButton[] display = new JButton[10];
-	private JButton[] pockets = new JButton[5];
-	private JButton[] pages = new JButton[6];
+	private final JButton[] display = new JButton[10];
+	private final JButton[] pockets = new JButton[5];
+	private final JButton[] pages = new JButton[6];
 	private JLabel moneyDisplay;
 	private JLabel amountDisplay;
 	private JLabel totalAmount;
@@ -29,8 +29,8 @@ public class Mart extends JFrame implements ActionListener
 	public boolean itemSelected = false;
 	private long amount;
 	private int selectedItemId;
-	ArrayList<Item> fullInventory = new ArrayList<Item>(200);
-	ArrayList<Item> currentDisplay = new ArrayList<Item>(60);
+	final ArrayList<Item> fullInventory = new ArrayList<Item>(200);
+	final ArrayList<Item> currentDisplay = new ArrayList<Item>(60);
 	Item.Pocket pocket = Item.Pocket.ITEM;
 	State state = State.BUY;
 

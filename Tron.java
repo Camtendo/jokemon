@@ -9,14 +9,16 @@ public class Tron extends JPanel implements KeyListener, Minigame
 {
 	long startTime;
 	double time;
-	int timer = 4;
+	final int timer = 4;
 	int rMove;
 	byte dir = 0, dir1 = 0;
-	int[][] map = new int[50][50];
-	int[] x = new int[151], y = new int[151];
-	int[] x1 = new int[151], y1 = new int[151];
-	Font gameFont = new Font("Agency FB", Font.BOLD, 40);
-	Font tronFont = new Font("Agency FB", Font.BOLD, 60);
+	final int[][] map = new int[50][50];
+	final int[] x = new int[151];
+    final int[] y = new int[151];
+	final int[] x1 = new int[151];
+    final int[] y1 = new int[151];
+	final Font gameFont = new Font("Agency FB", Font.BOLD, 40);
+	final Font tronFont = new Font("Agency FB", Font.BOLD, 60);
 	boolean move = false, dead = false, gameStart = false, dead1 = false, firstMove = false;
 	boolean solo = false;
 	int rScore = 0, bScore = 0;

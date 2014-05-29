@@ -13,12 +13,12 @@ public class InventoryWindow extends JFrame implements ActionListener
 	private boolean canSelect;
 	public boolean itemUsed = false;
 	private boolean infoB = false;
-	private JButton close;
-	private JButton information;
-	private JButton[] pages = new JButton[6];
-	private JButton[] pockets = new JButton[6];
-	private JButton[] display = new JButton[10];
-	private int[] displayNum = new int[10];
+	private final JButton close;
+	private final JButton information;
+	private final JButton[] pages = new JButton[6];
+	private final JButton[] pockets = new JButton[6];
+	private final JButton[] display = new JButton[10];
+	private final int[] displayNum = new int[10];
 
 	public enum State
 	{

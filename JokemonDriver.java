@@ -43,16 +43,16 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	//Pick Correct Version and TitleScreen at compile time
 
 	public final static String VERSION="Peaches";
-	TitleScreen_Peaches title=new TitleScreen_Peaches();
+	final TitleScreen_Peaches title=new TitleScreen_Peaches();
 
 	//public static final String VERSION="Cream";
 	//TitleScreen_Cream title=new TitleScreen_Cream();
 
 	static Image icon,loading;
-	static File file=new File("savedata");
+	static final File file=new File("savedata");
 	static boolean titleScreen=true;
 	static boolean makeTheArea = false;
-	private townMap map = new townMap();
+	private final townMap map = new townMap();
 
 	//Location Enums
 	public enum Area
@@ -86,7 +86,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		Lighthouse, Lighthouse_F2,
 	}
 
-	static Area areasWithPCs[]={Area.Stringville,Area.Args_Harbor,Area.Mount_Java,Area.Villa_Del_Joe,Area.Streamreader_Hotel,
+	static final Area[] areasWithPCs={Area.Stringville,Area.Args_Harbor,Area.Mount_Java,Area.Villa_Del_Joe,Area.Streamreader_Hotel,
 	Area.Recursive_Hot_Springs,Area.Polymorph_Town,Area.Binary_City,Area.Nested_Village,Area.Enumville, Area.Route_6, Area.Champions_Walk, Area.Elite_4,Area.Peach_City,Area.Cream_City};
 
 	static int houseInt = 0;
@@ -122,7 +122,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	static private InetAddress ipAddresss;
 		//Friend Vars
 		static String friendName="";
-		static String[] friendPokemon={"","","","","",""};
+		static final String[] friendPokemon={"","","","","",""};
 		static boolean tradeConfirm=false;
 		static boolean friendTradeConfirm=false;
 		static int offerIndex;
@@ -141,8 +141,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	Mart mart = new Mart();
 
     //Tileset Variables
-	Image tileImgOutdoors[]=new Image[246];
-	Image tileImgIndoors[]=new Image[366];
+    final Image[] tileImgOutdoors=new Image[246];
+	final Image[] tileImgIndoors=new Image[366];
 
 	//Window Vars
 	private JFrame jf;
@@ -156,17 +156,17 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	int frames, slp;
 
 	//Location Vars
-	public static Point location=new Point(15,12);
-	static Point widthHeight = new Point(51,55);
+	public static final Point location=new Point(15,12);
+	static final Point widthHeight = new Point(51,55);
 
 	//Character Vars
-	Image charStand[]=new Image[4];
-	Image charWalk1[]=new Image[4];
-	Image charWalk2[]=new Image[4];
-	Image charSurf[]=new Image[4];
-	Image charBike0[]=new Image[4];
-	Image charBike1[]=new Image[4];
-	Image charBike2[]=new Image[4];
+    final Image[] charStand=new Image[4];
+	final Image[] charWalk1=new Image[4];
+	final Image[] charWalk2=new Image[4];
+	final Image[] charSurf=new Image[4];
+	final Image[] charBike0=new Image[4];
+	final Image[] charBike1=new Image[4];
+	final Image[] charBike2=new Image[4];
 	static int direction=270;
 	boolean moving=false;
 	int movingFrame=0;
@@ -203,9 +203,9 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	boolean showCredits=false;
 
 	//Point for leaving and entering buildings
-	static Point returnPoint = new Point(5,38);
+	static final Point returnPoint = new Point(5,38);
 	static Area returnArea = Area.Stringville;
-	static Point returnPoint2 = new Point(5,38);
+	static final Point returnPoint2 = new Point(5,38);
 	static Area returnArea2 = Area.Stringville;
 
 	//Game Vars
@@ -214,7 +214,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	static int timesBeatRival=0;
 	static boolean justBeatRival=false;
 	static int badges=0;
-	static Image badgeImg[]=new Image[8];
+	static final Image[] badgeImg=new Image[8];
 	static int trainerIdNumber=(int)(Math.random()*90000)+10000;
 	static String idString;
 	static int playTimeSecs=1;
@@ -226,16 +226,16 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	static String timeString;
 	static long encryptionKey;
 		//Pokemon Vars
-		static Pokemon partyPokemon[]=new Pokemon[6];
-		static Pokemon pcPokemon[]=new Pokemon[120];
-		static Pokemon enemy[]=new Pokemon[6];
+		static final Pokemon[] partyPokemon=new Pokemon[6];
+		static final Pokemon[] pcPokemon=new Pokemon[120];
+		static final Pokemon[] enemy=new Pokemon[6];
 
 	//Pause Menu Items and Such
 	boolean paused=false;
-	static String pauseMenu[]={"Pokedex","Pokemon","  Item",name,"  Save"};
+	static final String[] pauseMenu={"Pokedex","Pokemon","  Item",name,"  Save"};
 	int pauseMenuInt=0;
 	int pokemonMenuInt=0;
-	Image playerImages[]=new Image[6];
+	final Image[] playerImages=new Image[6];
 	int toggleInt=0;
 	int toggleIndexToSwitch=0;
 	boolean togglingPokemon=false;
@@ -243,8 +243,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 	//Objective Vars
 	static String currentObjective="Go talk to Babb!";
-	static boolean objectiveComplete[]=new boolean[12];
-	static boolean gotItem[]=new boolean[16];
+	static final boolean[] objectiveComplete=new boolean[12];
+	static final boolean[] gotItem=new boolean[16];
 
 	//Pokedex Vars
 	Image pokedexImg;

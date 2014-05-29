@@ -21,14 +21,16 @@ public class Trainer extends javax.swing.JPanel
 	public boolean canUseItems;
 	public boolean important=false;
 	public Pokemon[] pokeArray=new Pokemon[6];
-	public TrainerType type;
-	public String name, prebattleMSG, postBattleMSG;
+	public final TrainerType type;
+	public final String name;
+    public String prebattleMSG;
+    public String postBattleMSG;
 	//0 for Male, 1 for Female
 	int gender=0;
 	public Point location=new Point(0,0);
 	public int direction=270;
 	public int viewRange=1;
-	Image trainerStand[]=new Image[4];
+	final Image[] trainerStand=new Image[4];
 	boolean hostile=true;
 
 	public enum TrainerType

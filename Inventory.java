@@ -9,13 +9,13 @@ import java.io.PrintWriter;
 public class Inventory
 {
 	//All items in the inventory holds enough for 1 of every single item in the game
-	static ArrayList<Item> fullInventory = new ArrayList<Item>(200);
-	static ArrayList<Item> currentDisplay = new ArrayList<Item>(60);
+	static final ArrayList<Item> fullInventory = new ArrayList<Item>(200);
+	static final ArrayList<Item> currentDisplay = new ArrayList<Item>(60);
 	public static Item.Pocket currentPocket;
-	public static ErrorWindow errorWindow = new ErrorWindow();
+	public static final ErrorWindow errorWindow = new ErrorWindow();
 	public static YesNoWindow yesNoWindow = new YesNoWindow();
-	public static InventoryWindow inventoryWindow = new InventoryWindow();
-	public static PokeSelectWin selectWindow = new PokeSelectWin();
+	public static final InventoryWindow inventoryWindow = new InventoryWindow();
+	public static final PokeSelectWin selectWindow = new PokeSelectWin();
 	public static int money = 2500;
 	public static int moveNo = 0;
 	public static boolean itemCancel = false;

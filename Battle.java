@@ -26,8 +26,8 @@ public final class Battle
 	private static int userNumOfPokemon;
 	public static int userIndex=0, userCmd=0, userLockedMove=-1;
 	public static boolean userFainted=false;
-	private static Pokemon[] revert=new Pokemon[6];
-	private static Pokemon.Species[] revertSpecies=new Pokemon.Species[6];
+	private static final Pokemon[] revert=new Pokemon[6];
+	private static final Pokemon.Species[] revertSpecies=new Pokemon.Species[6];
 
 	//User Command Boolean
 	private static boolean superDuperBoolean = false;
@@ -46,16 +46,16 @@ public final class Battle
 	private static boolean hit, crit, sideHit, hasPP=true;
 	public static int timesHit;
 	public static int turn=0;
-	private static boolean nonPostingCase[]=new boolean[2];
+	private static final boolean[] nonPostingCase=new boolean[2];
 
 	//Music Vars
-	static URL wildURL=Battle.class.getResource("Music/wildBattle.mid");
-	static URL trainerURL=Battle.class.getResource("Music/trainerBattle.mid");
-	static URL gymURL=Battle.class.getResource("Music/gymBattle.mid");
-	static URL rivalURL=Battle.class.getResource("Music/rivalBattle.mid");
-	static URL rocketURL=Battle.class.getResource("Music/javaBattle.mid");
-	static URL fatefulURL=Battle.class.getResource("Music/fatefulEncounter.mid");
-	static URL battleOverURL=Battle.class.getResource("Music/battleOver.mid");
+	static final URL wildURL=Battle.class.getResource("Music/wildBattle.mid");
+	static final URL trainerURL=Battle.class.getResource("Music/trainerBattle.mid");
+	static final URL gymURL=Battle.class.getResource("Music/gymBattle.mid");
+	static final URL rivalURL=Battle.class.getResource("Music/rivalBattle.mid");
+	static final URL rocketURL=Battle.class.getResource("Music/javaBattle.mid");
+	static final URL fatefulURL=Battle.class.getResource("Music/fatefulEncounter.mid");
+	static final URL battleOverURL=Battle.class.getResource("Music/battleOver.mid");
 	
 	static URL eliteURL;
 	

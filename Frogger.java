@@ -7,7 +7,7 @@ import java.net.URL;
 
 public class Frogger extends JPanel implements KeyListener
 {
-	Image run[]=new Image[9];
+	final Image[] run=new Image[9];
 	JLabel label;
 	private static Container cp;
 	JLabel ppic=new JLabel();
@@ -20,7 +20,7 @@ public class Frogger extends JPanel implements KeyListener
 	int car4x=1;
 	int count=0;
 	int i;
-	int end = 1000;
+	final int end = 1000;
 	int car1dx = 7;
 	int car2dx = 4;
 	int car3dx = 6;

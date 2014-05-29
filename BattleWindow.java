@@ -18,20 +18,20 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 	private Container cp;
 	JTextArea text;
 	JScrollPane scroll;
-	private String battleMessage;
+	private final String battleMessage;
 	private boolean duder = false;
 	public boolean cursorLock = true;
 	private boolean tryingToCatch=false;
 
 	private int superHappyFunTime = 0;
-	private Image[] playerImages = new Image[6];
-	private Image[] enemyImages = new Image[6];
-	private Image[] battleImages = new Image[18];
+	private final Image[] playerImages = new Image[6];
+	private final Image[] enemyImages = new Image[6];
+	private final Image[] battleImages = new Image[18];
 	private boolean keyBoolean = true;
-	Point mouse = new Point(0,0);
+	final Point mouse = new Point(0,0);
 
 	private Pokemon[] playerPokemon;
-	private Pokemon[] enemyPokemon;
+	private final Pokemon[] enemyPokemon;
 
 	JScrollBar jsb;
 	public int userSelected = 0;
@@ -43,7 +43,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 
 	private CursorLocation cursorLocation = CursorLocation.TOP_LEFT;
 	MenuSetting menuSetting = MenuSetting.MAIN;
-	private BattleState battleState = BattleState.STAND_BY;
+	private final BattleState battleState = BattleState.STAND_BY;
 
 	Thread thread;
 	long lastFPS = System.currentTimeMillis() + 1000;
@@ -54,8 +54,8 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 	int pNum;
 	int eNum;
 
-	boolean flicker[]=new boolean[2];
-	int flickerInt[]=new int[2];
+	final boolean[] flicker=new boolean[2];
+	final int[] flickerInt=new int[2];
 	boolean allowedToPaintExp=false;
 	boolean showingTrainer=true;
 

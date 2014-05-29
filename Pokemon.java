@@ -95,7 +95,8 @@ public class Pokemon
 		Type moveType;
 	}
 
-	int TRUE_PP[]={0,0,0,0}, TRUE_PPMAX[]={0,0,0,0};
+	final int[] TRUE_PP={0,0,0,0};
+    final int[] TRUE_PPMAX={0,0,0,0};
 
 	public enum Side_Effect
 	{

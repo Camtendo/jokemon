@@ -14,14 +14,14 @@ import java.net.*;
 public class PokeSelectWin extends JFrame implements ActionListener
 {
 	public boolean visible;
-	private Container cp;
+	private final Container cp;
 	private int pokeIndex = 0;
-	private JButton[] poke = new JButton[6];
-	private JLabel[] pokeInfo = new JLabel[6];
-	private JButton[] moves = new JButton[4];
-	private JLabel[] moveInfo = new JLabel[4];
-	private JButton close;
-	private JLabel messageDisplay;
+	private final JButton[] poke = new JButton[6];
+	private final JLabel[] pokeInfo = new JLabel[6];
+	private final JButton[] moves = new JButton[4];
+	private final JLabel[] moveInfo = new JLabel[4];
+	private final JButton close;
+	private final JLabel messageDisplay;
 	public boolean isSelected;
 	private State state;
 	public int moveNo = 0;

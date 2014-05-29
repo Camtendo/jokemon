@@ -16,8 +16,8 @@ public class Escape extends JPanel implements KeyListener, Minigame
 
 	private int cellH, cellW;
 	private Player p1;
-	private Enemy[] enemy = new Enemy[100];
-	private int cells;
+	private final Enemy[] enemy = new Enemy[100];
+	private final int cells;
 	private int numEnemy;
 	private LeftPanel lp;
 	private boolean gameOver = false;

@@ -21,24 +21,24 @@ public final class Mechanics
 
 	static int damage=0;
 	static int expYield=0;
-	static boolean participatedInBattle[]=new boolean[6];
+	static final boolean[] participatedInBattle=new boolean[6];
 
-	static int storedDamage[]=new int[2];
-	static boolean isHighCritical[]=new boolean[2];
-	static boolean charging[]=new boolean[2];
-	static int turnsMultiTurn[]=new int[2];
-	static int turnsAsleep[]=new int[2];
-	static int turnsMist[]=new int[2];
-	static int turnsConfused[]=new int[2];
-	static boolean isConfused[]=new boolean[2];
-	static int turnsDisabled[]=new int[2];
-	static int turnsLightScreen[]=new int[2];
-	static int turnsReflect[]=new int[2];
-	static int moveDisabled[]=new int[2];
-	static int substituteHealth[]=new int[2];
-	static boolean hasSubstitute[]=new boolean[2];
-	static boolean canAttack[]=new boolean[2];
-	static boolean awayFromBattle[]=new boolean[2];
+	static final int[] storedDamage=new int[2];
+	static final boolean[] isHighCritical=new boolean[2];
+	static final boolean[] charging=new boolean[2];
+	static final int[] turnsMultiTurn=new int[2];
+	static final int[] turnsAsleep=new int[2];
+	static final int[] turnsMist=new int[2];
+	static final int[] turnsConfused=new int[2];
+	static final boolean[] isConfused=new boolean[2];
+	static final int[] turnsDisabled=new int[2];
+	static final int[] turnsLightScreen=new int[2];
+	static final int[] turnsReflect=new int[2];
+	static final int[] moveDisabled=new int[2];
+	static final int[] substituteHealth=new int[2];
+	static final boolean[] hasSubstitute=new boolean[2];
+	static final boolean[] canAttack=new boolean[2];
+	static final boolean[] awayFromBattle=new boolean[2];
 
 	//Initializes necessary variables
 	public static void initialize()

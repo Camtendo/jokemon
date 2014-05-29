@@ -14,20 +14,20 @@ import java.io.*;
 
 public class TradeWindow extends JFrame implements ActionListener
 {
-	JFrame jf;
-    private JTextField ipInput;
-	private JTextField portInput;
-	private JLabel ipDisplay;
-	private JLabel portDisplay;
-	private JButton hostButton;
-	private JButton resetButton;
+	final JFrame jf;
+    private final JTextField ipInput;
+	private final JTextField portInput;
+	private final JLabel ipDisplay;
+	private final JLabel portDisplay;
+	private final JButton hostButton;
+	private final JButton resetButton;
 
-	private JButton connectButton;
-	private JLabel connectDisplay;
+	private final JButton connectButton;
+	private final JLabel connectDisplay;
 	private JLabel connectDisplay2;
 
 	private JTextField nameEntry;
-	private JLabel nameDisplay;
+	private final JLabel nameDisplay;
 
 	InputStream sin;
 	OutputStream sout;

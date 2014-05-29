@@ -32,15 +32,15 @@ import java.awt.Toolkit;
 
 public class Pokedex
 {
-	static String[] descriptions = new String[151];
-	static String[] weight = new String[151];
-	static String[] height = new String[151];
-	static String[] areasFound = new String[151];
-	static boolean[] seen = new boolean[151];
-	static boolean[] caught = new boolean[151];
+	static final String[] descriptions = new String[151];
+	static final String[] weight = new String[151];
+	static final String[] height = new String[151];
+	static final String[] areasFound = new String[151];
+	static final boolean[] seen = new boolean[151];
+	static final boolean[] caught = new boolean[151];
 	static int totalSeen, totalCaught;
 	final static String fileName = "savedata/pDex.abomb";
-	static Image pokedexImg[]=new Image[151];
+	static final Image[] pokedexImg=new Image[151];
 	
 	public static void createImages()
     {

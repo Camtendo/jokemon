@@ -28,14 +28,14 @@ public class Overworld extends JPanel implements KeyListener, Runnable
 	int count = 0, countV1 = 16, countV2 = 4;
 	int yDraw = -32, xDraw = -32;
 	int cX = 167, cY = 450;			//Your current location on the tile array
-	int[][] tile = new int[500][500];
-	Scanner in = new Scanner(System.in);
+	final int[][] tile = new int[500][500];
+	final Scanner in = new Scanner(System.in);
 	boolean atm = true, switchSide = false, bicycle = false, hack = false;
 	byte bikeDir = 0, map = 0;
 	Image cImg, jb;
-	Image[] img = new Image[20];
-	public Pokemon user[] = new Pokemon[6];
-	public Pokemon enemy[] = new Pokemon[6];
+	final Image[] img = new Image[20];
+	public final Pokemon[] user = new Pokemon[6];
+	public final Pokemon[] enemy = new Pokemon[6];
 	private JFrame jf;
 
     public static void main(String[] args)

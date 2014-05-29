@@ -13,11 +13,11 @@ import java.net.*;
 public class YesNoWindow extends JFrame implements ActionListener
 {
 	public boolean visible;
-	private Container cp;
+	private final Container cp;
 
 	boolean yes;
-	private JButton yesButton;
-	private JButton noButton;
+	private final JButton yesButton;
+	private final JButton noButton;
 
 
     public YesNoWindow()
