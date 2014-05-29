@@ -1126,10 +1126,7 @@ public final class Battle
 					b1.addText("SPEED: "+user[i].speed);
 					b1.addText("");
 					Pokemon.Move[] moves = new Pokemon.Move[4];
-					for (int q = 0; q<4; q++)
-					{
-						moves[q] = user[i].move[q];
-					}
+                    System.arraycopy(user[i].move, 0, moves, 0, 4);
 					user[i].move = Mechanics.levelUpMove(user[i],false);
 					for (int j = 0; j<4; j++)
 					{

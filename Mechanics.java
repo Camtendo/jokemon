@@ -3842,10 +3842,7 @@ public final class Mechanics
 
 		pokemon.level = holdLevel;
 		int[] ppHold = new int[4];
-		for (int i = 0; i<4; i++)
-		{
-			ppHold[i] = pokemon.TRUE_PP[i];
-		}
+        System.arraycopy(pokemon.TRUE_PP, 0, ppHold, 0, 4);
 
 		while(movesToLearn.size() > 0)
 		{
@@ -3884,10 +3881,7 @@ public final class Mechanics
 
 			movesToLearn.remove(0);
 		}
-		for (int i = 0; i<4; i++)
-		{
-			pokemon.TRUE_PP[i] = ppHold[i];
-		}
+        System.arraycopy(ppHold, 0, pokemon.TRUE_PP, 0, 4);
 
 		System.out.println(pokemon);
 

@@ -5999,10 +5999,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				partyPokemon[i].health=partyPokemon[i].healthMax;
 				partyPokemon[i].status = Pokemon.Status.OK;
 				partyPokemon[i].substatus = Pokemon.Substatus.OK;
-				for(int j=0; j<4; j++)
-				{
-					partyPokemon[i].TRUE_PP[j]=partyPokemon[i].TRUE_PPMAX[j];
-				}
+                System.arraycopy(partyPokemon[i].TRUE_PPMAX, 0, partyPokemon[i].TRUE_PP, 0, 4);
 			}
 		}
 
@@ -8936,7 +8933,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 			String test=in.readLine();
 
-			if(VERSION.toString().charAt(0)!=test.charAt(0))
+			if(VERSION.charAt(0)!=test.charAt(0))
 			{
 				System.out.println("Invalid Pokemon data");
 				System.exit(-1);
@@ -8953,7 +8950,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				else
 				{
 					//Header
-					if(VERSION.toString().charAt(0)!=test.charAt(0))
+					if(VERSION.charAt(0)!=test.charAt(0))
 					{
 						System.out.println("Invalid Pokemon data");
 						System.exit(-1);
@@ -9052,7 +9049,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				else
 				{
 					//Header
-					if(VERSION.toString().charAt(0)!=test.charAt(0))
+					if(VERSION.charAt(0)!=test.charAt(0))
 					{
 						System.out.println("Invalid Pokemon data");
 						System.exit(-1);

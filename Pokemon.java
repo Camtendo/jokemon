@@ -704,10 +704,7 @@ public class Pokemon
 		newP.nickname=p.nickname;
 		newP.originalTrainer=p.originalTrainer;
 
-		for(int i=0; i<4; i++)
-		{
-			newP.TRUE_PP[i]=p.TRUE_PP[i];
-		}
+        System.arraycopy(p.TRUE_PP, 0, newP.TRUE_PP, 0, 4);
 
 		return newP;
 	}
