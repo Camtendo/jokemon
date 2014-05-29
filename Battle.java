@@ -75,9 +75,8 @@ public final class Battle
 
 	public static BattleWindow b1;
 	public static YesNoWindow ynWin;
-	private static boolean allowEvolve=true;
 
-	public static void startBattle(Pokemon u[], int userInt, Pokemon e[], int enemyInt, String battleType, BattleWindow b2)
+    public static void startBattle(Pokemon u[], int userInt, Pokemon e[], int enemyInt, String battleType, BattleWindow b2)
 	{
 		TERMINATE=false;
 		caughtPokemon=null;
@@ -1219,7 +1218,7 @@ public final class Battle
 	//Returns true or false. Simple.
 	public static void confirmEvolution(boolean boo)
 	{
-		allowEvolve=boo;
+        boolean allowEvolve = boo;
 	}
 
 	//Lowers count for certain effects and prints information when necessary

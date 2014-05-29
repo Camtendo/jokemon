@@ -140,19 +140,14 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	static AudioClip bgm;
 	Mart mart = new Mart();
 
-	//Tile Width and Height
-	private final int WIDTH=64;
-	private final int HEIGHT=64;
-
-	//Tileset Variables
+    //Tileset Variables
 	Image tileImgOutdoors[]=new Image[246];
 	Image tileImgIndoors[]=new Image[366];
 
 	//Window Vars
 	private JFrame jf;
-	private Container c;
 
-	//Thread Vars
+    //Thread Vars
 	Thread thread;
 
 	//Frame Rate Vars
@@ -423,21 +418,23 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		{
 			for(int j=0; j<12; j++)
 			{
-				try
+                int HEIGHT = 64;
+                int WIDTH = 64;
+                try
 				{
 					switch (tileSet)
 						{
 							case OUTDOORS:
-								g.drawImage(tileImgOutdoors[currentArea[location.x-(6-i)][location.y-(4-j)]],64*i,64*j,WIDTH,HEIGHT,this);
+								g.drawImage(tileImgOutdoors[currentArea[location.x-(6-i)][location.y-(4-j)]],64*i,64*j, WIDTH, HEIGHT,this);
 								break;
 							case INDOORS:
-								g.drawImage(tileImgIndoors[currentArea[location.x-(6-i)][location.y-(4-j)]],64*i,64*j,WIDTH,HEIGHT,this);
+								g.drawImage(tileImgIndoors[currentArea[location.x-(6-i)][location.y-(4-j)]],64*i,64*j, WIDTH, HEIGHT,this);
 								break;
 						}
 				}
 				catch(Exception e)
 				{
-					g.drawImage(tileImgOutdoors[29],64*i,64*j,WIDTH,HEIGHT,this);
+					g.drawImage(tileImgOutdoors[29],64*i,64*j, WIDTH, HEIGHT,this);
 				}
 			}
 		}
@@ -6603,10 +6600,10 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					str="Trainer Tip: There is a Pokemon Center in every city and town! Make use of them!";
 					break;
 				case 5:
-					str="Trainer Tip: The battle moves of Pokémon are limited by their power points, PP.";
+					str="Trainer Tip: The battle moves of Pokï¿½mon are limited by their power points, PP.";
 					break;
 				case 6:
-					str="Trainer Tip: Any Pokémon that takes part in battle, however short, earns EXP!";
+					str="Trainer Tip: Any Pokï¿½mon that takes part in battle, however short, earns EXP!";
 					break;
 				case 7:
 					str="Trainer Tip: Pokemon grow in strength just by battling. Not just from gaining EXP.";
@@ -12599,7 +12596,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.setLocationRelativeTo(null);
 		jf.setResizable(false);
-		c = jf.getContentPane();
+        Container c = jf.getContentPane();
 
 		this.setLayout(null);
 		c.add(this);

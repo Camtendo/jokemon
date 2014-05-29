@@ -15,8 +15,7 @@ import java.io.*;
 public class TradeWindow extends JFrame implements ActionListener
 {
 	JFrame jf;
-	private Container cp;
-	private JTextField ipInput;
+    private JTextField ipInput;
 	private JTextField portInput;
 	private JLabel ipDisplay;
 	private JLabel portDisplay;
@@ -55,7 +54,7 @@ public class TradeWindow extends JFrame implements ActionListener
 	   	jf.setLayout(null);
 	 	jf.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	   	jf.setLocationRelativeTo(null);
-	   	cp = jf.getContentPane();
+        Container cp = jf.getContentPane();
 	
 		resetButton = new JButton();
 		resetButton.setBounds(10,215,230,25);

@@ -5,11 +5,9 @@ import java.net.*;
 
 public class InventoryWindow extends JFrame implements ActionListener
 {
-	//Variables
-	private Container cp;
 
 
-	public boolean visible;
+    public boolean visible;
 	public State state;
 	private int page=1;
 	private boolean canSelect;
@@ -39,7 +37,7 @@ public class InventoryWindow extends JFrame implements ActionListener
    		this.setVisible(false);
    		visible = false;
    		this.setLocationRelativeTo(null);
-   		cp = this.getContentPane();
+        Container cp = this.getContentPane();
    		int x = 16;
    		int y = this.getHeight()-90;
    		for (int i = 0; i < pages.length; i++)

@@ -37,9 +37,8 @@ public class Overworld extends JPanel implements KeyListener, Runnable
 	public Pokemon user[] = new Pokemon[6];
 	public Pokemon enemy[] = new Pokemon[6];
 	private JFrame jf;
-	private Container c;
 
-	public static void main(String[] args)
+    public static void main(String[] args)
 	{
 		ItemTest t1 = new ItemTest();
 		Overworld sb = new Overworld();
@@ -151,7 +150,7 @@ public class Overworld extends JPanel implements KeyListener, Runnable
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.setLocationRelativeTo(null);
 		jf.setResizable(false);
-		c = jf.getContentPane();
+        Container c = jf.getContentPane();
 
 
 		img[1] = new ImageIcon("oSprites/tile1.png").getImage();

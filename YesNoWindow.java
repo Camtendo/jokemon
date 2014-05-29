@@ -18,7 +18,6 @@ public class YesNoWindow extends JFrame implements ActionListener
 	boolean yes;
 	private JButton yesButton;
 	private JButton noButton;
-	private JLabel j1;
 
 
     public YesNoWindow()
@@ -92,8 +91,8 @@ public class YesNoWindow extends JFrame implements ActionListener
     		this.setVisible(true);
     	}
     	this.setTitle(message2);
-    	j1 = new JLabel(message);
-    	j1.setBounds(15,5,this.getWidth() - 30,25);
+        JLabel j1 = new JLabel(message);
+    	j1.setBounds(15, 5, this.getWidth() - 30, 25);
     	j1.setHorizontalAlignment(JLabel.CENTER);
 
     	cp.add(j1);
