@@ -364,10 +364,9 @@ public class Mart extends JFrame implements ActionListener
 				pockets[i].setVisible(true);
 				pages[i].setVisible(true);
 			}
-			for (int i = 0; i<display.length; i++)
-			{
-				display[i].setVisible(true);
-			}
+            for (JButton aDisplay : display) {
+                aDisplay.setVisible(true);
+            }
 			information.setVisible(true);
 			closeButton.setVisible(true);
 			moneyDisplay.setVisible(true);
@@ -455,11 +454,10 @@ public class Mart extends JFrame implements ActionListener
 			pocket = newPocket;
 			currentDisplay.clear();
 
-			for (int i = 0; i < fullInventory.size(); i++)
-			{
-				if (fullInventory.get(i).pocket == newPocket)
-				currentDisplay.add(fullInventory.get(i));
-			}
+            for (Item aFullInventory : fullInventory) {
+                if (aFullInventory.pocket == newPocket)
+                    currentDisplay.add(aFullInventory);
+            }
 		}
 		else
 		{

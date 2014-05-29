@@ -5930,11 +5930,10 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			bgm.loop();
 
 		int qq = 0;
-		for (int i = 0; i<partyPokemon.length; i++)
-		{
-			if (partyPokemon[i] != null)
-			qq++;
-		}
+        for (Pokemon aPartyPokemon : partyPokemon) {
+            if (aPartyPokemon != null)
+                qq++;
+        }
 
 		if (!Mechanics.hasRemainingPokemon(partyPokemon,qq))
 		{
@@ -5992,16 +5991,14 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	//Heals all Party Pokemon with no message Prompt
 	public void healPokemonNoPrompt()
 	{
-		for(int i=0; i<partyPokemon.length; i++)
-		{
-			if(partyPokemon[i]!=null)
-			{
-				partyPokemon[i].health=partyPokemon[i].healthMax;
-				partyPokemon[i].status = Pokemon.Status.OK;
-				partyPokemon[i].substatus = Pokemon.Substatus.OK;
-                System.arraycopy(partyPokemon[i].TRUE_PPMAX, 0, partyPokemon[i].TRUE_PP, 0, 4);
-			}
-		}
+        for (Pokemon aPartyPokemon : partyPokemon) {
+            if (aPartyPokemon != null) {
+                aPartyPokemon.health = aPartyPokemon.healthMax;
+                aPartyPokemon.status = Pokemon.Status.OK;
+                aPartyPokemon.substatus = Pokemon.Substatus.OK;
+                System.arraycopy(aPartyPokemon.TRUE_PPMAX, 0, aPartyPokemon.TRUE_PP, 0, 4);
+            }
+        }
 
 		System.out.println("Pokemon Party Healed.");
 	}
@@ -6622,25 +6619,22 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	{
 		int sum=0;
 
-		for(int i=0; i<areasWithPCs.length; i++)
-		{
-			if(seenArea(areasWithPCs[i]))
-				sum++;
-		}
+        for (Area areasWithPC1 : areasWithPCs) {
+            if (seenArea(areasWithPC1))
+                sum++;
+        }
 
 		flyAreas=new Area[sum];
 		System.out.println("Number of potential fly zones: "+sum);
 
 		int index=0;
 
-		for(int i=0; i<areasWithPCs.length; i++)
-		{
-			if(seenArea(areasWithPCs[i]))
-			{
-				flyAreas[index]=areasWithPCs[i];
-				index++;
-			}
-		}
+        for (Area areasWithPC : areasWithPCs) {
+            if (seenArea(areasWithPC)) {
+                flyAreas[index] = areasWithPC;
+                index++;
+            }
+        }
 	}
 
 	//Assigns Tile Value to Your location
@@ -8362,9 +8356,9 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		{
 			PrintWriter fout=new PrintWriter(new FileWriter(output));
 
-			for(int i=0; i<currentArea.length; i++)
-				for(int j=0; j<currentArea[0].length; j++)
-					fout.println(currentArea[i][j]);
+            for (int[] aCurrentArea : currentArea)
+                for (int j = 0; j < currentArea[0].length; j++)
+                    fout.println(aCurrentArea[j]);
 			fout.close();
 		}
 		catch(Exception e){}
@@ -8390,7 +8384,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
     		for(int i=0; i<line.length(); i++)
     		{
-    			superString+=""+Integer.toHexString(Integer.valueOf(line.charAt(i)));
+    			superString+=""+Integer.toHexString((int) line.charAt(i));
     		}
     	}
 
@@ -8499,10 +8493,9 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 			int length=foundItem.length;
 			fout.println(length);
-			for(int i=0; i<length; i++)
-			{
-				fout.println(foundItem[i]);
-			}
+            for (boolean aFoundItem : foundItem) {
+                fout.println(aFoundItem);
+            }
 			fout.close();
 
 			saveEncryptionKey(output,encrypt(output));
@@ -8594,10 +8587,9 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				fout.println("CDAE"+idString);
 
 			//Game Vars
-			for(int i=0; i<objectiveComplete.length; i++)
-			{
-				fout.println(objectiveComplete[i]);
-			}
+            for (boolean anObjectiveComplete : objectiveComplete) {
+                fout.println(anObjectiveComplete);
+            }
 			fout.close();
 
 			saveEncryptionKey(output,encrypt(output));
@@ -8718,146 +8710,138 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			else
 				fout.println("CDAE"+idString);
 
-			for(int i=0; i<partyPokemon.length; i++)
-			{
-				if(partyPokemon[i]==null)
-				{
-					fout.println("null");
-				}
-				else
-				{
-					//Header
-					if(VERSION.equals("Peaches"))
-						fout.println("PDAE"+partyPokemon[i].idNumber);
-					else
-						fout.println("CDAE"+partyPokemon[i].idNumber);
+            for (Pokemon aPartyPokemon : partyPokemon) {
+                if (aPartyPokemon == null) {
+                    fout.println("null");
+                } else {
+                    //Header
+                    if (VERSION.equals("Peaches"))
+                        fout.println("PDAE" + aPartyPokemon.idNumber);
+                    else
+                        fout.println("CDAE" + aPartyPokemon.idNumber);
 
-					//Strings
-					fout.println(partyPokemon[i].species);
-					fout.println(partyPokemon[i].nickname);
-					fout.println(partyPokemon[i].originalTrainer);
-					fout.println(partyPokemon[i].status);
-					fout.println(partyPokemon[i].substatus);
-					fout.println(partyPokemon[i].move[0]);
-					fout.println(partyPokemon[i].move[1]);
-					fout.println(partyPokemon[i].move[2]);
-					fout.println(partyPokemon[i].move[3]);
+                    //Strings
+                    fout.println(aPartyPokemon.species);
+                    fout.println(aPartyPokemon.nickname);
+                    fout.println(aPartyPokemon.originalTrainer);
+                    fout.println(aPartyPokemon.status);
+                    fout.println(aPartyPokemon.substatus);
+                    fout.println(aPartyPokemon.move[0]);
+                    fout.println(aPartyPokemon.move[1]);
+                    fout.println(aPartyPokemon.move[2]);
+                    fout.println(aPartyPokemon.move[3]);
 
-					//Integers
-					fout.println(Integer.toBinaryString(partyPokemon[i].level));
-						encryptionKey+=partyPokemon[i].level;
-					fout.println(Integer.toBinaryString(partyPokemon[i].exp));
-						encryptionKey+=partyPokemon[i].exp;
-					fout.println(Integer.toBinaryString(partyPokemon[i].health));
-						encryptionKey+=partyPokemon[i].health;
-					fout.println(Integer.toBinaryString(partyPokemon[i].healthMax));
-						encryptionKey+=partyPokemon[i].healthMax;
-					fout.println(Integer.toBinaryString(partyPokemon[i].HP_EV));
-						encryptionKey+=partyPokemon[i].HP_EV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].ATK_EV));
-						encryptionKey+=partyPokemon[i].ATK_EV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].DEF_EV));
-						encryptionKey+=partyPokemon[i].DEF_EV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].SPCL_EV));
-						encryptionKey+=partyPokemon[i].SPCL_EV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].SPEED_EV));
-						encryptionKey+=partyPokemon[i].SPEED_EV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].HP_IV));
-						encryptionKey+=partyPokemon[i].HP_IV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].ATK_IV));
-						encryptionKey+=partyPokemon[i].ATK_IV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].DEF_IV));
-						encryptionKey+=partyPokemon[i].DEF_IV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].SPCL_IV));
-						encryptionKey+=partyPokemon[i].SPCL_IV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].SPEED_IV));
-						encryptionKey+=partyPokemon[i].SPEED_IV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].TRUE_PP[0]));
-						encryptionKey+=partyPokemon[i].TRUE_PP[0];
-					fout.println(Integer.toBinaryString(partyPokemon[i].TRUE_PP[1]));
-					fout.println(Integer.toBinaryString(partyPokemon[i].TRUE_PP[2]));
-					fout.println(Integer.toBinaryString(partyPokemon[i].TRUE_PP[3]));
-					fout.println(Integer.toBinaryString(partyPokemon[i].TRUE_PPMAX[0]));
-						encryptionKey+=partyPokemon[i].TRUE_PPMAX[0];
-					fout.println(Integer.toBinaryString(partyPokemon[i].TRUE_PPMAX[1]));
-					fout.println(Integer.toBinaryString(partyPokemon[i].TRUE_PPMAX[2]));
-					fout.println(Integer.toBinaryString(partyPokemon[i].TRUE_PPMAX[3]));
+                    //Integers
+                    fout.println(Integer.toBinaryString(aPartyPokemon.level));
+                    encryptionKey += aPartyPokemon.level;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.exp));
+                    encryptionKey += aPartyPokemon.exp;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.health));
+                    encryptionKey += aPartyPokemon.health;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.healthMax));
+                    encryptionKey += aPartyPokemon.healthMax;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.HP_EV));
+                    encryptionKey += aPartyPokemon.HP_EV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.ATK_EV));
+                    encryptionKey += aPartyPokemon.ATK_EV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.DEF_EV));
+                    encryptionKey += aPartyPokemon.DEF_EV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.SPCL_EV));
+                    encryptionKey += aPartyPokemon.SPCL_EV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.SPEED_EV));
+                    encryptionKey += aPartyPokemon.SPEED_EV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.HP_IV));
+                    encryptionKey += aPartyPokemon.HP_IV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.ATK_IV));
+                    encryptionKey += aPartyPokemon.ATK_IV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.DEF_IV));
+                    encryptionKey += aPartyPokemon.DEF_IV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.SPCL_IV));
+                    encryptionKey += aPartyPokemon.SPCL_IV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.SPEED_IV));
+                    encryptionKey += aPartyPokemon.SPEED_IV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.TRUE_PP[0]));
+                    encryptionKey += aPartyPokemon.TRUE_PP[0];
+                    fout.println(Integer.toBinaryString(aPartyPokemon.TRUE_PP[1]));
+                    fout.println(Integer.toBinaryString(aPartyPokemon.TRUE_PP[2]));
+                    fout.println(Integer.toBinaryString(aPartyPokemon.TRUE_PP[3]));
+                    fout.println(Integer.toBinaryString(aPartyPokemon.TRUE_PPMAX[0]));
+                    encryptionKey += aPartyPokemon.TRUE_PPMAX[0];
+                    fout.println(Integer.toBinaryString(aPartyPokemon.TRUE_PPMAX[1]));
+                    fout.println(Integer.toBinaryString(aPartyPokemon.TRUE_PPMAX[2]));
+                    fout.println(Integer.toBinaryString(aPartyPokemon.TRUE_PPMAX[3]));
 
-					//Booleans
-					fout.println(partyPokemon[i].IS_TRADED);
-				}
-			}
+                    //Booleans
+                    fout.println(aPartyPokemon.IS_TRADED);
+                }
+            }
 
-			for(int i=0; i<pcPokemon.length; i++)
-			{
-				if(pcPokemon[i]==null)
-				{
-					fout.println("null");
-				}
-				else
-				{
-					//Header
-					if(VERSION.equals("Peaches"))
-						fout.println("PDAE"+pcPokemon[i].idNumber);
-					else
-						fout.println("CDAE"+pcPokemon[i].idNumber);
+            for (Pokemon aPcPokemon : pcPokemon) {
+                if (aPcPokemon == null) {
+                    fout.println("null");
+                } else {
+                    //Header
+                    if (VERSION.equals("Peaches"))
+                        fout.println("PDAE" + aPcPokemon.idNumber);
+                    else
+                        fout.println("CDAE" + aPcPokemon.idNumber);
 
-					//Strings
-					fout.println(pcPokemon[i].species);
-					fout.println(pcPokemon[i].nickname);
-					fout.println(pcPokemon[i].originalTrainer);
-					fout.println(pcPokemon[i].status);
-					fout.println(pcPokemon[i].substatus);
-					fout.println(pcPokemon[i].move[0]);
-					fout.println(pcPokemon[i].move[1]);
-					fout.println(pcPokemon[i].move[2]);
-					fout.println(pcPokemon[i].move[3]);
+                    //Strings
+                    fout.println(aPcPokemon.species);
+                    fout.println(aPcPokemon.nickname);
+                    fout.println(aPcPokemon.originalTrainer);
+                    fout.println(aPcPokemon.status);
+                    fout.println(aPcPokemon.substatus);
+                    fout.println(aPcPokemon.move[0]);
+                    fout.println(aPcPokemon.move[1]);
+                    fout.println(aPcPokemon.move[2]);
+                    fout.println(aPcPokemon.move[3]);
 
-					//Integers
-					fout.println(Integer.toBinaryString(pcPokemon[i].level));
-						encryptionKey+=pcPokemon[i].level;
-					fout.println(Integer.toBinaryString(pcPokemon[i].exp));
-						encryptionKey+=pcPokemon[i].exp;
-					fout.println(Integer.toBinaryString(pcPokemon[i].health));
-						encryptionKey+=pcPokemon[i].health;
-					fout.println(Integer.toBinaryString(pcPokemon[i].healthMax));
-						encryptionKey+=pcPokemon[i].healthMax;
-					fout.println(Integer.toBinaryString(pcPokemon[i].HP_EV));
-						encryptionKey+=pcPokemon[i].HP_EV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].ATK_EV));
-						encryptionKey+=pcPokemon[i].ATK_EV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].DEF_EV));
-						encryptionKey+=pcPokemon[i].DEF_EV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].SPCL_EV));
-						encryptionKey+=pcPokemon[i].SPCL_EV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].SPEED_EV));
-						encryptionKey+=pcPokemon[i].SPEED_EV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].HP_IV));
-						encryptionKey+=pcPokemon[i].HP_IV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].ATK_IV));
-						encryptionKey+=pcPokemon[i].ATK_IV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].DEF_IV));
-						encryptionKey+=pcPokemon[i].DEF_IV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].SPCL_IV));
-						encryptionKey+=pcPokemon[i].SPCL_IV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].SPEED_IV));
-						encryptionKey+=pcPokemon[i].SPEED_IV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].TRUE_PP[0]));
-						encryptionKey+=pcPokemon[i].TRUE_PP[0];
-					fout.println(Integer.toBinaryString(pcPokemon[i].TRUE_PP[1]));
-					fout.println(Integer.toBinaryString(pcPokemon[i].TRUE_PP[2]));
-					fout.println(Integer.toBinaryString(pcPokemon[i].TRUE_PP[3]));
-					fout.println(Integer.toBinaryString(pcPokemon[i].TRUE_PPMAX[0]));
-						encryptionKey+=pcPokemon[i].TRUE_PPMAX[0];
-					fout.println(Integer.toBinaryString(pcPokemon[i].TRUE_PPMAX[1]));
-					fout.println(Integer.toBinaryString(pcPokemon[i].TRUE_PPMAX[2]));
-					fout.println(Integer.toBinaryString(pcPokemon[i].TRUE_PPMAX[3]));
+                    //Integers
+                    fout.println(Integer.toBinaryString(aPcPokemon.level));
+                    encryptionKey += aPcPokemon.level;
+                    fout.println(Integer.toBinaryString(aPcPokemon.exp));
+                    encryptionKey += aPcPokemon.exp;
+                    fout.println(Integer.toBinaryString(aPcPokemon.health));
+                    encryptionKey += aPcPokemon.health;
+                    fout.println(Integer.toBinaryString(aPcPokemon.healthMax));
+                    encryptionKey += aPcPokemon.healthMax;
+                    fout.println(Integer.toBinaryString(aPcPokemon.HP_EV));
+                    encryptionKey += aPcPokemon.HP_EV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.ATK_EV));
+                    encryptionKey += aPcPokemon.ATK_EV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.DEF_EV));
+                    encryptionKey += aPcPokemon.DEF_EV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.SPCL_EV));
+                    encryptionKey += aPcPokemon.SPCL_EV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.SPEED_EV));
+                    encryptionKey += aPcPokemon.SPEED_EV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.HP_IV));
+                    encryptionKey += aPcPokemon.HP_IV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.ATK_IV));
+                    encryptionKey += aPcPokemon.ATK_IV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.DEF_IV));
+                    encryptionKey += aPcPokemon.DEF_IV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.SPCL_IV));
+                    encryptionKey += aPcPokemon.SPCL_IV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.SPEED_IV));
+                    encryptionKey += aPcPokemon.SPEED_IV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.TRUE_PP[0]));
+                    encryptionKey += aPcPokemon.TRUE_PP[0];
+                    fout.println(Integer.toBinaryString(aPcPokemon.TRUE_PP[1]));
+                    fout.println(Integer.toBinaryString(aPcPokemon.TRUE_PP[2]));
+                    fout.println(Integer.toBinaryString(aPcPokemon.TRUE_PP[3]));
+                    fout.println(Integer.toBinaryString(aPcPokemon.TRUE_PPMAX[0]));
+                    encryptionKey += aPcPokemon.TRUE_PPMAX[0];
+                    fout.println(Integer.toBinaryString(aPcPokemon.TRUE_PPMAX[1]));
+                    fout.println(Integer.toBinaryString(aPcPokemon.TRUE_PPMAX[2]));
+                    fout.println(Integer.toBinaryString(aPcPokemon.TRUE_PPMAX[3]));
 
-					//Booleans
-					fout.println(pcPokemon[i].IS_TRADED);
+                    //Booleans
+                    fout.println(aPcPokemon.IS_TRADED);
 
-				}
-			}
+                }
+            }
 
 			fout.println(""+encryptionKey);
 			fout.close();
@@ -9584,22 +9568,18 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	{
 		int numPokes=0;
 
-		for(int i=0; i<partyPokemon.length; i++)
-		{
-			if(partyPokemon[i]!=null&&partyPokemon[i].status==Pokemon.Status.PSN)
-			{
-				partyPokemon[i].health--;
-				drawPoison=true;
-				if(partyPokemon[i].health<=0)
-				{
-					partyPokemon[i].health=0;
-					partyPokemon[i].status=Pokemon.Status.FNT;
-				}
-				numPokes++;
-			}
-			else if(partyPokemon[i]!=null)
-				numPokes++;
-		}
+        for (Pokemon aPartyPokemon : partyPokemon) {
+            if (aPartyPokemon != null && aPartyPokemon.status == Pokemon.Status.PSN) {
+                aPartyPokemon.health--;
+                drawPoison = true;
+                if (aPartyPokemon.health <= 0) {
+                    aPartyPokemon.health = 0;
+                    aPartyPokemon.status = Pokemon.Status.FNT;
+                }
+                numPokes++;
+            } else if (aPartyPokemon != null)
+                numPokes++;
+        }
 
 
 		if(!Mechanics.hasRemainingPokemon(partyPokemon,numPokes))

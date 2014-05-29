@@ -186,27 +186,21 @@ public final class Mechanics
 	{
 		int highest=0;
 
-		for(int i=0; i<party.length; i++)
-		{
-			if(party[i]!=null)
-			{
-				if(party[i].level>highest)
-					highest=party[i].level;
-			}
-			else
-				break;
-		}
+        for (Pokemon aParty : party) {
+            if (aParty != null) {
+                if (aParty.level > highest)
+                    highest = aParty.level;
+            } else
+                break;
+        }
 
-		for(int i=0; i<pc.length; i++)
-		{
-			if(pc[i]!=null)
-			{
-				if(pc[i].level>highest)
-					highest=pc[i].level;
-			}
-			else
-				return highest;
-		}
+        for (Pokemon aPc : pc) {
+            if (aPc != null) {
+                if (aPc.level > highest)
+                    highest = aPc.level;
+            } else
+                return highest;
+        }
 
 		return highest;
 	}
@@ -258,17 +252,14 @@ public final class Mechanics
 	//Checks party for HM01 Cut
 	public static boolean hasCut(Pokemon[] pokemon)
 	{
-		for(int i=0; i<pokemon.length; i++)
-		{
-			if(pokemon[i]!=null)
-			{
-				for(int j=0; j<4; j++)
-				{
-					if(pokemon[i].move[j]==Pokemon.Move.CUT)
-						return true;
-				}
-			}
-		}
+        for (Pokemon aPokemon : pokemon) {
+            if (aPokemon != null) {
+                for (int j = 0; j < 4; j++) {
+                    if (aPokemon.move[j] == Pokemon.Move.CUT)
+                        return true;
+                }
+            }
+        }
 
 		return false;
 	}
@@ -276,17 +267,14 @@ public final class Mechanics
 	//Checks party for HM02 Fly
 	public static boolean hasFly(Pokemon[] pokemon)
 	{
-		for(int i=0; i<pokemon.length; i++)
-		{
-			if(pokemon[i]!=null)
-			{
-				for(int j=0; j<4; j++)
-				{
-					if(pokemon[i].move[j]==Pokemon.Move.FLY)
-						return true;
-				}
-			}
-		}
+        for (Pokemon aPokemon : pokemon) {
+            if (aPokemon != null) {
+                for (int j = 0; j < 4; j++) {
+                    if (aPokemon.move[j] == Pokemon.Move.FLY)
+                        return true;
+                }
+            }
+        }
 
 		return false;
 	}
@@ -294,17 +282,14 @@ public final class Mechanics
 	//Checks party for HM03 Surf
 	public static boolean hasSurf(Pokemon[] pokemon)
 	{
-		for(int i=0; i<pokemon.length; i++)
-		{
-			if(pokemon[i]!=null)
-			{
-				for(int j=0; j<4; j++)
-				{
-					if(pokemon[i].move[j]==Pokemon.Move.SURF)
-						return true;
-				}
-			}
-		}
+        for (Pokemon aPokemon : pokemon) {
+            if (aPokemon != null) {
+                for (int j = 0; j < 4; j++) {
+                    if (aPokemon.move[j] == Pokemon.Move.SURF)
+                        return true;
+                }
+            }
+        }
 
 		return false;
 	}
@@ -312,17 +297,14 @@ public final class Mechanics
 	//Checks party for HM04 Strength
 	public static boolean hasStrength(Pokemon[] pokemon)
 	{
-		for(int i=0; i<pokemon.length; i++)
-		{
-			if(pokemon[i]!=null)
-			{
-				for(int j=0; j<4; j++)
-				{
-					if(pokemon[i].move[j]==Pokemon.Move.STRENGTH)
-						return true;
-				}
-			}
-		}
+        for (Pokemon aPokemon : pokemon) {
+            if (aPokemon != null) {
+                for (int j = 0; j < 4; j++) {
+                    if (aPokemon.move[j] == Pokemon.Move.STRENGTH)
+                        return true;
+                }
+            }
+        }
 
 		return false;
 	}
@@ -330,17 +312,14 @@ public final class Mechanics
 	//Checks party for HM05 Flash
 	public static boolean hasFlash(Pokemon[] pokemon)
 	{
-		for(int i=0; i<pokemon.length; i++)
-		{
-			if(pokemon[i]!=null)
-			{
-				for(int j=0; j<4; j++)
-				{
-					if(pokemon[i].move[j]==Pokemon.Move.CUT)
-						return true;
-				}
-			}
-		}
+        for (Pokemon aPokemon : pokemon) {
+            if (aPokemon != null) {
+                for (int j = 0; j < 4; j++) {
+                    if (aPokemon.move[j] == Pokemon.Move.CUT)
+                        return true;
+                }
+            }
+        }
 
 		return false;
 	}

@@ -28,11 +28,10 @@ public class Inventory
 		while (currentDisplay.size()!= 0)
 			currentDisplay.remove(0);
 
-		for (int i = 0; i < fullInventory.size(); i++)
-		{
-			if (fullInventory.get(i).pocket == newPocket)
-			currentDisplay.add(fullInventory.get(i));
-		}
+        for (Item aFullInventory : fullInventory) {
+            if (aFullInventory.pocket == newPocket)
+                currentDisplay.add(aFullInventory);
+        }
 	}
 	//Adds an item to the inventory
 	public static void addItem(Item addedItem)
@@ -54,46 +53,36 @@ public class Inventory
 	public static boolean hasItem(Item newItem)
 	{
 		boolean hasItem = false;
-		for (int i = 0; i<fullInventory.size(); i++)
-		{
-			if (fullInventory.get(i).type == newItem.type)
-			{
-				if (newItem.type == Item.Type.TM || newItem.type == Item.Type.HM)
-				{
-					if (newItem.type == Item.Type.TM && fullInventory.get(i).type == Item.Type.TM && newItem.mNo == fullInventory.get(i).mNo)
-					hasItem = true;
-					else if (newItem.type == Item.Type.HM && fullInventory.get(i).type == Item.Type.HM && newItem.mNo == fullInventory.get(i).mNo)
-					hasItem = true;
-				}
-				else
-				{
-					hasItem = true;
-				}
-			}
-		}
+        for (Item aFullInventory : fullInventory) {
+            if (aFullInventory.type == newItem.type) {
+                if (newItem.type == Item.Type.TM || newItem.type == Item.Type.HM) {
+                    if (newItem.type == Item.Type.TM && aFullInventory.type == Item.Type.TM && newItem.mNo == aFullInventory.mNo)
+                        hasItem = true;
+                    else if (newItem.type == Item.Type.HM && aFullInventory.type == Item.Type.HM && newItem.mNo == aFullInventory.mNo)
+                        hasItem = true;
+                } else {
+                    hasItem = true;
+                }
+            }
+        }
 		return hasItem;
 	}
 	public static Item getItemInfo(Item newItem)
 	{
 		if (!hasItem(newItem))
 		return null;
-		for (int i = 0; i<fullInventory.size(); i++)
-		{
-			if (fullInventory.get(i).type == newItem.type)
-			{
-				if (newItem.type == Item.Type.TM || newItem.type == Item.Type.HM)
-				{
-					if (newItem.type == Item.Type.TM && fullInventory.get(i).type == Item.Type.TM && newItem.mNo == fullInventory.get(i).mNo)
-					return fullInventory.get(i);
-					else if (newItem.type == Item.Type.HM && fullInventory.get(i).type == Item.Type.HM && newItem.mNo == fullInventory.get(i).mNo)
-					return fullInventory.get(i);
-				}
-				else
-				{
-					return fullInventory.get(i);
-				}
-			}
-		}
+        for (Item aFullInventory : fullInventory) {
+            if (aFullInventory.type == newItem.type) {
+                if (newItem.type == Item.Type.TM || newItem.type == Item.Type.HM) {
+                    if (newItem.type == Item.Type.TM && aFullInventory.type == Item.Type.TM && newItem.mNo == aFullInventory.mNo)
+                        return aFullInventory;
+                    else if (newItem.type == Item.Type.HM && aFullInventory.type == Item.Type.HM && newItem.mNo == aFullInventory.mNo)
+                        return aFullInventory;
+                } else {
+                    return aFullInventory;
+                }
+            }
+        }
 		return null;
 	}
 	//Item index is the item currently selected out of the array of items in the inventory
@@ -800,20 +789,16 @@ public class Inventory
 
 			fout.println(fullInventory.size());
 
-			for (int i = 0; i<fullInventory.size(); i++)
-			{
-				if(fullInventory.get(i).type==Item.Type.TM||fullInventory.get(i).type==Item.Type.HM)
-				{
-					fout.println(""+fullInventory.get(i).type);
-					fout.println(""+fullInventory.get(i).amount);
-					fout.println(""+fullInventory.get(i).mNo);
-				}
-				else
-				{
-					fout.println(""+fullInventory.get(i).type);
-					fout.println(""+fullInventory.get(i).amount);
-				}
-			}
+            for (Item aFullInventory : fullInventory) {
+                if (aFullInventory.type == Item.Type.TM || aFullInventory.type == Item.Type.HM) {
+                    fout.println("" + aFullInventory.type);
+                    fout.println("" + aFullInventory.amount);
+                    fout.println("" + aFullInventory.mNo);
+                } else {
+                    fout.println("" + aFullInventory.type);
+                    fout.println("" + aFullInventory.amount);
+                }
+            }
 			fout.println(money);
 			fout.close();
 

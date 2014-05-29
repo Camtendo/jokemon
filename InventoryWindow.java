@@ -104,10 +104,9 @@ public class InventoryWindow extends JFrame implements ActionListener
    		information.setBounds(16,this.getHeight()-120,260,20);
    		information.addActionListener(this);
    		cp.add(information);
-   		for (int ii = 0; ii<display.length; ii++)
-		{
-			cp.add(display[ii]);
-		}
+        for (JButton aDisplay : display) {
+            cp.add(aDisplay);
+        }
 	}
 
 	//Action Performed
