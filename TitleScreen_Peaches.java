@@ -183,7 +183,7 @@ public class TitleScreen_Peaches extends JPanel implements Runnable, KeyListener
 			{
 				Thread.sleep(slp);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 		
 		creditMusic.loop();
@@ -197,7 +197,7 @@ public class TitleScreen_Peaches extends JPanel implements Runnable, KeyListener
 			{
 				Thread.sleep(slp);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 	}
 

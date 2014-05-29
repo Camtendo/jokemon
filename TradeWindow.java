@@ -195,7 +195,7 @@ public class TradeWindow extends JFrame implements ActionListener
 	    			{
 	    				Thread.sleep(5000);
 	    			}
-	    			catch(Exception ex){}
+	    			catch(Exception ignored){}
 	    			
 	    			JokemonDriver.CONNECTED=true;
 	    			System.out.println("Connected to Client.");
@@ -229,7 +229,7 @@ public class TradeWindow extends JFrame implements ActionListener
 	    			{
 	    				Thread.sleep(5000);
 	    			}
-	    			catch(Exception ex){}
+	    			catch(Exception ignored){}
 	    			
 	    			JokemonDriver.CONNECTED=true;
 	    			System.out.println("Connected to Host.");

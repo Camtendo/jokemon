@@ -1039,7 +1039,7 @@ public class Pokedex
 			try{
 				fout = new PrintWriter(new FileWriter(new File(fileName)));
 			}
-			catch(IOException ex){}
+			catch(IOException ignored){}
 		}
 
 		for(int i=0; i<151; i++)

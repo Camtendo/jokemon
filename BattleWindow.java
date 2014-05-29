@@ -185,7 +185,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 			{
 				Thread.sleep(slp);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 	}
 	public void framerateManager()
@@ -532,7 +532,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
     	{
     		Thread.sleep(4000);
     	}
-    	catch(Exception e){}
+    	catch(Exception ignored){}
     }
 
     //Called when a Pokemon is failed to be caught
@@ -795,7 +795,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 		{
 			this.requestFocus();
 		}
-		catch(Exception eeeee){}
+		catch(Exception ignored){}
 	}
 	public void mouseEntered(MouseEvent e){}
 	public void mouseReleased(MouseEvent e){}
@@ -845,7 +845,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 				{
 					paintStandBy(g);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 				break;
 		}
 		paintHud(g);
@@ -866,7 +866,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 				g.drawImage(this.icon,15,50,16,16,this);
 			}
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		g.drawImage(battleImages[1],385,350,200,50,this); //Draws Player Arrow
 		g.drawImage(battleImages[0],0,450,600,150,this); //Draws Box

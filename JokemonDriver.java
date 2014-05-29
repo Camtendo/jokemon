@@ -379,7 +379,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						}
 					}
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		else if(!transition)
@@ -504,7 +504,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				g.drawString("--------",50,20*i+100);
 			}
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		g.drawString("Box "+(compBox+1),250,70);
 		try
@@ -517,7 +517,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				g.drawString("--------",250,20*i+100);
 			}
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		if(!compMode.equals(""))
 		{
@@ -638,7 +638,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				g.drawString("--------",50,20*i+100);
 			}
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		g.drawImage(icon,30,offerIndex*20+85,16,16,this);
 
@@ -658,7 +658,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				g.drawString("--------",550,20*i+100);
 			}
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		g.drawImage(icon,530,friendOfferIndex*20+85,16,16,this);
 
@@ -724,7 +724,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						g.drawString(""+(pokedexInt+i)+": "+"????????",50,20*i+100);
 					}
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 
 				if(Pokedex.caught[pokedexInt-1])
 				{
@@ -6035,7 +6035,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				{
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 			
 			invokeMap=false;
@@ -6100,33 +6100,33 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		{
 			talk();
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		try
 		{
 			pickUp();
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		try
 		{
 			readSign();
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		try
 		{
 			if(Inventory.hasItem(new Item(Item.Type.HM,1,1)))
 			useCut();
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		try
 		{
 			if(Inventory.hasItem(new Item(Item.Type.HM,1,4)))
 			useStrength();
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		//Pokemon Center
 		if((area==Area.Pokecenter&&location.x==4&&location.y==3&&direction==90)||(area==Area.Elite_4&&location.x==24&&location.y==109&&direction==90))
@@ -6691,7 +6691,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 								repaint();
 								Thread.sleep(2500);
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 						}
 						break;
 					case 90:
@@ -6721,7 +6721,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 								repaint();
 								Thread.sleep(2500);
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 						}
 						break;
 					case 180:
@@ -6751,7 +6751,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 								repaint();
 								Thread.sleep(2500);
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 						}
 						break;
 					case 270:
@@ -6781,7 +6781,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 								repaint();
 								Thread.sleep(2500);
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 						}
 						break;
 				}
@@ -6803,7 +6803,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				repaint();
 				Thread.sleep(10);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 
 		bgm.stop();
@@ -6831,7 +6831,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				repaint();
 				Thread.sleep(10);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 
 		if(!forceBike)
@@ -6952,7 +6952,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!gotItem[1]&&person.equals("Jimmy"))
@@ -6976,7 +6976,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!gotItem[2]&&person.equals("Jace"))
@@ -7000,7 +7000,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!gotItem[3]&&person.equals("Jin"))
@@ -7024,7 +7024,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!gotItem[4]&&person.equals("Jordan"))
@@ -7048,7 +7048,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!gotItem[5]&&person.equals("Joy"))
@@ -7072,7 +7072,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!gotItem[6]&&person.equals("James"))
@@ -7096,7 +7096,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!gotItem[7]&&person.equals("Jessica"))
@@ -7120,7 +7120,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 
@@ -7145,7 +7145,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!Inventory.hasItem(new Item(Item.Type.HM,1,2))&&person.equals("Flyer"))
@@ -7169,7 +7169,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!Inventory.hasItem(new Item(Item.Type.HM,1,3))&&person.equals("Surfer"))
@@ -7193,7 +7193,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!Inventory.hasItem(new Item(Item.Type.HM,1,4))&&person.equals("Brutus"))
@@ -7217,7 +7217,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!Inventory.hasItem(new Item(Item.Type.GOOD_ROD,1))&&person.equals("Roderick Jr."))
@@ -7241,7 +7241,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!Inventory.hasItem(new Item(Item.Type.OLD_ROD,1))&&person.equals("Roderick III"))
@@ -7265,7 +7265,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(badges>=3&&!Inventory.hasItem(new Item(Item.Type.BICYCLE,1))&&person.equals("Bike Enthusiast"))
@@ -7289,7 +7289,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!Inventory.hasItem(new Item(Item.Type.HM,1,5))&&person.equalsIgnoreCase("Mr. Flashy"))
@@ -7312,7 +7312,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!Inventory.hasItem(new Item(Item.Type.MASTER_BALL,1))&&person.equalsIgnoreCase("BOSS"))
@@ -7335,7 +7335,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 
@@ -7356,7 +7356,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					{
 						Thread.sleep(300);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 				else
 					trainerBattle();
@@ -7370,7 +7370,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					{
 						Thread.sleep(300);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 				else
 					trainerBattle();
@@ -7384,7 +7384,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					{
 						Thread.sleep(300);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 				else
 					trainerBattle();
@@ -7398,7 +7398,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					{
 						Thread.sleep(300);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 				else
 					trainerBattle();
@@ -7561,7 +7561,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				repaint();
 				Thread.sleep(10);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 
 		jf.toFront();
@@ -7589,7 +7589,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						repaint();
 						Thread.sleep(10);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 
 				fishing=true;
@@ -7609,7 +7609,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						repaint();
 						Thread.sleep(10);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 				return;
 			}
@@ -7657,7 +7657,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						repaint();
 						Thread.sleep(10);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 
 				fishing=true;
@@ -7681,7 +7681,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						repaint();
 						Thread.sleep(10);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 				
 				if(enemy[0].nickname.equals("Mewtrix"))
@@ -7919,7 +7919,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				repaint();
 				Thread.sleep(10);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 
 		jf.toFront();
@@ -7974,7 +7974,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				repaint();
 				Thread.sleep(10);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 
 		jf.toFront();
@@ -8038,7 +8038,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 
 			gameEventHandler(trainer[theTrainer]);
@@ -8110,7 +8110,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 
 			jf.toFront();
@@ -8141,7 +8141,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			{
 				Thread.sleep(10);
 			}
-			catch(Exception ex){}
+			catch(Exception ignored){}
 			manageTime();
 			tWin.tradeLogic();
 		}
@@ -8176,7 +8176,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			{
 				Thread.sleep(1000);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 		String minStr,secStr;
 
@@ -8361,7 +8361,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
                     fout.println(aCurrentArea[j]);
 			fout.close();
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		System.out.println("Tile map saved");
 	}
@@ -8501,7 +8501,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			saveEncryptionKey(output,encrypt(output));
 			System.out.println("Item data saved.");
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 	}
 
 	//Loads found item data
@@ -8547,7 +8547,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				objectiveComplete[i]=Boolean.parseBoolean(in.readLine());
 			}
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		testEncryption(input);
 
@@ -8595,7 +8595,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			saveEncryptionKey(output,encrypt(output));
 			System.out.println("Objective data saved.");
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 	}
 
 	//Saves House Int
@@ -8617,7 +8617,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 			System.out.println("House Integer saved.");
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 	}
 
 	//Saves other game data
@@ -8656,7 +8656,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			saveEncryptionKey(output,encrypt(output));
 			System.out.println("Base data saved.");
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 	}
 
 	//Loads GameData
@@ -8687,7 +8687,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			returnArea=Area.valueOf(in.readLine());
 			returnArea2=Area.valueOf(in.readLine());
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		testEncryption(input);
 
@@ -9282,7 +9282,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 								Thread.sleep(250);
 								repaint();
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 							return true;
 						}
 						else
@@ -9303,7 +9303,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 								Thread.sleep(250);
 								repaint();
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 							return true;
 						}
 						else
@@ -9324,7 +9324,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 								Thread.sleep(250);
 								repaint();
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 							return true;
 						}
 						else
@@ -9413,7 +9413,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 									repaint();
 									Thread.sleep(100);
 								}
-								catch(Exception e){}
+								catch(Exception ignored){}
 							}
 							break;
 						case 90:
@@ -9425,7 +9425,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 									repaint();
 									Thread.sleep(100);
 								}
-								catch(Exception e){}
+								catch(Exception ignored){}
 							}
 							break;
 						case 180:
@@ -9437,7 +9437,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 									repaint();
 									Thread.sleep(100);
 								}
-								catch(Exception e){}
+								catch(Exception ignored){}
 							}
 							break;
 						case 270:
@@ -9449,7 +9449,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 									repaint();
 									Thread.sleep(100);
 								}
-								catch(Exception e){}
+								catch(Exception ignored){}
 							}
 							break;
 					}
@@ -12398,7 +12398,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
       		{
       			Thread.sleep(slp);
       		}
-      		catch(Exception e){}
+      		catch(Exception ignored){}
 		}
 
 		title.titleMusic.stop();

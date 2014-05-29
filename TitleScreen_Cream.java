@@ -242,7 +242,7 @@ public class TitleScreen_Cream extends JPanel implements Runnable
 			{
 				Thread.sleep(slp);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 		
 		creditMusic.loop();
@@ -256,7 +256,7 @@ public class TitleScreen_Cream extends JPanel implements Runnable
 			{
 				Thread.sleep(slp);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 	}
 

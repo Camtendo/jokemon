@@ -183,7 +183,7 @@ public class Frogger extends JPanel implements KeyListener
 			move(direction);
 			move();
 			repaint();
-			try{Thread.sleep(10);}catch(Exception e){}
+			try{Thread.sleep(10);}catch(Exception ignored){}
 		}
 	}
 	public void move()
@@ -212,7 +212,7 @@ public class Frogger extends JPanel implements KeyListener
 			car2dx += count;
 			car3dx += count;
 			car4dx += count;
-			try{Thread.sleep(1000);}catch(Exception e){}
+			try{Thread.sleep(1000);}catch(Exception ignored){}
 		}
 		if(x<-81)
 			x=940;
@@ -222,7 +222,7 @@ public class Frogger extends JPanel implements KeyListener
 			y=632;
 		if(x+47>=car1x && x<=car1x+58 && y+48>=100 && y<=148)
 		{
-			try{Thread.sleep(900);}catch(Exception e){}
+			try{Thread.sleep(900);}catch(Exception ignored){}
 			count=1;
 			car1dx = 7;
 			car2dx = 4;
@@ -233,7 +233,7 @@ public class Frogger extends JPanel implements KeyListener
 		}
 		if(x+47>=car2x && x<=car2x+58 && y+48>=500 && y<=548)
 		{
-			try{Thread.sleep(900);}catch(Exception e){}
+			try{Thread.sleep(900);}catch(Exception ignored){}
 			count=1;
 			car1dx = 7;
 			car2dx = 4;
@@ -244,7 +244,7 @@ public class Frogger extends JPanel implements KeyListener
 		}
 		if(x+47>=car3x && x<=car3x+58 && y+48>=355 && y<=403)
 		{
-			try{Thread.sleep(900);}catch(Exception e){}
+			try{Thread.sleep(900);}catch(Exception ignored){}
 			count=1;
 			car1dx = 7;
 			car2dx = 4;
@@ -255,7 +255,7 @@ public class Frogger extends JPanel implements KeyListener
 		}
 		if(x+47>=car4x && x<=car4x+58 && y+48>=255 && y<=303)
 		{
-			try{Thread.sleep(900);}catch(Exception e){}
+			try{Thread.sleep(900);}catch(Exception ignored){}
 			count=1;
 			car1dx = 7;
 			car2dx = 4;

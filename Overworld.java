@@ -378,7 +378,7 @@ public class Overworld extends JPanel implements KeyListener, Runnable
 			hack=true;
 			moveCursor();
 			checkLocation();
-			try{Thread.sleep(10);}catch(Exception e){}
+			try{Thread.sleep(10);}catch(Exception ignored){}
 			repaint();
 		}
 	}

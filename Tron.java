@@ -522,7 +522,7 @@ public class Tron extends JPanel implements KeyListener, Minigame
    		{
    			runEnemy();
    			updateGame();
-   			try{Thread.sleep(1);}catch(Exception e){}
+   			try{Thread.sleep(1);}catch(Exception ignored){}
 			repaint();
    		}
    	}

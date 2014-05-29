@@ -767,7 +767,7 @@ public class Inventory
 			}
 			money=Integer.parseInt(in.readLine());
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		JokemonDriver.testEncryption(input);
 
@@ -805,7 +805,7 @@ public class Inventory
 			JokemonDriver.saveEncryptionKey(output,JokemonDriver.encrypt(output));
 			System.out.println("Inventory saved.");
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 	}
 	public static String tooString()
 	{

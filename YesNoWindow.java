@@ -57,7 +57,7 @@ public class YesNoWindow extends JFrame implements ActionListener
     		{
     			Thread.sleep(15);
     		}
-    		catch(Exception e)
+    		catch(Exception ignored)
     		{
 
     		}

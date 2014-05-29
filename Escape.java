@@ -43,7 +43,7 @@ public class Escape extends JPanel implements KeyListener, Minigame
 	{
 		repaint();
 		try{Thread.sleep(1000);}
-		catch(Exception e){}
+		catch(Exception ignored){}
 		p1 = new Player(cells, cellW, cellH);
 		lp.safeJumps = 3;
 		for(int i = 0; i<numEnemy; i++)
