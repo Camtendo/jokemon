@@ -43,16 +43,16 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	//Pick Correct Version and TitleScreen at compile time
 
 	public final static String VERSION="Peaches";
-	TitleScreen_Peaches title=new TitleScreen_Peaches();
+	final TitleScreen_Peaches title=new TitleScreen_Peaches();
 
 	//public static final String VERSION="Cream";
 	//TitleScreen_Cream title=new TitleScreen_Cream();
 
 	static Image icon,loading;
-	static File file=new File("savedata");
+	static final File file=new File("savedata");
 	static boolean titleScreen=true;
 	static boolean makeTheArea = false;
-	private townMap map = new townMap();
+	private final townMap map = new townMap();
 
 	//Location Enums
 	public enum Area
@@ -86,7 +86,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		Lighthouse, Lighthouse_F2,
 	}
 
-	static Area areasWithPCs[]={Area.Stringville,Area.Args_Harbor,Area.Mount_Java,Area.Villa_Del_Joe,Area.Streamreader_Hotel,
+	static final Area[] areasWithPCs={Area.Stringville,Area.Args_Harbor,Area.Mount_Java,Area.Villa_Del_Joe,Area.Streamreader_Hotel,
 	Area.Recursive_Hot_Springs,Area.Polymorph_Town,Area.Binary_City,Area.Nested_Village,Area.Enumville, Area.Route_6, Area.Champions_Walk, Area.Elite_4,Area.Peach_City,Area.Cream_City};
 
 	static int houseInt = 0;
@@ -122,7 +122,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	static private InetAddress ipAddresss;
 		//Friend Vars
 		static String friendName="";
-		static String[] friendPokemon={"","","","","",""};
+		static final String[] friendPokemon={"","","","","",""};
 		static boolean tradeConfirm=false;
 		static boolean friendTradeConfirm=false;
 		static int offerIndex;
@@ -140,19 +140,14 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	static AudioClip bgm;
 	Mart mart = new Mart();
 
-	//Tile Width and Height
-	private final int WIDTH=64;
-	private final int HEIGHT=64;
-
-	//Tileset Variables
-	Image tileImgOutdoors[]=new Image[246];
-	Image tileImgIndoors[]=new Image[366];
+    //Tileset Variables
+    final Image[] tileImgOutdoors=new Image[246];
+	final Image[] tileImgIndoors=new Image[366];
 
 	//Window Vars
 	private JFrame jf;
-	private Container c;
 
-	//Thread Vars
+    //Thread Vars
 	Thread thread;
 
 	//Frame Rate Vars
@@ -161,17 +156,17 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	int frames, slp;
 
 	//Location Vars
-	public static Point location=new Point(15,12);
-	static Point widthHeight = new Point(51,55);
+	public static final Point location=new Point(15,12);
+	static final Point widthHeight = new Point(51,55);
 
 	//Character Vars
-	Image charStand[]=new Image[4];
-	Image charWalk1[]=new Image[4];
-	Image charWalk2[]=new Image[4];
-	Image charSurf[]=new Image[4];
-	Image charBike0[]=new Image[4];
-	Image charBike1[]=new Image[4];
-	Image charBike2[]=new Image[4];
+    final Image[] charStand=new Image[4];
+	final Image[] charWalk1=new Image[4];
+	final Image[] charWalk2=new Image[4];
+	final Image[] charSurf=new Image[4];
+	final Image[] charBike0=new Image[4];
+	final Image[] charBike1=new Image[4];
+	final Image[] charBike2=new Image[4];
 	static int direction=270;
 	boolean moving=false;
 	int movingFrame=0;
@@ -208,9 +203,9 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	boolean showCredits=false;
 
 	//Point for leaving and entering buildings
-	static Point returnPoint = new Point(5,38);
+	static final Point returnPoint = new Point(5,38);
 	static Area returnArea = Area.Stringville;
-	static Point returnPoint2 = new Point(5,38);
+	static final Point returnPoint2 = new Point(5,38);
 	static Area returnArea2 = Area.Stringville;
 
 	//Game Vars
@@ -219,7 +214,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	static int timesBeatRival=0;
 	static boolean justBeatRival=false;
 	static int badges=0;
-	static Image badgeImg[]=new Image[8];
+	static final Image[] badgeImg=new Image[8];
 	static int trainerIdNumber=(int)(Math.random()*90000)+10000;
 	static String idString;
 	static int playTimeSecs=1;
@@ -231,16 +226,16 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	static String timeString;
 	static long encryptionKey;
 		//Pokemon Vars
-		static Pokemon partyPokemon[]=new Pokemon[6];
-		static Pokemon pcPokemon[]=new Pokemon[120];
-		static Pokemon enemy[]=new Pokemon[6];
+		static final Pokemon[] partyPokemon=new Pokemon[6];
+		static final Pokemon[] pcPokemon=new Pokemon[120];
+		static final Pokemon[] enemy=new Pokemon[6];
 
 	//Pause Menu Items and Such
 	boolean paused=false;
-	static String pauseMenu[]={"Pokedex","Pokemon","  Item",name,"  Save"};
+	static final String[] pauseMenu={"Pokedex","Pokemon","  Item",name,"  Save"};
 	int pauseMenuInt=0;
 	int pokemonMenuInt=0;
-	Image playerImages[]=new Image[6];
+	final Image[] playerImages=new Image[6];
 	int toggleInt=0;
 	int toggleIndexToSwitch=0;
 	boolean togglingPokemon=false;
@@ -248,8 +243,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 	//Objective Vars
 	static String currentObjective="Go talk to Babb!";
-	static boolean objectiveComplete[]=new boolean[12];
-	static boolean gotItem[]=new boolean[16];
+	static final boolean[] objectiveComplete=new boolean[12];
+	static final boolean[] gotItem=new boolean[16];
 
 	//Pokedex Vars
 	Image pokedexImg;
@@ -384,7 +379,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						}
 					}
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		else if(!transition)
@@ -423,21 +418,23 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		{
 			for(int j=0; j<12; j++)
 			{
-				try
+                int HEIGHT = 64;
+                int WIDTH = 64;
+                try
 				{
 					switch (tileSet)
 						{
 							case OUTDOORS:
-								g.drawImage(tileImgOutdoors[currentArea[location.x-(6-i)][location.y-(4-j)]],64*i,64*j,WIDTH,HEIGHT,this);
+								g.drawImage(tileImgOutdoors[currentArea[location.x-(6-i)][location.y-(4-j)]],64*i,64*j, WIDTH, HEIGHT,this);
 								break;
 							case INDOORS:
-								g.drawImage(tileImgIndoors[currentArea[location.x-(6-i)][location.y-(4-j)]],64*i,64*j,WIDTH,HEIGHT,this);
+								g.drawImage(tileImgIndoors[currentArea[location.x-(6-i)][location.y-(4-j)]],64*i,64*j, WIDTH, HEIGHT,this);
 								break;
 						}
 				}
 				catch(Exception e)
 				{
-					g.drawImage(tileImgOutdoors[29],64*i,64*j,WIDTH,HEIGHT,this);
+					g.drawImage(tileImgOutdoors[29],64*i,64*j, WIDTH, HEIGHT,this);
 				}
 			}
 		}
@@ -507,7 +504,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				g.drawString("--------",50,20*i+100);
 			}
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		g.drawString("Box "+(compBox+1),250,70);
 		try
@@ -520,7 +517,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				g.drawString("--------",250,20*i+100);
 			}
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		if(!compMode.equals(""))
 		{
@@ -641,7 +638,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				g.drawString("--------",50,20*i+100);
 			}
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		g.drawImage(icon,30,offerIndex*20+85,16,16,this);
 
@@ -661,7 +658,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				g.drawString("--------",550,20*i+100);
 			}
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		g.drawImage(icon,530,friendOfferIndex*20+85,16,16,this);
 
@@ -727,7 +724,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						g.drawString(""+(pokedexInt+i)+": "+"????????",50,20*i+100);
 					}
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 
 				if(Pokedex.caught[pokedexInt-1])
 				{
@@ -5933,11 +5930,10 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			bgm.loop();
 
 		int qq = 0;
-		for (int i = 0; i<partyPokemon.length; i++)
-		{
-			if (partyPokemon[i] != null)
-			qq++;
-		}
+        for (Pokemon aPartyPokemon : partyPokemon) {
+            if (aPartyPokemon != null)
+                qq++;
+        }
 
 		if (!Mechanics.hasRemainingPokemon(partyPokemon,qq))
 		{
@@ -5995,19 +5991,14 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	//Heals all Party Pokemon with no message Prompt
 	public void healPokemonNoPrompt()
 	{
-		for(int i=0; i<partyPokemon.length; i++)
-		{
-			if(partyPokemon[i]!=null)
-			{
-				partyPokemon[i].health=partyPokemon[i].healthMax;
-				partyPokemon[i].status = Pokemon.Status.OK;
-				partyPokemon[i].substatus = Pokemon.Substatus.OK;
-				for(int j=0; j<4; j++)
-				{
-					partyPokemon[i].TRUE_PP[j]=partyPokemon[i].TRUE_PPMAX[j];
-				}
-			}
-		}
+        for (Pokemon aPartyPokemon : partyPokemon) {
+            if (aPartyPokemon != null) {
+                aPartyPokemon.health = aPartyPokemon.healthMax;
+                aPartyPokemon.status = Pokemon.Status.OK;
+                aPartyPokemon.substatus = Pokemon.Substatus.OK;
+                System.arraycopy(aPartyPokemon.TRUE_PPMAX, 0, aPartyPokemon.TRUE_PP, 0, 4);
+            }
+        }
 
 		System.out.println("Pokemon Party Healed.");
 	}
@@ -6044,7 +6035,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				{
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 			
 			invokeMap=false;
@@ -6109,33 +6100,33 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		{
 			talk();
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		try
 		{
 			pickUp();
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		try
 		{
 			readSign();
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		try
 		{
 			if(Inventory.hasItem(new Item(Item.Type.HM,1,1)))
 			useCut();
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		try
 		{
 			if(Inventory.hasItem(new Item(Item.Type.HM,1,4)))
 			useStrength();
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		//Pokemon Center
 		if((area==Area.Pokecenter&&location.x==4&&location.y==3&&direction==90)||(area==Area.Elite_4&&location.x==24&&location.y==109&&direction==90))
@@ -6603,10 +6594,10 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					str="Trainer Tip: There is a Pokemon Center in every city and town! Make use of them!";
 					break;
 				case 5:
-					str="Trainer Tip: The battle moves of Pokémon are limited by their power points, PP.";
+					str="Trainer Tip: The battle moves of Pokï¿½mon are limited by their power points, PP.";
 					break;
 				case 6:
-					str="Trainer Tip: Any Pokémon that takes part in battle, however short, earns EXP!";
+					str="Trainer Tip: Any Pokï¿½mon that takes part in battle, however short, earns EXP!";
 					break;
 				case 7:
 					str="Trainer Tip: Pokemon grow in strength just by battling. Not just from gaining EXP.";
@@ -6628,25 +6619,22 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	{
 		int sum=0;
 
-		for(int i=0; i<areasWithPCs.length; i++)
-		{
-			if(seenArea(areasWithPCs[i]))
-				sum++;
-		}
+        for (Area areasWithPC1 : areasWithPCs) {
+            if (seenArea(areasWithPC1))
+                sum++;
+        }
 
 		flyAreas=new Area[sum];
 		System.out.println("Number of potential fly zones: "+sum);
 
 		int index=0;
 
-		for(int i=0; i<areasWithPCs.length; i++)
-		{
-			if(seenArea(areasWithPCs[i]))
-			{
-				flyAreas[index]=areasWithPCs[i];
-				index++;
-			}
-		}
+        for (Area areasWithPC : areasWithPCs) {
+            if (seenArea(areasWithPC)) {
+                flyAreas[index] = areasWithPC;
+                index++;
+            }
+        }
 	}
 
 	//Assigns Tile Value to Your location
@@ -6703,7 +6691,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 								repaint();
 								Thread.sleep(2500);
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 						}
 						break;
 					case 90:
@@ -6733,7 +6721,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 								repaint();
 								Thread.sleep(2500);
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 						}
 						break;
 					case 180:
@@ -6763,7 +6751,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 								repaint();
 								Thread.sleep(2500);
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 						}
 						break;
 					case 270:
@@ -6793,7 +6781,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 								repaint();
 								Thread.sleep(2500);
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 						}
 						break;
 				}
@@ -6815,7 +6803,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				repaint();
 				Thread.sleep(10);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 
 		bgm.stop();
@@ -6843,7 +6831,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				repaint();
 				Thread.sleep(10);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 
 		if(!forceBike)
@@ -6964,7 +6952,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!gotItem[1]&&person.equals("Jimmy"))
@@ -6988,7 +6976,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!gotItem[2]&&person.equals("Jace"))
@@ -7012,7 +7000,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!gotItem[3]&&person.equals("Jin"))
@@ -7036,7 +7024,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!gotItem[4]&&person.equals("Jordan"))
@@ -7060,7 +7048,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!gotItem[5]&&person.equals("Joy"))
@@ -7084,7 +7072,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!gotItem[6]&&person.equals("James"))
@@ -7108,7 +7096,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!gotItem[7]&&person.equals("Jessica"))
@@ -7132,7 +7120,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 
@@ -7157,7 +7145,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!Inventory.hasItem(new Item(Item.Type.HM,1,2))&&person.equals("Flyer"))
@@ -7181,7 +7169,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!Inventory.hasItem(new Item(Item.Type.HM,1,3))&&person.equals("Surfer"))
@@ -7205,7 +7193,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!Inventory.hasItem(new Item(Item.Type.HM,1,4))&&person.equals("Brutus"))
@@ -7229,7 +7217,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!Inventory.hasItem(new Item(Item.Type.GOOD_ROD,1))&&person.equals("Roderick Jr."))
@@ -7253,7 +7241,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!Inventory.hasItem(new Item(Item.Type.OLD_ROD,1))&&person.equals("Roderick III"))
@@ -7277,7 +7265,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(badges>=3&&!Inventory.hasItem(new Item(Item.Type.BICYCLE,1))&&person.equals("Bike Enthusiast"))
@@ -7301,7 +7289,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!Inventory.hasItem(new Item(Item.Type.HM,1,5))&&person.equalsIgnoreCase("Mr. Flashy"))
@@ -7324,7 +7312,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 		if(!Inventory.hasItem(new Item(Item.Type.MASTER_BALL,1))&&person.equalsIgnoreCase("BOSS"))
@@ -7347,7 +7335,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 		}
 
@@ -7368,7 +7356,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					{
 						Thread.sleep(300);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 				else
 					trainerBattle();
@@ -7382,7 +7370,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					{
 						Thread.sleep(300);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 				else
 					trainerBattle();
@@ -7396,7 +7384,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					{
 						Thread.sleep(300);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 				else
 					trainerBattle();
@@ -7410,7 +7398,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					{
 						Thread.sleep(300);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 				else
 					trainerBattle();
@@ -7573,7 +7561,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				repaint();
 				Thread.sleep(10);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 
 		jf.toFront();
@@ -7601,7 +7589,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						repaint();
 						Thread.sleep(10);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 
 				fishing=true;
@@ -7621,7 +7609,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						repaint();
 						Thread.sleep(10);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 				return;
 			}
@@ -7669,7 +7657,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						repaint();
 						Thread.sleep(10);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 
 				fishing=true;
@@ -7693,7 +7681,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						repaint();
 						Thread.sleep(10);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 				
 				if(enemy[0].nickname.equals("Mewtrix"))
@@ -7931,7 +7919,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				repaint();
 				Thread.sleep(10);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 
 		jf.toFront();
@@ -7986,7 +7974,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				repaint();
 				Thread.sleep(10);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 
 		jf.toFront();
@@ -8050,7 +8038,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 
 			gameEventHandler(trainer[theTrainer]);
@@ -8122,7 +8110,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					repaint();
 					Thread.sleep(10);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 
 			jf.toFront();
@@ -8153,7 +8141,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			{
 				Thread.sleep(10);
 			}
-			catch(Exception ex){}
+			catch(Exception ignored){}
 			manageTime();
 			tWin.tradeLogic();
 		}
@@ -8188,7 +8176,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			{
 				Thread.sleep(1000);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 		String minStr,secStr;
 
@@ -8368,12 +8356,12 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		{
 			PrintWriter fout=new PrintWriter(new FileWriter(output));
 
-			for(int i=0; i<currentArea.length; i++)
-				for(int j=0; j<currentArea[0].length; j++)
-					fout.println(currentArea[i][j]);
+            for (int[] aCurrentArea : currentArea)
+                for (int j = 0; j < currentArea[0].length; j++)
+                    fout.println(aCurrentArea[j]);
 			fout.close();
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		System.out.println("Tile map saved");
 	}
@@ -8396,7 +8384,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
     		for(int i=0; i<line.length(); i++)
     		{
-    			superString+=""+Integer.toHexString(Integer.valueOf(line.charAt(i)));
+    			superString+=""+Integer.toHexString((int) line.charAt(i));
     		}
     	}
 
@@ -8505,16 +8493,15 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 			int length=foundItem.length;
 			fout.println(length);
-			for(int i=0; i<length; i++)
-			{
-				fout.println(foundItem[i]);
-			}
+            for (boolean aFoundItem : foundItem) {
+                fout.println(aFoundItem);
+            }
 			fout.close();
 
 			saveEncryptionKey(output,encrypt(output));
 			System.out.println("Item data saved.");
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 	}
 
 	//Loads found item data
@@ -8560,7 +8547,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				objectiveComplete[i]=Boolean.parseBoolean(in.readLine());
 			}
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		testEncryption(input);
 
@@ -8600,16 +8587,15 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				fout.println("CDAE"+idString);
 
 			//Game Vars
-			for(int i=0; i<objectiveComplete.length; i++)
-			{
-				fout.println(objectiveComplete[i]);
-			}
+            for (boolean anObjectiveComplete : objectiveComplete) {
+                fout.println(anObjectiveComplete);
+            }
 			fout.close();
 
 			saveEncryptionKey(output,encrypt(output));
 			System.out.println("Objective data saved.");
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 	}
 
 	//Saves House Int
@@ -8631,7 +8617,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 			System.out.println("House Integer saved.");
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 	}
 
 	//Saves other game data
@@ -8670,7 +8656,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			saveEncryptionKey(output,encrypt(output));
 			System.out.println("Base data saved.");
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 	}
 
 	//Loads GameData
@@ -8701,7 +8687,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			returnArea=Area.valueOf(in.readLine());
 			returnArea2=Area.valueOf(in.readLine());
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		testEncryption(input);
 
@@ -8724,146 +8710,138 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			else
 				fout.println("CDAE"+idString);
 
-			for(int i=0; i<partyPokemon.length; i++)
-			{
-				if(partyPokemon[i]==null)
-				{
-					fout.println("null");
-				}
-				else
-				{
-					//Header
-					if(VERSION.equals("Peaches"))
-						fout.println("PDAE"+partyPokemon[i].idNumber);
-					else
-						fout.println("CDAE"+partyPokemon[i].idNumber);
+            for (Pokemon aPartyPokemon : partyPokemon) {
+                if (aPartyPokemon == null) {
+                    fout.println("null");
+                } else {
+                    //Header
+                    if (VERSION.equals("Peaches"))
+                        fout.println("PDAE" + aPartyPokemon.idNumber);
+                    else
+                        fout.println("CDAE" + aPartyPokemon.idNumber);
 
-					//Strings
-					fout.println(partyPokemon[i].species);
-					fout.println(partyPokemon[i].nickname);
-					fout.println(partyPokemon[i].originalTrainer);
-					fout.println(partyPokemon[i].status);
-					fout.println(partyPokemon[i].substatus);
-					fout.println(partyPokemon[i].move[0]);
-					fout.println(partyPokemon[i].move[1]);
-					fout.println(partyPokemon[i].move[2]);
-					fout.println(partyPokemon[i].move[3]);
+                    //Strings
+                    fout.println(aPartyPokemon.species);
+                    fout.println(aPartyPokemon.nickname);
+                    fout.println(aPartyPokemon.originalTrainer);
+                    fout.println(aPartyPokemon.status);
+                    fout.println(aPartyPokemon.substatus);
+                    fout.println(aPartyPokemon.move[0]);
+                    fout.println(aPartyPokemon.move[1]);
+                    fout.println(aPartyPokemon.move[2]);
+                    fout.println(aPartyPokemon.move[3]);
 
-					//Integers
-					fout.println(Integer.toBinaryString(partyPokemon[i].level));
-						encryptionKey+=partyPokemon[i].level;
-					fout.println(Integer.toBinaryString(partyPokemon[i].exp));
-						encryptionKey+=partyPokemon[i].exp;
-					fout.println(Integer.toBinaryString(partyPokemon[i].health));
-						encryptionKey+=partyPokemon[i].health;
-					fout.println(Integer.toBinaryString(partyPokemon[i].healthMax));
-						encryptionKey+=partyPokemon[i].healthMax;
-					fout.println(Integer.toBinaryString(partyPokemon[i].HP_EV));
-						encryptionKey+=partyPokemon[i].HP_EV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].ATK_EV));
-						encryptionKey+=partyPokemon[i].ATK_EV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].DEF_EV));
-						encryptionKey+=partyPokemon[i].DEF_EV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].SPCL_EV));
-						encryptionKey+=partyPokemon[i].SPCL_EV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].SPEED_EV));
-						encryptionKey+=partyPokemon[i].SPEED_EV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].HP_IV));
-						encryptionKey+=partyPokemon[i].HP_IV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].ATK_IV));
-						encryptionKey+=partyPokemon[i].ATK_IV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].DEF_IV));
-						encryptionKey+=partyPokemon[i].DEF_IV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].SPCL_IV));
-						encryptionKey+=partyPokemon[i].SPCL_IV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].SPEED_IV));
-						encryptionKey+=partyPokemon[i].SPEED_IV;
-					fout.println(Integer.toBinaryString(partyPokemon[i].TRUE_PP[0]));
-						encryptionKey+=partyPokemon[i].TRUE_PP[0];
-					fout.println(Integer.toBinaryString(partyPokemon[i].TRUE_PP[1]));
-					fout.println(Integer.toBinaryString(partyPokemon[i].TRUE_PP[2]));
-					fout.println(Integer.toBinaryString(partyPokemon[i].TRUE_PP[3]));
-					fout.println(Integer.toBinaryString(partyPokemon[i].TRUE_PPMAX[0]));
-						encryptionKey+=partyPokemon[i].TRUE_PPMAX[0];
-					fout.println(Integer.toBinaryString(partyPokemon[i].TRUE_PPMAX[1]));
-					fout.println(Integer.toBinaryString(partyPokemon[i].TRUE_PPMAX[2]));
-					fout.println(Integer.toBinaryString(partyPokemon[i].TRUE_PPMAX[3]));
+                    //Integers
+                    fout.println(Integer.toBinaryString(aPartyPokemon.level));
+                    encryptionKey += aPartyPokemon.level;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.exp));
+                    encryptionKey += aPartyPokemon.exp;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.health));
+                    encryptionKey += aPartyPokemon.health;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.healthMax));
+                    encryptionKey += aPartyPokemon.healthMax;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.HP_EV));
+                    encryptionKey += aPartyPokemon.HP_EV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.ATK_EV));
+                    encryptionKey += aPartyPokemon.ATK_EV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.DEF_EV));
+                    encryptionKey += aPartyPokemon.DEF_EV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.SPCL_EV));
+                    encryptionKey += aPartyPokemon.SPCL_EV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.SPEED_EV));
+                    encryptionKey += aPartyPokemon.SPEED_EV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.HP_IV));
+                    encryptionKey += aPartyPokemon.HP_IV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.ATK_IV));
+                    encryptionKey += aPartyPokemon.ATK_IV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.DEF_IV));
+                    encryptionKey += aPartyPokemon.DEF_IV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.SPCL_IV));
+                    encryptionKey += aPartyPokemon.SPCL_IV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.SPEED_IV));
+                    encryptionKey += aPartyPokemon.SPEED_IV;
+                    fout.println(Integer.toBinaryString(aPartyPokemon.TRUE_PP[0]));
+                    encryptionKey += aPartyPokemon.TRUE_PP[0];
+                    fout.println(Integer.toBinaryString(aPartyPokemon.TRUE_PP[1]));
+                    fout.println(Integer.toBinaryString(aPartyPokemon.TRUE_PP[2]));
+                    fout.println(Integer.toBinaryString(aPartyPokemon.TRUE_PP[3]));
+                    fout.println(Integer.toBinaryString(aPartyPokemon.TRUE_PPMAX[0]));
+                    encryptionKey += aPartyPokemon.TRUE_PPMAX[0];
+                    fout.println(Integer.toBinaryString(aPartyPokemon.TRUE_PPMAX[1]));
+                    fout.println(Integer.toBinaryString(aPartyPokemon.TRUE_PPMAX[2]));
+                    fout.println(Integer.toBinaryString(aPartyPokemon.TRUE_PPMAX[3]));
 
-					//Booleans
-					fout.println(partyPokemon[i].IS_TRADED);
-				}
-			}
+                    //Booleans
+                    fout.println(aPartyPokemon.IS_TRADED);
+                }
+            }
 
-			for(int i=0; i<pcPokemon.length; i++)
-			{
-				if(pcPokemon[i]==null)
-				{
-					fout.println("null");
-				}
-				else
-				{
-					//Header
-					if(VERSION.equals("Peaches"))
-						fout.println("PDAE"+pcPokemon[i].idNumber);
-					else
-						fout.println("CDAE"+pcPokemon[i].idNumber);
+            for (Pokemon aPcPokemon : pcPokemon) {
+                if (aPcPokemon == null) {
+                    fout.println("null");
+                } else {
+                    //Header
+                    if (VERSION.equals("Peaches"))
+                        fout.println("PDAE" + aPcPokemon.idNumber);
+                    else
+                        fout.println("CDAE" + aPcPokemon.idNumber);
 
-					//Strings
-					fout.println(pcPokemon[i].species);
-					fout.println(pcPokemon[i].nickname);
-					fout.println(pcPokemon[i].originalTrainer);
-					fout.println(pcPokemon[i].status);
-					fout.println(pcPokemon[i].substatus);
-					fout.println(pcPokemon[i].move[0]);
-					fout.println(pcPokemon[i].move[1]);
-					fout.println(pcPokemon[i].move[2]);
-					fout.println(pcPokemon[i].move[3]);
+                    //Strings
+                    fout.println(aPcPokemon.species);
+                    fout.println(aPcPokemon.nickname);
+                    fout.println(aPcPokemon.originalTrainer);
+                    fout.println(aPcPokemon.status);
+                    fout.println(aPcPokemon.substatus);
+                    fout.println(aPcPokemon.move[0]);
+                    fout.println(aPcPokemon.move[1]);
+                    fout.println(aPcPokemon.move[2]);
+                    fout.println(aPcPokemon.move[3]);
 
-					//Integers
-					fout.println(Integer.toBinaryString(pcPokemon[i].level));
-						encryptionKey+=pcPokemon[i].level;
-					fout.println(Integer.toBinaryString(pcPokemon[i].exp));
-						encryptionKey+=pcPokemon[i].exp;
-					fout.println(Integer.toBinaryString(pcPokemon[i].health));
-						encryptionKey+=pcPokemon[i].health;
-					fout.println(Integer.toBinaryString(pcPokemon[i].healthMax));
-						encryptionKey+=pcPokemon[i].healthMax;
-					fout.println(Integer.toBinaryString(pcPokemon[i].HP_EV));
-						encryptionKey+=pcPokemon[i].HP_EV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].ATK_EV));
-						encryptionKey+=pcPokemon[i].ATK_EV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].DEF_EV));
-						encryptionKey+=pcPokemon[i].DEF_EV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].SPCL_EV));
-						encryptionKey+=pcPokemon[i].SPCL_EV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].SPEED_EV));
-						encryptionKey+=pcPokemon[i].SPEED_EV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].HP_IV));
-						encryptionKey+=pcPokemon[i].HP_IV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].ATK_IV));
-						encryptionKey+=pcPokemon[i].ATK_IV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].DEF_IV));
-						encryptionKey+=pcPokemon[i].DEF_IV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].SPCL_IV));
-						encryptionKey+=pcPokemon[i].SPCL_IV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].SPEED_IV));
-						encryptionKey+=pcPokemon[i].SPEED_IV;
-					fout.println(Integer.toBinaryString(pcPokemon[i].TRUE_PP[0]));
-						encryptionKey+=pcPokemon[i].TRUE_PP[0];
-					fout.println(Integer.toBinaryString(pcPokemon[i].TRUE_PP[1]));
-					fout.println(Integer.toBinaryString(pcPokemon[i].TRUE_PP[2]));
-					fout.println(Integer.toBinaryString(pcPokemon[i].TRUE_PP[3]));
-					fout.println(Integer.toBinaryString(pcPokemon[i].TRUE_PPMAX[0]));
-						encryptionKey+=pcPokemon[i].TRUE_PPMAX[0];
-					fout.println(Integer.toBinaryString(pcPokemon[i].TRUE_PPMAX[1]));
-					fout.println(Integer.toBinaryString(pcPokemon[i].TRUE_PPMAX[2]));
-					fout.println(Integer.toBinaryString(pcPokemon[i].TRUE_PPMAX[3]));
+                    //Integers
+                    fout.println(Integer.toBinaryString(aPcPokemon.level));
+                    encryptionKey += aPcPokemon.level;
+                    fout.println(Integer.toBinaryString(aPcPokemon.exp));
+                    encryptionKey += aPcPokemon.exp;
+                    fout.println(Integer.toBinaryString(aPcPokemon.health));
+                    encryptionKey += aPcPokemon.health;
+                    fout.println(Integer.toBinaryString(aPcPokemon.healthMax));
+                    encryptionKey += aPcPokemon.healthMax;
+                    fout.println(Integer.toBinaryString(aPcPokemon.HP_EV));
+                    encryptionKey += aPcPokemon.HP_EV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.ATK_EV));
+                    encryptionKey += aPcPokemon.ATK_EV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.DEF_EV));
+                    encryptionKey += aPcPokemon.DEF_EV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.SPCL_EV));
+                    encryptionKey += aPcPokemon.SPCL_EV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.SPEED_EV));
+                    encryptionKey += aPcPokemon.SPEED_EV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.HP_IV));
+                    encryptionKey += aPcPokemon.HP_IV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.ATK_IV));
+                    encryptionKey += aPcPokemon.ATK_IV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.DEF_IV));
+                    encryptionKey += aPcPokemon.DEF_IV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.SPCL_IV));
+                    encryptionKey += aPcPokemon.SPCL_IV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.SPEED_IV));
+                    encryptionKey += aPcPokemon.SPEED_IV;
+                    fout.println(Integer.toBinaryString(aPcPokemon.TRUE_PP[0]));
+                    encryptionKey += aPcPokemon.TRUE_PP[0];
+                    fout.println(Integer.toBinaryString(aPcPokemon.TRUE_PP[1]));
+                    fout.println(Integer.toBinaryString(aPcPokemon.TRUE_PP[2]));
+                    fout.println(Integer.toBinaryString(aPcPokemon.TRUE_PP[3]));
+                    fout.println(Integer.toBinaryString(aPcPokemon.TRUE_PPMAX[0]));
+                    encryptionKey += aPcPokemon.TRUE_PPMAX[0];
+                    fout.println(Integer.toBinaryString(aPcPokemon.TRUE_PPMAX[1]));
+                    fout.println(Integer.toBinaryString(aPcPokemon.TRUE_PPMAX[2]));
+                    fout.println(Integer.toBinaryString(aPcPokemon.TRUE_PPMAX[3]));
 
-					//Booleans
-					fout.println(pcPokemon[i].IS_TRADED);
+                    //Booleans
+                    fout.println(aPcPokemon.IS_TRADED);
 
-				}
-			}
+                }
+            }
 
 			fout.println(""+encryptionKey);
 			fout.close();
@@ -8939,7 +8917,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 			String test=in.readLine();
 
-			if(VERSION.toString().charAt(0)!=test.charAt(0))
+			if(VERSION.charAt(0)!=test.charAt(0))
 			{
 				System.out.println("Invalid Pokemon data");
 				System.exit(-1);
@@ -8956,7 +8934,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				else
 				{
 					//Header
-					if(VERSION.toString().charAt(0)!=test.charAt(0))
+					if(VERSION.charAt(0)!=test.charAt(0))
 					{
 						System.out.println("Invalid Pokemon data");
 						System.exit(-1);
@@ -9055,7 +9033,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				else
 				{
 					//Header
-					if(VERSION.toString().charAt(0)!=test.charAt(0))
+					if(VERSION.charAt(0)!=test.charAt(0))
 					{
 						System.out.println("Invalid Pokemon data");
 						System.exit(-1);
@@ -9304,7 +9282,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 								Thread.sleep(250);
 								repaint();
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 							return true;
 						}
 						else
@@ -9325,7 +9303,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 								Thread.sleep(250);
 								repaint();
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 							return true;
 						}
 						else
@@ -9346,7 +9324,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 								Thread.sleep(250);
 								repaint();
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 							return true;
 						}
 						else
@@ -9435,7 +9413,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 									repaint();
 									Thread.sleep(100);
 								}
-								catch(Exception e){}
+								catch(Exception ignored){}
 							}
 							break;
 						case 90:
@@ -9447,7 +9425,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 									repaint();
 									Thread.sleep(100);
 								}
-								catch(Exception e){}
+								catch(Exception ignored){}
 							}
 							break;
 						case 180:
@@ -9459,7 +9437,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 									repaint();
 									Thread.sleep(100);
 								}
-								catch(Exception e){}
+								catch(Exception ignored){}
 							}
 							break;
 						case 270:
@@ -9471,7 +9449,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 									repaint();
 									Thread.sleep(100);
 								}
-								catch(Exception e){}
+								catch(Exception ignored){}
 							}
 							break;
 					}
@@ -9590,22 +9568,18 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	{
 		int numPokes=0;
 
-		for(int i=0; i<partyPokemon.length; i++)
-		{
-			if(partyPokemon[i]!=null&&partyPokemon[i].status==Pokemon.Status.PSN)
-			{
-				partyPokemon[i].health--;
-				drawPoison=true;
-				if(partyPokemon[i].health<=0)
-				{
-					partyPokemon[i].health=0;
-					partyPokemon[i].status=Pokemon.Status.FNT;
-				}
-				numPokes++;
-			}
-			else if(partyPokemon[i]!=null)
-				numPokes++;
-		}
+        for (Pokemon aPartyPokemon : partyPokemon) {
+            if (aPartyPokemon != null && aPartyPokemon.status == Pokemon.Status.PSN) {
+                aPartyPokemon.health--;
+                drawPoison = true;
+                if (aPartyPokemon.health <= 0) {
+                    aPartyPokemon.health = 0;
+                    aPartyPokemon.status = Pokemon.Status.FNT;
+                }
+                numPokes++;
+            } else if (aPartyPokemon != null)
+                numPokes++;
+        }
 
 
 		if(!Mechanics.hasRemainingPokemon(partyPokemon,numPokes))
@@ -12424,7 +12398,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
       		{
       			Thread.sleep(slp);
       		}
-      		catch(Exception e){}
+      		catch(Exception ignored){}
 		}
 
 		title.titleMusic.stop();
@@ -12599,7 +12573,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.setLocationRelativeTo(null);
 		jf.setResizable(false);
-		c = jf.getContentPane();
+        Container c = jf.getContentPane();
 
 		this.setLayout(null);
 		c.add(this);

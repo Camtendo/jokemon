@@ -28,18 +28,17 @@ public class Overworld extends JPanel implements KeyListener, Runnable
 	int count = 0, countV1 = 16, countV2 = 4;
 	int yDraw = -32, xDraw = -32;
 	int cX = 167, cY = 450;			//Your current location on the tile array
-	int[][] tile = new int[500][500];
-	Scanner in = new Scanner(System.in);
+	final int[][] tile = new int[500][500];
+	final Scanner in = new Scanner(System.in);
 	boolean atm = true, switchSide = false, bicycle = false, hack = false;
 	byte bikeDir = 0, map = 0;
 	Image cImg, jb;
-	Image[] img = new Image[20];
-	public Pokemon user[] = new Pokemon[6];
-	public Pokemon enemy[] = new Pokemon[6];
+	final Image[] img = new Image[20];
+	public final Pokemon[] user = new Pokemon[6];
+	public final Pokemon[] enemy = new Pokemon[6];
 	private JFrame jf;
-	private Container c;
 
-	public static void main(String[] args)
+    public static void main(String[] args)
 	{
 		ItemTest t1 = new ItemTest();
 		Overworld sb = new Overworld();
@@ -151,7 +150,7 @@ public class Overworld extends JPanel implements KeyListener, Runnable
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.setLocationRelativeTo(null);
 		jf.setResizable(false);
-		c = jf.getContentPane();
+        Container c = jf.getContentPane();
 
 
 		img[1] = new ImageIcon("oSprites/tile1.png").getImage();
@@ -379,7 +378,7 @@ public class Overworld extends JPanel implements KeyListener, Runnable
 			hack=true;
 			moveCursor();
 			checkLocation();
-			try{Thread.sleep(10);}catch(Exception e){}
+			try{Thread.sleep(10);}catch(Exception ignored){}
 			repaint();
 		}
 	}

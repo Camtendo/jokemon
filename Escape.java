@@ -16,8 +16,8 @@ public class Escape extends JPanel implements KeyListener, Minigame
 
 	private int cellH, cellW;
 	private Player p1;
-	private Enemy[] enemy = new Enemy[100];
-	private int cells;
+	private final Enemy[] enemy = new Enemy[100];
+	private final int cells;
 	private int numEnemy;
 	private LeftPanel lp;
 	private boolean gameOver = false;
@@ -43,7 +43,7 @@ public class Escape extends JPanel implements KeyListener, Minigame
 	{
 		repaint();
 		try{Thread.sleep(1000);}
-		catch(Exception e){}
+		catch(Exception ignored){}
 		p1 = new Player(cells, cellW, cellH);
 		lp.safeJumps = 3;
 		for(int i = 0; i<numEnemy; i++)

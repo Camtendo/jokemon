@@ -14,21 +14,20 @@ import java.io.*;
 
 public class TradeWindow extends JFrame implements ActionListener
 {
-	JFrame jf;
-	private Container cp;
-	private JTextField ipInput;
-	private JTextField portInput;
-	private JLabel ipDisplay;
-	private JLabel portDisplay;
-	private JButton hostButton;
-	private JButton resetButton;
+	final JFrame jf;
+    private final JTextField ipInput;
+	private final JTextField portInput;
+	private final JLabel ipDisplay;
+	private final JLabel portDisplay;
+	private final JButton hostButton;
+	private final JButton resetButton;
 
-	private JButton connectButton;
-	private JLabel connectDisplay;
+	private final JButton connectButton;
+	private final JLabel connectDisplay;
 	private JLabel connectDisplay2;
 
 	private JTextField nameEntry;
-	private JLabel nameDisplay;
+	private final JLabel nameDisplay;
 
 	InputStream sin;
 	OutputStream sout;
@@ -55,7 +54,7 @@ public class TradeWindow extends JFrame implements ActionListener
 	   	jf.setLayout(null);
 	 	jf.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	   	jf.setLocationRelativeTo(null);
-	   	cp = jf.getContentPane();
+        Container cp = jf.getContentPane();
 	
 		resetButton = new JButton();
 		resetButton.setBounds(10,215,230,25);
@@ -196,7 +195,7 @@ public class TradeWindow extends JFrame implements ActionListener
 	    			{
 	    				Thread.sleep(5000);
 	    			}
-	    			catch(Exception ex){}
+	    			catch(Exception ignored){}
 	    			
 	    			JokemonDriver.CONNECTED=true;
 	    			System.out.println("Connected to Client.");
@@ -230,7 +229,7 @@ public class TradeWindow extends JFrame implements ActionListener
 	    			{
 	    				Thread.sleep(5000);
 	    			}
-	    			catch(Exception ex){}
+	    			catch(Exception ignored){}
 	    			
 	    			JokemonDriver.CONNECTED=true;
 	    			System.out.println("Connected to Host.");

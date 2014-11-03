@@ -17,9 +17,9 @@ public class ErrorWindow extends JFrame implements ActionListener
 {
 	private int aNum;
 	private boolean visible;
-	private Container cp;
+	private final Container cp;
 
-	private JButton okButton;
+	private final JButton okButton;
 
     public ErrorWindow()
     {

@@ -21,24 +21,24 @@ public final class Mechanics
 
 	static int damage=0;
 	static int expYield=0;
-	static boolean participatedInBattle[]=new boolean[6];
+	static final boolean[] participatedInBattle=new boolean[6];
 
-	static int storedDamage[]=new int[2];
-	static boolean isHighCritical[]=new boolean[2];
-	static boolean charging[]=new boolean[2];
-	static int turnsMultiTurn[]=new int[2];
-	static int turnsAsleep[]=new int[2];
-	static int turnsMist[]=new int[2];
-	static int turnsConfused[]=new int[2];
-	static boolean isConfused[]=new boolean[2];
-	static int turnsDisabled[]=new int[2];
-	static int turnsLightScreen[]=new int[2];
-	static int turnsReflect[]=new int[2];
-	static int moveDisabled[]=new int[2];
-	static int substituteHealth[]=new int[2];
-	static boolean hasSubstitute[]=new boolean[2];
-	static boolean canAttack[]=new boolean[2];
-	static boolean awayFromBattle[]=new boolean[2];
+	static final int[] storedDamage=new int[2];
+	static final boolean[] isHighCritical=new boolean[2];
+	static final boolean[] charging=new boolean[2];
+	static final int[] turnsMultiTurn=new int[2];
+	static final int[] turnsAsleep=new int[2];
+	static final int[] turnsMist=new int[2];
+	static final int[] turnsConfused=new int[2];
+	static final boolean[] isConfused=new boolean[2];
+	static final int[] turnsDisabled=new int[2];
+	static final int[] turnsLightScreen=new int[2];
+	static final int[] turnsReflect=new int[2];
+	static final int[] moveDisabled=new int[2];
+	static final int[] substituteHealth=new int[2];
+	static final boolean[] hasSubstitute=new boolean[2];
+	static final boolean[] canAttack=new boolean[2];
+	static final boolean[] awayFromBattle=new boolean[2];
 
 	//Initializes necessary variables
 	public static void initialize()
@@ -186,27 +186,21 @@ public final class Mechanics
 	{
 		int highest=0;
 
-		for(int i=0; i<party.length; i++)
-		{
-			if(party[i]!=null)
-			{
-				if(party[i].level>highest)
-					highest=party[i].level;
-			}
-			else
-				break;
-		}
+        for (Pokemon aParty : party) {
+            if (aParty != null) {
+                if (aParty.level > highest)
+                    highest = aParty.level;
+            } else
+                break;
+        }
 
-		for(int i=0; i<pc.length; i++)
-		{
-			if(pc[i]!=null)
-			{
-				if(pc[i].level>highest)
-					highest=pc[i].level;
-			}
-			else
-				return highest;
-		}
+        for (Pokemon aPc : pc) {
+            if (aPc != null) {
+                if (aPc.level > highest)
+                    highest = aPc.level;
+            } else
+                return highest;
+        }
 
 		return highest;
 	}
@@ -258,17 +252,14 @@ public final class Mechanics
 	//Checks party for HM01 Cut
 	public static boolean hasCut(Pokemon[] pokemon)
 	{
-		for(int i=0; i<pokemon.length; i++)
-		{
-			if(pokemon[i]!=null)
-			{
-				for(int j=0; j<4; j++)
-				{
-					if(pokemon[i].move[j]==Pokemon.Move.CUT)
-						return true;
-				}
-			}
-		}
+        for (Pokemon aPokemon : pokemon) {
+            if (aPokemon != null) {
+                for (int j = 0; j < 4; j++) {
+                    if (aPokemon.move[j] == Pokemon.Move.CUT)
+                        return true;
+                }
+            }
+        }
 
 		return false;
 	}
@@ -276,17 +267,14 @@ public final class Mechanics
 	//Checks party for HM02 Fly
 	public static boolean hasFly(Pokemon[] pokemon)
 	{
-		for(int i=0; i<pokemon.length; i++)
-		{
-			if(pokemon[i]!=null)
-			{
-				for(int j=0; j<4; j++)
-				{
-					if(pokemon[i].move[j]==Pokemon.Move.FLY)
-						return true;
-				}
-			}
-		}
+        for (Pokemon aPokemon : pokemon) {
+            if (aPokemon != null) {
+                for (int j = 0; j < 4; j++) {
+                    if (aPokemon.move[j] == Pokemon.Move.FLY)
+                        return true;
+                }
+            }
+        }
 
 		return false;
 	}
@@ -294,17 +282,14 @@ public final class Mechanics
 	//Checks party for HM03 Surf
 	public static boolean hasSurf(Pokemon[] pokemon)
 	{
-		for(int i=0; i<pokemon.length; i++)
-		{
-			if(pokemon[i]!=null)
-			{
-				for(int j=0; j<4; j++)
-				{
-					if(pokemon[i].move[j]==Pokemon.Move.SURF)
-						return true;
-				}
-			}
-		}
+        for (Pokemon aPokemon : pokemon) {
+            if (aPokemon != null) {
+                for (int j = 0; j < 4; j++) {
+                    if (aPokemon.move[j] == Pokemon.Move.SURF)
+                        return true;
+                }
+            }
+        }
 
 		return false;
 	}
@@ -312,17 +297,14 @@ public final class Mechanics
 	//Checks party for HM04 Strength
 	public static boolean hasStrength(Pokemon[] pokemon)
 	{
-		for(int i=0; i<pokemon.length; i++)
-		{
-			if(pokemon[i]!=null)
-			{
-				for(int j=0; j<4; j++)
-				{
-					if(pokemon[i].move[j]==Pokemon.Move.STRENGTH)
-						return true;
-				}
-			}
-		}
+        for (Pokemon aPokemon : pokemon) {
+            if (aPokemon != null) {
+                for (int j = 0; j < 4; j++) {
+                    if (aPokemon.move[j] == Pokemon.Move.STRENGTH)
+                        return true;
+                }
+            }
+        }
 
 		return false;
 	}
@@ -330,17 +312,14 @@ public final class Mechanics
 	//Checks party for HM05 Flash
 	public static boolean hasFlash(Pokemon[] pokemon)
 	{
-		for(int i=0; i<pokemon.length; i++)
-		{
-			if(pokemon[i]!=null)
-			{
-				for(int j=0; j<4; j++)
-				{
-					if(pokemon[i].move[j]==Pokemon.Move.CUT)
-						return true;
-				}
-			}
-		}
+        for (Pokemon aPokemon : pokemon) {
+            if (aPokemon != null) {
+                for (int j = 0; j < 4; j++) {
+                    if (aPokemon.move[j] == Pokemon.Move.CUT)
+                        return true;
+                }
+            }
+        }
 
 		return false;
 	}
@@ -3842,10 +3821,7 @@ public final class Mechanics
 
 		pokemon.level = holdLevel;
 		int[] ppHold = new int[4];
-		for (int i = 0; i<4; i++)
-		{
-			ppHold[i] = pokemon.TRUE_PP[i];
-		}
+        System.arraycopy(pokemon.TRUE_PP, 0, ppHold, 0, 4);
 
 		while(movesToLearn.size() > 0)
 		{
@@ -3884,10 +3860,7 @@ public final class Mechanics
 
 			movesToLearn.remove(0);
 		}
-		for (int i = 0; i<4; i++)
-		{
-			pokemon.TRUE_PP[i] = ppHold[i];
-		}
+        System.arraycopy(ppHold, 0, pokemon.TRUE_PP, 0, 4);
 
 		System.out.println(pokemon);
 

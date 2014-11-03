@@ -12,7 +12,7 @@ import java.net.URL;
 public class Item extends javax.swing.JPanel
 {
 	//Fields
-	public Type type;
+	public final Type type;
 	public Effect effect1;
 	public Effect effect2;
 	public Pocket pocket;
@@ -32,7 +32,7 @@ public class Item extends javax.swing.JPanel
 	//If tm or Hm, the Move the Pokemon learns
 	public Pokemon.Move moveLearned = null;
 
-	public Point location=new Point(0,0);
+	public final Point location=new Point(0,0);
 	public boolean found=true;
 	final static Image itemImg = Toolkit.getDefaultToolkit().getImage(Item.class.getResource("Sprites/item.png"));
 
