@@ -5,10 +5,11 @@ This project was a set of two games (Peaches and Cream) made as a super project 
 
 Website and Downloads
 =====================
-http://pokemonjavaversion.webs.com/
-###Individual versions (v1.1):
-* [Peaches Version](https://dl.dropboxusercontent.com/u/35469595/Peaches.rar)
-* [Cream Version](https://dl.dropboxusercontent.com/u/35469595/Cream.rar)
+Website is dead :(
+[Trailer](https://youtu.be/3rKij12sKFU)
+### Individual versions (v1.1):
+* [Peaches Version](https://www.dropbox.com/s/00jwulmlzy50cj0/Peaches.rar?dl=0)
+* [Cream Version](https://www.dropbox.com/s/lcnfxuhc5nusyao/Cream.rar?dl=0)
 
 How to Run
 ========
