@@ -557,14 +557,14 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 	}
     public void keyPressed(KeyEvent e)
 	{
-		String dir = e.getKeyText(e.getKeyCode());
+		var keyCode = e.getKeyCode();
 		//System.out.println(dir);
 
 		if(Battle.BATTLE_OVER)
 			Battle.TERMINATE=true;
 
 		if (keyBoolean&&!cursorLock)
-		keyMeasure(dir);
+		keyMeasure(keyCode);
 	}
 	public void windowDeactivated(WindowEvent e)
 	{
@@ -589,7 +589,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 	{
 
 	}
-	public void keyMeasure(String dir)
+	public void keyMeasure(int keyCode)
 	{
 		if (cursorLock)
 		{
@@ -597,7 +597,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 			return;
 		}
 		keyBoolean = false;
-		if (dir.equalsIgnoreCase("UP"))//If Up Arrow is pressed
+		if (keyCode == 38)//If Up Arrow is pressed
 		{
 			switch(menuSetting)
 			{
@@ -625,7 +625,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 			}
 
 		}
-		else if (dir.equalsIgnoreCase("DOWN"))//If Down Arrow is pressed
+		else if (keyCode == 40)//If Down Arrow is pressed
 		{
 			switch(menuSetting)
 			{
@@ -653,7 +653,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 			}
 
 		}
-		else if (dir.equalsIgnoreCase("LEFT"))//If Left Arrow is pressed
+		else if (keyCode == 37)//If Left Arrow is pressed
 		{
 			switch(menuSetting)
 			{
@@ -673,7 +673,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 			}
 			//playerPokemon[cursorLocation.pokemon-1].health--;
 		}
-		else if (dir.equalsIgnoreCase("RIGHT"))//If Right Arrow is pressed
+		else if (keyCode == 39)//If Right Arrow is pressed
 		{
 			switch(menuSetting)
 			{
@@ -693,7 +693,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 			}
 			//playerPokemon[cursorLocation.pokemon-1].health++;
 		}
-		else if (dir.equalsIgnoreCase("SPACE"))//If Space Bar is pressed
+		else if (keyCode == 32)//If Space Bar is pressed
 		{
 			switch(menuSetting)
 			{
@@ -764,7 +764,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 				break;
 			}
 		}
-		else if (dir.equalsIgnoreCase("BACKSPACE"))
+		else if (keyCode == 8)
 		{
 			switch(menuSetting)
 			{

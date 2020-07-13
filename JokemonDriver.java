@@ -38,7 +38,7 @@ import java.util.Scanner;
 
 public class JokemonDriver extends JPanel implements Runnable,KeyListener
 {
-	public final boolean DEBUG=false;
+	public final boolean DEBUG=true;
 	public final boolean DONATE=false;
 	//Pick Correct Version and TitleScreen at compile time
 
