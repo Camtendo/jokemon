@@ -26,8 +26,8 @@ public final class Battle
 	private static int userNumOfPokemon;
 	public static int userIndex=0, userCmd=0, userLockedMove=-1;
 	public static boolean userFainted=false;
-	private static Pokemon[] revert=new Pokemon[6];
-	private static Pokemon.Species[] revertSpecies=new Pokemon.Species[6];
+	private static final Pokemon[] revert=new Pokemon[6];
+	private static final Pokemon.Species[] revertSpecies=new Pokemon.Species[6];
 
 	//User Command Boolean
 	private static boolean superDuperBoolean = false;
@@ -46,16 +46,16 @@ public final class Battle
 	private static boolean hit, crit, sideHit, hasPP=true;
 	public static int timesHit;
 	public static int turn=0;
-	private static boolean nonPostingCase[]=new boolean[2];
+	private static final boolean[] nonPostingCase=new boolean[2];
 
 	//Music Vars
-	static URL wildURL=Battle.class.getResource("Music/wildBattle.mid");
-	static URL trainerURL=Battle.class.getResource("Music/trainerBattle.mid");
-	static URL gymURL=Battle.class.getResource("Music/gymBattle.mid");
-	static URL rivalURL=Battle.class.getResource("Music/rivalBattle.mid");
-	static URL rocketURL=Battle.class.getResource("Music/javaBattle.mid");
-	static URL fatefulURL=Battle.class.getResource("Music/fatefulEncounter.mid");
-	static URL battleOverURL=Battle.class.getResource("Music/battleOver.mid");
+	static final URL wildURL=Battle.class.getResource("Music/wildBattle.mid");
+	static final URL trainerURL=Battle.class.getResource("Music/trainerBattle.mid");
+	static final URL gymURL=Battle.class.getResource("Music/gymBattle.mid");
+	static final URL rivalURL=Battle.class.getResource("Music/rivalBattle.mid");
+	static final URL rocketURL=Battle.class.getResource("Music/javaBattle.mid");
+	static final URL fatefulURL=Battle.class.getResource("Music/fatefulEncounter.mid");
+	static final URL battleOverURL=Battle.class.getResource("Music/battleOver.mid");
 	
 	static URL eliteURL;
 	
@@ -75,9 +75,8 @@ public final class Battle
 
 	public static BattleWindow b1;
 	public static YesNoWindow ynWin;
-	private static boolean allowEvolve=true;
 
-	public static void startBattle(Pokemon u[], int userInt, Pokemon e[], int enemyInt, String battleType, BattleWindow b2)
+    public static void startBattle(Pokemon u[], int userInt, Pokemon e[], int enemyInt, String battleType, BattleWindow b2)
 	{
 		TERMINATE=false;
 		caughtPokemon=null;
@@ -231,7 +230,7 @@ public final class Battle
 			{
 				Thread.sleep(3000);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 
 			b1.showingTrainer=false;
 			b1.addText(b1.trainer.type+" "+b1.trainer.name+" sent out "+enemy[enemyIndex].nickname+"!");
@@ -244,7 +243,7 @@ public final class Battle
 			{
 				Thread.sleep(2000);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 
 			b1.showingTrainer=false;
 		}
@@ -253,7 +252,7 @@ public final class Battle
 		{
 			Thread.sleep(1000);
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		b1.addText("GO! "+user[userIndex].nickname+"!");
 		switchPkmn.play();
@@ -333,7 +332,7 @@ public final class Battle
 					{
 						Thread.sleep(3000);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 
 				if(userCmd==4)
@@ -360,7 +359,7 @@ public final class Battle
 						{
 							Thread.sleep(1000);
 						}
-						catch(Exception e){}
+						catch(Exception ignored){}
 					}
 					else
 					{
@@ -440,7 +439,7 @@ public final class Battle
 								Thread.sleep(2000);
 								b1.addText("");
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 							b1.addText(user[userIndex].nickname+" fainted!");
 							ko.play();
 							userIndex=userSwitchPokemon();
@@ -453,7 +452,7 @@ public final class Battle
 							{
 								Thread.sleep(2000);
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 						}
 						if(!Mechanics.isAlive(enemy[enemyIndex].health)&&Mechanics.hasRemainingPokemon(enemy,enemyNumOfPokemon))
 						{
@@ -462,7 +461,7 @@ public final class Battle
 								Thread.sleep(2000);
 								b1.addText("");
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 							b1.addText("Enemy "+enemy[enemyIndex].nickname+" fainted!");
 							ko.play();
 
@@ -477,7 +476,7 @@ public final class Battle
 							{
 								Thread.sleep(2000);
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 						}
 
 						checkPreMoveStatus(1);
@@ -488,7 +487,7 @@ public final class Battle
 								Thread.sleep(3000);
 								b1.addText("");
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 
 							if(hasPP&&enemy[enemyIndex].move[enemyCmd].mainEffect==Pokemon.Primary_Effect.RAISE_STAT||
 								enemy[enemyIndex].move[enemyCmd].mainEffect==Pokemon.Primary_Effect.LOWER_STAT&&!nonPostingCase[1])
@@ -552,7 +551,7 @@ public final class Battle
 								Thread.sleep(2000);
 								b1.addText("");
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 
 							b1.addText(user[userIndex].nickname+" fainted!");
 							ko.play();
@@ -565,7 +564,7 @@ public final class Battle
 							{
 								Thread.sleep(2000);
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 						}
 						if(!Mechanics.isAlive(enemy[enemyIndex].health)&&Mechanics.hasRemainingPokemon(enemy,enemyNumOfPokemon))
 						{
@@ -574,7 +573,7 @@ public final class Battle
 								Thread.sleep(2000);
 								b1.addText("");
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 
 							b1.addText("Enemy "+enemy[enemyIndex].nickname+" fainted!");
 							ko.play();
@@ -592,7 +591,7 @@ public final class Battle
 							{
 								Thread.sleep(2000);
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 
 						}
 						if (!dudeCancel)
@@ -602,7 +601,7 @@ public final class Battle
 								Thread.sleep(3000);
 								b1.addText("");
 							}
-							catch(Exception e){}
+							catch(Exception ignored){}
 
 							checkPreMoveStatus(0);
 							if(userCmd>=0&&userCmd<4&&Mechanics.canAttack[0]&&!userFainted&&Mechanics.hasRemainingPokemon(user,userNumOfPokemon))
@@ -642,7 +641,7 @@ public final class Battle
 				{
 					Thread.sleep(2000);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 
 			if(switchCancel)
@@ -666,7 +665,7 @@ public final class Battle
 					Thread.sleep(2000);
 					b1.addText("");
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 			if(!Mechanics.isAlive(enemy[enemyIndex].health)&&Mechanics.hasRemainingPokemon(enemy,enemyNumOfPokemon))
 			{
@@ -686,7 +685,7 @@ public final class Battle
 					Thread.sleep(2000);
 					b1.addText("");
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 			}
 
 			nonPostingCase[0]=false;
@@ -705,7 +704,7 @@ public final class Battle
 		{
 			Thread.sleep(2000);
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		if(BATTLE_OVER)
 		{
@@ -721,7 +720,7 @@ public final class Battle
 				{
 					Thread.sleep(3000);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 
 				Mechanics.calcExp(enemy[enemyIndex]);
 				awardExp();
@@ -743,13 +742,13 @@ public final class Battle
 				{
 					Thread.sleep(3000);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 				b1.addText("You black out!");
 				try
 				{
 					Thread.sleep(3000);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 
 				b1.addText("Warped to last Pokemon Center!");
 				gameOver.play();
@@ -786,7 +785,7 @@ public final class Battle
 		{
 			Thread.sleep(1000);
 		}
-		catch(Exception e){}
+		catch(Exception ignored){}
 
 		b1.addText("==Press Any Key to Continue==");
 
@@ -827,7 +826,7 @@ public final class Battle
 			{
 				Thread.sleep(10);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 
 		gameOver.stop();
@@ -864,7 +863,7 @@ public final class Battle
 				{
 					Thread.sleep(15);
 				}
-				catch(Exception e)
+				catch(Exception ignored)
 				{
 
 				}
@@ -1056,7 +1055,7 @@ public final class Battle
 				{
 					Thread.sleep(3000);
 				}
-				catch(Exception e){}
+				catch(Exception ignored){}
 
 				checkLevel();
 			}
@@ -1127,10 +1126,7 @@ public final class Battle
 					b1.addText("SPEED: "+user[i].speed);
 					b1.addText("");
 					Pokemon.Move[] moves = new Pokemon.Move[4];
-					for (int q = 0; q<4; q++)
-					{
-						moves[q] = user[i].move[q];
-					}
+                    System.arraycopy(user[i].move, 0, moves, 0, 4);
 					user[i].move = Mechanics.levelUpMove(user[i],false);
 					for (int j = 0; j<4; j++)
 					{
@@ -1144,7 +1140,7 @@ public final class Battle
 					{
 						Thread.sleep(3000);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 				}
 			}
 			else if(user[i].level>=100)
@@ -1219,7 +1215,7 @@ public final class Battle
 	//Returns true or false. Simple.
 	public static void confirmEvolution(boolean boo)
 	{
-		allowEvolve=boo;
+        boolean allowEvolve = boo;
 	}
 
 	//Lowers count for certain effects and prints information when necessary
@@ -1730,7 +1726,7 @@ public final class Battle
 						Thread.sleep(2000);
 						b1.addText("");
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 
 					b1.addText(user[userIndex].nickname+"'s health was sapped by LEECH SEED!");
 					Mechanics.damage=(user[userIndex].healthMax/16)+1;
@@ -1740,7 +1736,7 @@ public final class Battle
 					{
 						Thread.sleep(2000);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 					break;
 				default:
 					System.out.println("Done.");
@@ -1756,7 +1752,7 @@ public final class Battle
 						Thread.sleep(2000);
 						b1.addText("");
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 
 					b1.addText(user[userIndex].nickname+" suffers from poison!");
 					Mechanics.damage=(user[userIndex].healthMax/16)+1;
@@ -1767,7 +1763,7 @@ public final class Battle
 					{
 						Thread.sleep(2000);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 
 					break;
 				case BRN:
@@ -1778,7 +1774,7 @@ public final class Battle
 						Thread.sleep(2000);
 						b1.addText("");
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 
 					b1.addText(user[userIndex].nickname+" is hurt from its burn!");
 					Mechanics.damage=user[userIndex].healthMax/16;
@@ -1789,7 +1785,7 @@ public final class Battle
 					{
 						Thread.sleep(2000);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 
 					break;
 			}
@@ -1808,7 +1804,7 @@ public final class Battle
 						Thread.sleep(2000);
 						b1.addText("");
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 
 					b1.addText("Enemy "+enemy[enemyIndex].nickname+"'s health was sapped by LEECH SEED!");
 					Mechanics.damage=enemy[enemyIndex].healthMax/16;
@@ -1819,7 +1815,7 @@ public final class Battle
 					{
 						Thread.sleep(2000);
 					}
-					catch(Exception e){}
+					catch(Exception ignored){}
 
 					break;
 				default:
@@ -1864,7 +1860,7 @@ public final class Battle
 			{
 				Thread.sleep(15);
 			}
-			catch(Exception e)
+			catch(Exception ignored)
 			{
 
 			}

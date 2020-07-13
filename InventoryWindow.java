@@ -5,22 +5,20 @@ import java.net.*;
 
 public class InventoryWindow extends JFrame implements ActionListener
 {
-	//Variables
-	private Container cp;
 
 
-	public boolean visible;
+    public boolean visible;
 	public State state;
 	private int page=1;
 	private boolean canSelect;
 	public boolean itemUsed = false;
 	private boolean infoB = false;
-	private JButton close;
-	private JButton information;
-	private JButton[] pages = new JButton[6];
-	private JButton[] pockets = new JButton[6];
-	private JButton[] display = new JButton[10];
-	private int[] displayNum = new int[10];
+	private final JButton close;
+	private final JButton information;
+	private final JButton[] pages = new JButton[6];
+	private final JButton[] pockets = new JButton[6];
+	private final JButton[] display = new JButton[10];
+	private final int[] displayNum = new int[10];
 
 	public enum State
 	{
@@ -39,7 +37,7 @@ public class InventoryWindow extends JFrame implements ActionListener
    		this.setVisible(false);
    		visible = false;
    		this.setLocationRelativeTo(null);
-   		cp = this.getContentPane();
+        Container cp = this.getContentPane();
    		int x = 16;
    		int y = this.getHeight()-90;
    		for (int i = 0; i < pages.length; i++)
@@ -106,10 +104,9 @@ public class InventoryWindow extends JFrame implements ActionListener
    		information.setBounds(16,this.getHeight()-120,260,20);
    		information.addActionListener(this);
    		cp.add(information);
-   		for (int ii = 0; ii<display.length; ii++)
-		{
-			cp.add(display[ii]);
-		}
+        for (JButton aDisplay : display) {
+            cp.add(aDisplay);
+        }
 	}
 
 	//Action Performed
@@ -232,7 +229,7 @@ public class InventoryWindow extends JFrame implements ActionListener
 			{
 				Thread.sleep(15);
 			}
-			catch(Exception e)
+			catch(Exception ignored)
 			{
 
 			}

@@ -31,11 +31,13 @@ public class TitleScreen_Peaches extends JPanel implements Runnable, KeyListener
 	String fps="1";
 	long lastFPS;
 	int frames, slp;
-	Point randStars[]=new Point[300];
-	Font font=new Font("Sanserif", Font.BOLD, 60);
+	final Point[] randStars=new Point[300];
+	final Font font=new Font("Sanserif", Font.BOLD, 60);
 	int creditInt;
-	Font smallerMenuFont=new Font("Sanserif", Font.BOLD, 14);
-	Image camtendo,justinian, jinc;
+	final Font smallerMenuFont=new Font("Sanserif", Font.BOLD, 14);
+	final Image camtendo;
+    final Image justinian;
+    final Image jinc;
 
 	public static void main(String[] peaches)
 	{
@@ -183,7 +185,7 @@ public class TitleScreen_Peaches extends JPanel implements Runnable, KeyListener
 			{
 				Thread.sleep(slp);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 		
 		creditMusic.loop();
@@ -197,7 +199,7 @@ public class TitleScreen_Peaches extends JPanel implements Runnable, KeyListener
 			{
 				Thread.sleep(slp);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 		}
 	}
 

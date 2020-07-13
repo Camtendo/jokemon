@@ -11,8 +11,8 @@
 
 public final class BattleTest
 {
-	static Pokemon[] user=new Pokemon[6];
-	static Pokemon[] enemy=new Pokemon[6];
+	static final Pokemon[] user=new Pokemon[6];
+	static final Pokemon[] enemy=new Pokemon[6];
 
 	public static void main(String args[])
 	{

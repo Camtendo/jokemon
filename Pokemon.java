@@ -95,7 +95,8 @@ public class Pokemon
 		Type moveType;
 	}
 
-	int TRUE_PP[]={0,0,0,0}, TRUE_PPMAX[]={0,0,0,0};
+	final int[] TRUE_PP={0,0,0,0};
+    final int[] TRUE_PPMAX={0,0,0,0};
 
 	public enum Side_Effect
 	{
@@ -704,10 +705,7 @@ public class Pokemon
 		newP.nickname=p.nickname;
 		newP.originalTrainer=p.originalTrainer;
 
-		for(int i=0; i<4; i++)
-		{
-			newP.TRUE_PP[i]=p.TRUE_PP[i];
-		}
+        System.arraycopy(p.TRUE_PP, 0, newP.TRUE_PP, 0, 4);
 
 		return newP;
 	}

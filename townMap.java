@@ -9,17 +9,14 @@ public class townMap extends JFrame implements ActionListener, MouseMotionListen
 	private boolean visible;
 	private JokemonDriver.Area area;
 	private JLabel areaDisplay;
-	private JLabel map;
-	private JButton closeWindow;
-	private Container cp;
-	private Point mouse;
-	private int thingInt;
-	
-	private void setUpGui()
+    private JButton closeWindow;
+    private Point mouse;
+
+    private void setUpGui()
 	{
 		area = JokemonDriver.Area.Stringville;
 		mouse = new Point();
-		thingInt = 0;
+        int thingInt = 0;
 		this.setTitle("Town Map");
     	this.setSize(195,239);
    		this.setResizable(false);
@@ -28,10 +25,10 @@ public class townMap extends JFrame implements ActionListener, MouseMotionListen
    		this.setVisible(false);
    		visible = false;
    		this.setLocationRelativeTo(null);
-   		cp = this.getContentPane();
-   		
-   		map = new JLabel();
-   		map.setBounds(1,-5,188,176);
+        Container cp = this.getContentPane();
+
+        JLabel map = new JLabel();
+   		map.setBounds(1, -5, 188, 176);
    		map.setIcon(new ImageIcon(townMap.class.getResource("Logos/townmap.png")));
    		
    		closeWindow = new JButton();

@@ -5,4 +5,23 @@
 *.war
 *.ear
 
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+out/
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+
+# Save Data Folder #
 savedata/

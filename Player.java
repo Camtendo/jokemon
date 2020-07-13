@@ -14,7 +14,7 @@ public class Player
 {
 	int row, column; 	//row and column number for player
 	int width, height; 	//width and height of each spot
-	int cells;			//number of cells in each row/column
+	final int cells;			//number of cells in each row/column
 	boolean alive;
 
 	final static int NORTH = 1;

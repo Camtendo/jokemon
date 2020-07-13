@@ -9,17 +9,15 @@ import java.net.URL;
 
 public class Mart extends JFrame implements ActionListener
 {
-	//Window Variables
-	private Container cp;
-	private JButton buyButton;
+    private JButton buyButton;
 	private JButton sellButton;
 	private JTextField amountField;
 	private JButton information;
 	private JButton closeButton;
 	private JButton buySellButton;
-	private JButton[] display = new JButton[10];
-	private JButton[] pockets = new JButton[5];
-	private JButton[] pages = new JButton[6];
+	private final JButton[] display = new JButton[10];
+	private final JButton[] pockets = new JButton[5];
+	private final JButton[] pages = new JButton[6];
 	private JLabel moneyDisplay;
 	private JLabel amountDisplay;
 	private JLabel totalAmount;
@@ -31,13 +29,12 @@ public class Mart extends JFrame implements ActionListener
 	public boolean itemSelected = false;
 	private long amount;
 	private int selectedItemId;
-	ArrayList<Item> fullInventory = new ArrayList<Item>(200);
-	ArrayList<Item> currentDisplay = new ArrayList<Item>(60);
+	final ArrayList<Item> fullInventory = new ArrayList<Item>(200);
+	final ArrayList<Item> currentDisplay = new ArrayList<Item>(60);
 	Item.Pocket pocket = Item.Pocket.ITEM;
 	State state = State.BUY;
-	private String martName = "";
 
-	public enum State
+    public enum State
 	{
 		BUY,SELL;
 	}
@@ -45,10 +42,10 @@ public class Mart extends JFrame implements ActionListener
 	//Sets up the mart and opens it
 	public void setUpMart(JokemonDriver.Area area, int storeNum)
 	{
-		martName=""+area+" Mart";
+        String martName = "" + area + " Mart";
 		if(area==JokemonDriver.Area.MegaMart)
-			martName="Villa Del Joe Mart";
-		martName=martName.replace("_"," ");
+			martName ="Villa Del Joe Mart";
+		martName = martName.replace("_", " ");
 
 		switch(area)
 		{
@@ -224,7 +221,7 @@ public class Mart extends JFrame implements ActionListener
    		this.setVisible(false);
    		this.setLocationRelativeTo(null);
 
-   		cp = this.getContentPane();
+        Container cp = this.getContentPane();
 
    		int x = 16;
    		int y = 35;
@@ -367,10 +364,9 @@ public class Mart extends JFrame implements ActionListener
 				pockets[i].setVisible(true);
 				pages[i].setVisible(true);
 			}
-			for (int i = 0; i<display.length; i++)
-			{
-				display[i].setVisible(true);
-			}
+            for (JButton aDisplay : display) {
+                aDisplay.setVisible(true);
+            }
 			information.setVisible(true);
 			closeButton.setVisible(true);
 			moneyDisplay.setVisible(true);
@@ -458,11 +454,10 @@ public class Mart extends JFrame implements ActionListener
 			pocket = newPocket;
 			currentDisplay.clear();
 
-			for (int i = 0; i < fullInventory.size(); i++)
-			{
-				if (fullInventory.get(i).pocket == newPocket)
-				currentDisplay.add(fullInventory.get(i));
-			}
+            for (Item aFullInventory : fullInventory) {
+                if (aFullInventory.pocket == newPocket)
+                    currentDisplay.add(aFullInventory);
+            }
 		}
 		else
 		{

@@ -13,12 +13,11 @@ import java.net.*;
 public class YesNoWindow extends JFrame implements ActionListener
 {
 	public boolean visible;
-	private Container cp;
+	private final Container cp;
 
 	boolean yes;
-	private JButton yesButton;
-	private JButton noButton;
-	private JLabel j1;
+	private final JButton yesButton;
+	private final JButton noButton;
 
 
     public YesNoWindow()
@@ -58,7 +57,7 @@ public class YesNoWindow extends JFrame implements ActionListener
     		{
     			Thread.sleep(15);
     		}
-    		catch(Exception e)
+    		catch(Exception ignored)
     		{
 
     		}
@@ -92,8 +91,8 @@ public class YesNoWindow extends JFrame implements ActionListener
     		this.setVisible(true);
     	}
     	this.setTitle(message2);
-    	j1 = new JLabel(message);
-    	j1.setBounds(15,5,this.getWidth() - 30,25);
+        JLabel j1 = new JLabel(message);
+    	j1.setBounds(15, 5, this.getWidth() - 30, 25);
     	j1.setHorizontalAlignment(JLabel.CENTER);
 
     	cp.add(j1);
