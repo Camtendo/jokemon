@@ -205,6 +205,20 @@ public final class Mechanics
 		return highest;
 	}
 
+	public static int getHighestLevel(Pokemon pokemon[])
+	{
+		int highest = 0;
+		for (Pokemon aPc : pokemon) {
+			if (aPc != null) {
+				if (aPc.level > highest)
+					highest = aPc.level;
+			} else
+				return highest;
+		}
+
+		return highest;
+	}
+
 	//Returns a Pokemon given a 5 species set, rarities as integers, and levels also as integers.
 	//Preferably Rarities must sum to 100 and be greater than 5 or else the algorithm will break
 	public static Pokemon randomEncounter(Pokemon.Species s1, int rare1, int lvl1, Pokemon.Species s2, int rare2, int lvl2,

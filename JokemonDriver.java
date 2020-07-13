@@ -46,8 +46,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	public final static String VERSION="Peaches";
 	final TitleScreen_Peaches title=new TitleScreen_Peaches();
 
-	public static final String VERSION="Cream";
-	TitleScreen_Cream title=new TitleScreen_Cream();
+	//public static final String VERSION="Cream";
+	//TitleScreen_Cream title=new TitleScreen_Cream();
 
 	static Image icon,loading;
 	static final File file=new File("savedata");
@@ -206,7 +206,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	static boolean fishing=false;
 	static int repelSteps=0;
 	boolean showCredits=false;
-	private final Image BACK = Toolkit.getDefaultToolkit().getImage(Item.class.getResource("Sprites/background.jpg"));
+	// private final Image BACK = Toolkit.getDefaultToolkit().getImage(Item.class.getResource("Sprites/background.jpg"));
 
 	//Point for leaving and entering buildings
 	static final Point returnPoint = new Point(5,38);
@@ -265,7 +265,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	public static void main(String[] jokes)
 	{
 		JokemonDriver j=new JokemonDriver();
-		Pokemon.createAllMoves();
+		//Pokemon.createAllMoves();
 		j.initTiles();
 		j.initCharSprites();
 		j.loadAudio();
@@ -629,7 +629,9 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	public void drawTrade(Graphics g)
 	{
 		//g.setColor(new Color(255,126,0,200));
-		g.drawImage(BACK,0,0,getWidth(),getHeight(),this);
+		//g.drawImage(BACK,0,0,getWidth(),getHeight(),this);
+		g.setColor(Color.BLUE);
+		g.drawRect(0, 0, getWidth(), getHeight());
 
 		g.setFont(new Font("Sanserif",Font.BOLD,18));
 		g.setColor(Color.WHITE);
@@ -3111,7 +3113,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				trainer[5].setDirection(270);
 
 				mapItems[0]=new Item(Item.Type.ULTRA_BALL,new Point(30,42));
-				mapItems[1]=new Item(Item.Type.MAX_ELIXER,new Point(17,13));
+				mapItems[1]=new Item(Item.Type.MAX_ELIXIR,new Point(17,13));
 				mapItems[2]=new Item(Item.Type.MOUNTAIN_DEW,new Point(47,33));
 
 				loadItemData();
@@ -13357,7 +13359,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	//Game Loop
 	public void run()
 	{
-		title.titleMusic.loop();
+		title.loopTitleMusic();
 		while(titleScreen)
 		{
 			repaint();
@@ -13370,7 +13372,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
       		catch(Exception ignored){}
 		}
 
-		title.titleMusic.stop();
+		title.stopTitleMusic();
 		repaint();
 
 		loadPokemonImages();

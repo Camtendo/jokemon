@@ -1014,6 +1014,11 @@ public class Pokedex
 		}
 	}
 
+	public static boolean completed()
+	{
+		return totalCaught == 151;
+	}
+
 	public void evolve(int index)
 	{
 		if(caught[index] == false)

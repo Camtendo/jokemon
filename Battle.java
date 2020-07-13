@@ -163,6 +163,7 @@ public final class Battle
 
 	public static void setSoundEffects()
 	{
+		System.out.println("Importing audio and sound effects...");
 		wildMusic=JApplet.newAudioClip(wildURL);
     	trainerMusic=JApplet.newAudioClip(trainerURL);
     	rivalMusic=JApplet.newAudioClip(rivalURL);
@@ -218,6 +219,7 @@ public final class Battle
 		gameOver=JApplet.newAudioClip(SEURL);
 
 		IMPORTED=true;
+		System.out.println("Finished importing audio and sound effects.");
 	}
 
 	public static void runBattle()

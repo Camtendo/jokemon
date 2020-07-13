@@ -8,6 +8,8 @@
 //
 //
 
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Sequencer;
 import javax.swing.JPanel;
 import javax.swing.JApplet;
 import javax.swing.JFrame;
@@ -26,6 +28,7 @@ import java.applet.AudioClip;
 public class TitleScreen_Peaches extends JPanel implements Runnable, KeyListener
 {
 	Thread thread;
+	private Sequencer sequencer;
 	AudioClip titleMusic, creditMusic;
 	Image icon,logo,mascot;
 	String fps="1";
@@ -44,10 +47,17 @@ public class TitleScreen_Peaches extends JPanel implements Runnable, KeyListener
 		TitleScreen_Peaches t=new TitleScreen_Peaches();
 		t.setupGUI();
 		t.beginThread();
+
 	}
 	
 	public TitleScreen_Peaches()
 	{
+		try
+		{
+			sequencer = MidiSystem.getSequencer();
+		}
+		catch (Exception ignored){}
+
 		URL introU=TitleScreen_Peaches.class.getResource("Music/JokemonTitleMusic.mid");
     	titleMusic=JApplet.newAudioClip(introU);
     	
@@ -77,7 +87,7 @@ public class TitleScreen_Peaches extends JPanel implements Runnable, KeyListener
 			randStars[i]=new Point(0,0);
 			randStars[i].x=(int)(Math.random()*800);
 			randStars[i].y=(int)(Math.random()*600);
-		}	
+		}
 	}
 	
 	public void keyReleased(KeyEvent e){}
@@ -253,6 +263,28 @@ public class TitleScreen_Peaches extends JPanel implements Runnable, KeyListener
 		g.drawString("The End (Game Data has been saved!)",150,4000-creditInt/3);
 			
 		creditInt++;
+	}
+
+	public void loopTitleMusic()
+	{
+		try
+		{
+			URL url=TitleScreen_Peaches.class.getResource("titlemusic.mid");
+			sequencer.open();
+			sequencer.setSequence(MidiSystem.getSequence(url));
+			sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+			sequencer.start();
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error while trying to play title music!");
+		}
+
+	}
+
+	public void stopTitleMusic()
+	{
+		sequencer.stop();
 	}
 
 	public void frameRateManager()
