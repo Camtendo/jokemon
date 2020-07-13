@@ -29,8 +29,6 @@ Try using the following in various scenarios:
 + Escape Key
 + Enter
 
-Currently, battles will **NOT** work on Macs.
-
 Original Developers
 ======
 
