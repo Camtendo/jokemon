@@ -68,7 +68,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 	//Constructors
 	//Battle Type Strings are either WILD, TRAINER, or GYM
     public BattleWindow(Pokemon[] userPoke, Pokemon[] enemyPoke, String battleType) {
-    	battleMessage = "=======Battle Initiated=======";
+    	battleMessage = "==Battle Initiated==";
 
     	if(!battleType.equals("WILD"))
     	{
@@ -118,7 +118,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
 
     //Second Constructor
     public BattleWindow(Pokemon[] userPoke, Pokemon[] enemyPoke, String battleType, Trainer train) {
-    	battleMessage = "=======Battle Initiated=======";
+    	battleMessage = "==Battle Initiated==";
 
     	trainer=train;
     	flicker[0]=false;
@@ -510,7 +510,7 @@ public class BattleWindow extends JComponent implements KeyListener, MouseListen
     {
     	str = str.replace('_',' ');
     	text.append("\n" + str);
-    	System.out.println("Added Text: "+str);
+    	//System.out.println("Added Text: "+str);
     	//jsb.setValue(jsb.getMaximum());
     	text.setCaretPosition(text.getCaretPosition()+str.length());
     	jsb.repaint();

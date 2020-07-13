@@ -156,6 +156,7 @@ public class Inventory
 
 		if (!Battle.BATTLE_TYPE.equals("WILD"))
 		{
+			Battle.b1.addText("You can't steal a Trainer's Pokemon!");
 			errorWindow.addMessage("You can't steal a Trainer's Pokemon!");
 			errorWindow.toFront();
 			itemCancel = false;

@@ -89,7 +89,14 @@ public final class Battle
     	setSoundEffects();
 
 		b1=b2;
-		
+		b1.cursorLock=true;
+		turn=0;
+		user=u;
+		userNumOfPokemon=userInt;
+		enemy=e;
+		enemyNumOfPokemon=enemyInt;
+
+		loopMusic();
 		if(BATTLE_TYPE.equals("SUPER"))
 		{
 			if(b1.trainer.type==Trainer.TrainerType.ELITE)
@@ -101,12 +108,6 @@ public final class Battle
 				eliteURL=Battle.class.getResource("Music/PowerTrainers/Babb.mid");
 			}
 		}
-		b1.cursorLock=true;
-		turn=0;
-		user=u;
-		userNumOfPokemon=userInt;
-		enemy=e;
-		enemyNumOfPokemon=enemyInt;
 
 		for(int i=0; i<6; i++)
 		{
@@ -121,8 +122,6 @@ public final class Battle
 				user[i].accuracyStage=0;
 			}
 		}
-
-		loopMusic();
 
 		Mechanics.canAttack[0]=true;
 		Mechanics.canAttack[1]=true;
@@ -218,7 +217,7 @@ public final class Battle
 			b1.addText(b1.trainer.type+" "+b1.trainer.name+" wants to fight!");
 			try
 			{
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 			}
 			catch(Exception ignored){}
 
@@ -273,7 +272,7 @@ public final class Battle
 					user[i].IS_TRADED=true;
 			}
 
-			b1.addText("=========================");
+			b1.addText("=====");
 			b1.addText("Turn: "+turn);
 
 			b1.jsb.repaint();
@@ -320,7 +319,7 @@ public final class Battle
 				{
 					try
 					{
-						Thread.sleep(3000);
+						Thread.sleep(1500);
 					}
 					catch(Exception ignored){}
 				}
@@ -474,7 +473,7 @@ public final class Battle
 						{
 							try
 							{
-								Thread.sleep(3000);
+								Thread.sleep(2000);
 								b1.addText("");
 							}
 							catch(Exception ignored){}
@@ -588,7 +587,7 @@ public final class Battle
 						{
 							try
 							{
-								Thread.sleep(3000);
+								Thread.sleep(2000);
 								b1.addText("");
 							}
 							catch(Exception ignored){}
@@ -708,7 +707,7 @@ public final class Battle
 				ko.play();
 				try
 				{
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 				}
 				catch(Exception ignored){}
 
@@ -730,13 +729,13 @@ public final class Battle
 				b1.addText("You have no usable Pokemon!");
 				try
 				{
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 				}
 				catch(Exception ignored){}
 				b1.addText("You black out!");
 				try
 				{
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 				}
 				catch(Exception ignored){}
 
@@ -757,7 +756,8 @@ public final class Battle
 			}
 		}
 
-		b1.addText("========Battle Over========");
+		b1.addText("=====");
+		b1.addText("Battle Over");
 
 		b1.allowedToPaintExp=true;
 		b1.updateUserPoke(user);
@@ -779,7 +779,7 @@ public final class Battle
 		}
 		catch(Exception ignored){}
 
-		b1.addText("==Press Any Key to Continue==");
+		b1.addText("Press Any Key to Continue");
 
 		for(int i=0; i<6; i++)
 		{
@@ -1045,7 +1045,7 @@ public final class Battle
 
 				try
 				{
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 				}
 				catch(Exception ignored){}
 
@@ -1130,7 +1130,7 @@ public final class Battle
 
 					try
 					{
-						Thread.sleep(3000);
+						Thread.sleep(2000);
 					}
 					catch(Exception ignored){}
 				}
