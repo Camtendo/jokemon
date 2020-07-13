@@ -11,6 +11,8 @@
 //1=enemy
 
 import java.net.URL;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Sequencer;
 import javax.swing.JApplet;
 import java.applet.AudioClip;
 
@@ -49,6 +51,7 @@ public final class Battle
 	private static final boolean[] nonPostingCase=new boolean[2];
 
 	//Music Vars
+	private static Sequencer sequencer;
 	static final URL wildURL=Battle.class.getResource("Music/wildBattle.mid");
 	static final URL trainerURL=Battle.class.getResource("Music/trainerBattle.mid");
 	static final URL gymURL=Battle.class.getResource("Music/gymBattle.mid");
@@ -58,16 +61,7 @@ public final class Battle
 	static final URL battleOverURL=Battle.class.getResource("Music/battleOver.mid");
 	
 	static URL eliteURL;
-	
-	static AudioClip wildMusic;
-	static AudioClip trainerMusic;
-	static AudioClip gymMusic;
-	static AudioClip rivalMusic;
-	static AudioClip javaMusic;
-	static AudioClip eliteMusic;
-	static AudioClip fatefulMusic;
-	static AudioClip battleOver;
-	static AudioClip gameOver;
+	static URL gameOver;
 
 	//Sound Effect Vars
 	static AudioClip brn,decStat,enemyHit,frz,incStat,par,psn,slp,special,userHit,levelUp,ko,switchPkmn,lowHP;
@@ -101,13 +95,10 @@ public final class Battle
 			if(b1.trainer.type==Trainer.TrainerType.ELITE)
 			{
 				eliteURL=Battle.class.getResource("Music/PowerTrainers/" + b1.trainer.name + ".mid");
-				eliteMusic=JApplet.newAudioClip(eliteURL);
-				System.out.println(eliteMusic.toString());
 			}
 			else
 			{
 				eliteURL=Battle.class.getResource("Music/PowerTrainers/Babb.mid");
-				eliteMusic=JApplet.newAudioClip(eliteURL);
 			}
 		}
 		b1.cursorLock=true;
@@ -164,14 +155,12 @@ public final class Battle
 	public static void setSoundEffects()
 	{
 		System.out.println("Importing audio and sound effects...");
-		wildMusic=JApplet.newAudioClip(wildURL);
-    	trainerMusic=JApplet.newAudioClip(trainerURL);
-    	rivalMusic=JApplet.newAudioClip(rivalURL);
-    	gymMusic=JApplet.newAudioClip(gymURL);
-    	javaMusic=JApplet.newAudioClip(rocketURL);
-    	fatefulMusic=JApplet.newAudioClip(fatefulURL);
-    	battleOver=JApplet.newAudioClip(battleOverURL);
-    	//elite1M = JApplet.newAudioClip(elite1);
+		try
+		{
+			sequencer = MidiSystem.getSequencer();
+			sequencer.open();
+		}
+		catch (Exception ignored){}
 
 		SEURL=Battle.class.getResource("SE/brn.wav");
 		brn=JApplet.newAudioClip(SEURL);
@@ -215,8 +204,7 @@ public final class Battle
 		SEURL=Battle.class.getResource("SE/lowHP.wav");
 		lowHP=JApplet.newAudioClip(SEURL);
 
-		SEURL=Battle.class.getResource("Music/gameOver.mid");
-		gameOver=JApplet.newAudioClip(SEURL);
+		gameOver=Battle.class.getResource("Music/gameOver.mid");
 
 		IMPORTED=true;
 		System.out.println("Finished importing audio and sound effects.");
@@ -753,7 +741,9 @@ public final class Battle
 				catch(Exception ignored){}
 
 				b1.addText("Warped to last Pokemon Center!");
-				gameOver.play();
+				//gameOver.play();
+				loopAudioAsset(gameOver);
+				loopMusic();
 
 				stopMusic();
 
@@ -778,7 +768,7 @@ public final class Battle
 		{
 			stopMusic();
 	    	if(Mechanics.hasRemainingPokemon(user,userNumOfPokemon))
-	    	battleOver.loop();
+	    	loopAudioAsset(battleOverURL);
 	    	BATTLE_OVER=true;
 	    	lowHP.stop();
 		}
@@ -831,8 +821,8 @@ public final class Battle
 			catch(Exception ignored){}
 		}
 
-		gameOver.stop();
-		battleOver.stop();
+		/*gameOver.stop();
+		battleOver.stop();*/
 		lowHP.stop();
 		stopMusic();
 
@@ -1417,54 +1407,40 @@ public final class Battle
 		if(BATTLE_TYPE.equals("WILD"))
 		{
 			if(!Mechanics.isLegendary(enemy[0]))
-			wildMusic.loop();
+			//wildMusic.loop();
+			loopAudioAsset(wildURL);
 			else
-			fatefulMusic.loop();
+			//fatefulMusic.loop();
+			loopAudioAsset(fatefulURL);
 
 		}
 	    else if(BATTLE_TYPE.equals("TRAINER"))
 	    {
 	    	if(b1.trainer.type==Trainer.TrainerType.JAVA)
-	    		javaMusic.loop();
+	    		//javaMusic.loop();
+	    		loopAudioAsset(rocketURL);
 	    	else
-	    		trainerMusic.loop();
+	    		//trainerMusic.loop();
+	    	loopAudioAsset(trainerURL);
 	    }
 	    else if(BATTLE_TYPE.equals("SUPER"))
 	    {
-	    	eliteMusic.loop();
+	    	//eliteMusic.loop();
+	    	loopAudioAsset(eliteURL);
 	    	//elite1M.loop();
 	    }
 	    else if(BATTLE_TYPE.equals("GYM"))
-	    gymMusic.loop();
+	    //gymMusic.loop();
+	    	loopAudioAsset(gymURL);
 	    else if(BATTLE_TYPE.equals("RIVAL"))
-    	rivalMusic.loop();
+    	//rivalMusic.loop();
+	    	loopAudioAsset(rivalURL);
 	}
 
 	//Stops all music
 	public static void stopMusic()
 	{
-		if(BATTLE_TYPE.equals("WILD"))
-		{
-			if(!Mechanics.isLegendary(enemy[0]))
-			wildMusic.stop();
-			else
-			fatefulMusic.stop();
-		}
-	    else if(BATTLE_TYPE.equals("TRAINER"))
-	    {
-	    	if(b1.trainer.type==Trainer.TrainerType.JAVA)
-	    		javaMusic.stop();
-	    	else
-	    		trainerMusic.stop();
-	    }
-	    else if(BATTLE_TYPE.equals("SUPER"))
-	    {
-	    	eliteMusic.stop();
-	    }
-	    else if(BATTLE_TYPE.equals("GYM"))
-	    gymMusic.stop();
-	    else if(BATTLE_TYPE.equals("RIVAL"))
-    	rivalMusic.stop();
+		stopAudioAsset();
 	}
 
 	//Loops the low HP tone
@@ -5236,5 +5212,25 @@ public final class Battle
 	{
 		if (b1 != null)
 		b1.tooFront();
+	}
+
+	public static void loopAudioAsset(URL url)
+	{
+		try
+		{
+			sequencer.open();
+			sequencer.setSequence(MidiSystem.getSequence(url));
+			sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+			sequencer.start();
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error while trying to play asset!");
+		}
+	}
+
+	public static void stopAudioAsset()
+	{
+		sequencer.stop();
 	}
 }

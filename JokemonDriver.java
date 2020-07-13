@@ -18,6 +18,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.GridLayout;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Sequencer;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -57,6 +59,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	public static boolean mute = false;
 	private townMap map = new townMap();
 	private InventoryWindow iWin;
+	private Sequencer sequencer;
 
 	//Location Enums
 	public enum Area
@@ -141,7 +144,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	//Area Vars
 	static Area area=Area.Stringville;
 	static int[][] currentArea;
-	static AudioClip bgm;
+	static URL bgm;
 	Mart mart = new Mart();
 
     //Tileset Variables
@@ -179,15 +182,15 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	boolean forceBike=false;
 	boolean invokeBicycle=false;
 	boolean invokeMap=false;
-	static AudioClip surfSong;
-	static AudioClip bikeSong;
+	static URL surfSong;
+	static URL bikeSong;
 
 	//NPC Trainer Vars
 	int numTrainers=2;
 	int trainerToFight;
 	Trainer trainer[]=new Trainer[numTrainers];
 	boolean trainerEnc=false;
-	AudioClip maleEncounter,femaleEncounter,evilEncounter,rivalEncounter,leaderEncounter;
+	URL maleEncounter,femaleEncounter,evilEncounter,rivalEncounter,leaderEncounter;
 
 	//Item Vars
 	Item mapItems[];
@@ -1503,9 +1506,10 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		for(int i=1; i<6; i++)
 			enemy[i]=null;
 
-		bgm.stop();
-		surfSong.stop();
-		bikeSong.stop();
+		//bgm.stop();
+		// surfSong.stop();
+		// bikeSong.stop();
+		stopAudioAsset();
 		jf.setVisible(false);
 
 		bwindow=new BattleWindow(partyPokemon,enemy,"WILD");
@@ -1528,11 +1532,14 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		jf.toFront();
 
 		if(surfing && !mute)
-			surfSong.loop();
+			// surfSong.loop();
+			loopAudioAsset(surfSong);
 		else if(bicycling&&!forceBike&&!mute)
-			bikeSong.loop();
+			// bikeSong.loop();
+			loopAudioAsset(bikeSong);
 		else if (!mute)
-			bgm.loop();
+			// bgm.loop();
+			loopAudioAsset(bgm);
 
 		fishing=false;
 		handleCapturedPokemon();
@@ -2085,9 +2092,11 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						else
 						{
 							bicycling=false;
-							bikeSong.stop();
+							// bikeSong.stop();
+							stopAudioAsset();
 							if(!mute)
-							bgm.loop();
+							//bgm.loop();
+								loopAudioAsset(bgm);
 						}
 					}
 				}
@@ -2170,21 +2179,25 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (!mute && !titleScreen)
 				{
 					mute=true;
-					bgm.stop();
+					/*bgm.stop();
 					bikeSong.stop();
-					surfSong.stop();
+					surfSong.stop();*/
+					stopAudioAsset();
 				}
 				else
 				{
 					if(surfing)
-					surfSong.loop();
+					// surfSong.loop();
+					loopAudioAsset(surfSong);
 					else if(bicycling&&!forceBike)
 					{
-						bikeSong.loop();
+						//bikeSong.loop();
+						loopAudioAsset(bikeSong);
 					}
 					else
 					{
-						bgm.loop();
+						//bgm.loop();
+						loopAudioAsset(bgm);
 					}
 					mute=false;
 				}
@@ -2292,10 +2305,11 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	{
 		if(Battle.IMPORTED)
 		{
-			bgm.stop();
+			// bgm.stop();
 		}
 
-		bikeSong.stop();
+		//bikeSong.stop();
+		stopAudioAsset();
 		forceBike=false;
 
 		int levelBoost=0;
@@ -2316,7 +2330,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Stringville.tilemap");
 				URL url=JokemonDriver.class.getResource("Music/Locations/1_stringville.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=url;
 
 				//Trainer Declaration
 				numTrainers=8;
@@ -2422,8 +2436,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 50;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Route0.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes.mid");
 
 				if (badges == 0)
 				numTrainers=7;
@@ -2507,8 +2520,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 68;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("ArgsHarbor.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/2_args_harbor.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/2_args_harbor.mid");
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
@@ -2583,8 +2595,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 60;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Route1.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes.mid");
 
 				if(badges>7)
 				{
@@ -2672,8 +2683,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 60;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Route2.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes2.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes2.mid");
 
 				if(objectiveComplete[10])
 					levelBoost=50;
@@ -2741,8 +2751,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 9;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Pokecenter.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0b_pokemon_center.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0b_pokemon_center.mid");
 				break;
 			case Nested_Village:
 				tileSet = OUTDOORS;
@@ -2750,8 +2759,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 46;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("NestedVillage.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes2.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes2.mid");
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
@@ -2818,8 +2826,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 9;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Mart.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0c_shop.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0c_shop.mid");
 
 				numTrainers=1;
 				trainer=new Trainer[numTrainers];
@@ -2841,8 +2848,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 48;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Route3.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes2.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes2.mid");
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
@@ -2921,8 +2927,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 62;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("VillaDelJoe.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/4_joe_villa.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/4_joe_villa.mid");
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
@@ -2984,8 +2989,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 9;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("YourHouse.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/house.mid");
 				break;
 			case Route_4:
 				tileSet = OUTDOORS;
@@ -2993,8 +2997,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 100;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Route4.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes3.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes3.mid");
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
@@ -3061,8 +3064,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 50;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("MountJava.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/3_mount_java.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/3_mount_java.mid");
 
 				numTrainers=6;
 				trainer=new Trainer[numTrainers];
@@ -3128,8 +3130,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 40;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Route5.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes3.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes3.mid");
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
@@ -3210,8 +3211,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 44;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Route6.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes4.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes4.mid");
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
@@ -3279,8 +3279,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 44;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("StreamReaderHotel.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/5_streamreader_hotel.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/5_streamreader_hotel.mid");
 
 				numTrainers=3;
 				trainer=new Trainer[numTrainers];
@@ -3315,8 +3314,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 64;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Route8.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes4.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes4.mid");
 
 				numTrainers=3;
 				trainer=new Trainer[numTrainers];
@@ -3369,8 +3367,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 30;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Articuno.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes4.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes4.mid");
+
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
 				numItems=1;
@@ -3391,8 +3389,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 90;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Route9.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes3.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes3.mid");
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
@@ -3462,8 +3459,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 60;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Recursive.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/6_recursive_hot_springs.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/6_recursive_hot_springs.mid");
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
@@ -3540,8 +3536,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 50;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Route10.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes2.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes2.mid");
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
@@ -3609,8 +3604,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 40;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Route11.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes5.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes5.mid");
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
@@ -3679,8 +3673,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 40;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Enumville.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes5.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes5.mid");
 
 				numTrainers=3;
 				trainer=new Trainer[numTrainers];
@@ -3730,8 +3723,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 72;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Route12.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes4.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes4.mid");
 
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
@@ -3761,8 +3753,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 60;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Polymorph.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/7_polymorph_town.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/7_polymorph_town.mid");
 
 				numTrainers=5;
 				trainer=new Trainer[numTrainers];
@@ -3826,8 +3817,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 50;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Binary.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/8_binary_city.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/8_binary_city.mid");
 
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
@@ -3841,8 +3831,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 50;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Route13.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes.mid");
 
 				if(objectiveComplete[10])
 					levelBoost=50;
@@ -3870,8 +3859,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 50;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Route7.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes3.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes3.mid");
 				numTrainers=3;
 				trainer=new Trainer[numTrainers];
 				numItems=0;
@@ -3945,8 +3933,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 25;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Null.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes3.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes3.mid");
 				loadItemData();
 				break;
 			case Champions_Walk:
@@ -3955,8 +3942,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 40;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Champion.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0g_champions_walk.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0g_champions_walk.mid");
 				numItems=0;
 				mapItems=new Item[numItems];
 				loadItemData();
@@ -3971,8 +3957,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 60;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("VictoryRoad.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0g_champions_walk.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0g_champions_walk.mid");
 
 				if(timesBeatRival==4)
 				{
@@ -3998,8 +3983,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 48;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("VersionCityP.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/10_peachcream_city.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/10_peachcream_city.mid");
 				loadItemData();
 				break;
 			case Cream_City:
@@ -4008,8 +3992,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 48;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("VersionCityC.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/10_peachcream_city.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/10_peachcream_city.mid");
 				loadItemData();
 				break;
 			case Babbs_Lab:
@@ -4018,8 +4001,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 13;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Babb.tilemap");
-				url=JokemonDriver.class.getResource("Music/oak-s-lab.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/oak-s-lab.mid");
 
 				numTrainers=3;
 				trainer=new Trainer[numTrainers];
@@ -4071,8 +4053,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 8;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Generic1.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/house.mid");
 
 				numTrainers=1;
 				trainer=new Trainer[numTrainers];
@@ -4247,13 +4228,11 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				createMap("RivalHouse.tilemap");
 				if (timesBeatRival<=4)
 				{
-					url=JokemonDriver.class.getResource("Music/Locations/house.mid");
-					bgm=JApplet.newAudioClip(url);
+					bgm=JokemonDriver.class.getResource("Music/Locations/house.mid");
 				}
 				else
 				{
-					url=JokemonDriver.class.getResource("Music/PowerTrainers/TrueRival.mid");
-					bgm=JApplet.newAudioClip(url);
+					bgm=JokemonDriver.class.getResource("Music/PowerTrainers/TrueRival.mid");
 				}
 
 				numTrainers=1;
@@ -4290,8 +4269,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 15;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Gym1.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0f_gym.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0f_gym.mid");
 
 				numTrainers=4;
 				trainer=new Trainer[numTrainers];
@@ -4362,8 +4340,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 15;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Gym2.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0f_gym.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0f_gym.mid");
 
 				numTrainers=4;
 				trainer=new Trainer[numTrainers];
@@ -4434,8 +4411,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 20;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Gym3.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0f_gym.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0f_gym.mid");
 
 				numTrainers=4;
 				trainer=new Trainer[numTrainers];
@@ -4506,8 +4482,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 20;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Gym4.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0f_gym.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0f_gym.mid");
 
 				numTrainers=4;
 				trainer=new Trainer[numTrainers];
@@ -4578,8 +4553,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 20;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Gym5.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0f_gym.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0f_gym.mid");
 
 				numTrainers=4;
 				trainer=new Trainer[numTrainers];
@@ -4650,8 +4624,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 20;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Gym6.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0f_gym.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0f_gym.mid");
 
 				numTrainers=4;
 				trainer=new Trainer[numTrainers];
@@ -4722,8 +4695,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 20;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Gym7.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0f_gym.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0f_gym.mid");
 
 				numTrainers=4;
 				trainer=new Trainer[numTrainers];
@@ -4794,8 +4766,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 20;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Gym8.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0f_gym.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0f_gym.mid");
 
 				numTrainers=4;
 				trainer=new Trainer[numTrainers];
@@ -4866,8 +4837,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 10;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Jincradiotower.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/house.mid");
 
 				numTrainers=6;
 				trainer=new Trainer[numTrainers];
@@ -4929,8 +4899,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 26;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Intville.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/10_peachcream_city.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/10_peachcream_city.mid");
 
 				numTrainers=4;
 				trainer=new Trainer[numTrainers];
@@ -4967,8 +4936,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 8;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("HBorder.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes.mid");
 
 				numTrainers=1;
 				trainer=new Trainer[numTrainers];
@@ -4990,8 +4958,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 8;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("VBorder.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes.mid");
 
 				numTrainers=2;
 				trainer=new Trainer[numTrainers];
@@ -5053,8 +5020,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 20;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Slipspace.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes.mid");
 				loadItemData();
 				break;
 			case Route_14:
@@ -5063,8 +5029,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 30;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Route14.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0d_routes4.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0d_routes4.mid");
 
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
@@ -5079,8 +5044,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 40;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("HexForest.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
 
 				if(objectiveComplete[10])
 					levelBoost=50;
@@ -5148,8 +5112,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 8;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Generic2.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/house.mid");
 
 				numTrainers=1;
 				trainer=new Trainer[numTrainers];
@@ -5297,8 +5260,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 8;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Generic3.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/house.mid");
 
 				numTrainers=1;
 				trainer=new Trainer[numTrainers];
@@ -5461,8 +5423,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 100;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Jinc.tilemap");
-				url=JokemonDriver.class.getResource("titlemusic.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("titlemusic.mid");
 				numTrainers=13;
 				trainer=new Trainer[numTrainers];
 				numItems=0;
@@ -5581,8 +5542,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 8;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Generic4.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/house.mid");
 
 				numTrainers=1;
 				trainer=new Trainer[numTrainers];
@@ -5645,8 +5605,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 8;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Generic5.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/house.mid");
 
 				numTrainers=1;
 				trainer=new Trainer[numTrainers];
@@ -5709,8 +5668,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 8;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Generic6.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/house.mid");
 
 				numTrainers=1;
 				trainer=new Trainer[numTrainers];
@@ -5772,8 +5730,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 100;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Public.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
 
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
@@ -5800,8 +5757,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 30;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Class.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
 
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
@@ -5815,8 +5771,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 20;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Moltres.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
 
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
@@ -5830,8 +5785,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 20;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("ArticunoCave.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
 
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
@@ -5848,8 +5802,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					createMap("PrimalP.tilemap");
 				else
 					createMap("PrimalC.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
 
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
@@ -5863,8 +5816,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 30;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("JavaCave.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
 
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
@@ -5878,8 +5830,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 80;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("DiglettCave.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
 
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
@@ -5893,8 +5844,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 90;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("VictoryRoadCave.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
 
 				numTrainers=10;
 				trainer=new Trainer[numTrainers];
@@ -5993,8 +5943,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 20;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Mountain_Dew_Paradise.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
 
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
@@ -6023,8 +5972,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 40;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Rocket_Right_Tower.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0a_java_hideout.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0a_java_hideout.mid");
 
 				if(!objectiveComplete[9])
 				{
@@ -6094,8 +6042,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 80;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Rocket_Left_Tower.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0a_java_hideout.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0a_java_hideout.mid");
 
 				if(!objectiveComplete[9])
 				{
@@ -6167,8 +6114,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 80;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Rocket_Central_Tower.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0a_java_hideout.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0a_java_hideout.mid");
 
 				numTrainers=1;
 				trainer=new Trainer[numTrainers];
@@ -6198,8 +6144,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 12;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Lobby.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/house.mid");
 
 				numTrainers=4;
 				trainer=new Trainer[numTrainers];
@@ -6244,8 +6189,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 12;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Lighthouse.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/house.mid");
 
 				numTrainers=3;
 				trainer=new Trainer[numTrainers];
@@ -6294,8 +6238,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 12;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Lighthouse2.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/house.mid");
 
 				numTrainers=3;
 				trainer=new Trainer[numTrainers];
@@ -6345,8 +6288,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 80;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("MegaMart.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/house.mid");
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
 				numItems=0;
@@ -6359,8 +6301,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 20;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Power_Plant.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/house.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/house.mid");
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
 				numItems=0;
@@ -6373,8 +6314,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 120;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Challenge_Cave.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/0e_cave.mid");
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
 				numItems=0;
@@ -6387,8 +6327,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 120;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Elite_4.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/9_hall_of_champions.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/9_hall_of_champions.mid");
 				
 				if (!objectiveComplete[10])
 				numTrainers=7;
@@ -6702,8 +6641,7 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				widthHeight.y = 15;
 				currentArea = new int[widthHeight.x][widthHeight.y];
 				createMap("Battle_Tower.tilemap");
-				url=JokemonDriver.class.getResource("Music/Locations/9_hall_of_champions.mid");
-				bgm=JApplet.newAudioClip(url);
+				bgm=JokemonDriver.class.getResource("Music/Locations/9_hall_of_champions.mid");
 				numTrainers=0;
 				trainer=new Trainer[numTrainers];
 				numItems=0;
@@ -6738,7 +6676,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 //		}
 		if (!mute)
 		{
-			bgm.loop();
+			// bgm.loop();
+			loopAudioAsset(bgm);
 		}
 
 		checkLegendaries();
@@ -6753,20 +6692,20 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 	public void loadAudio()
 	{
-		URL url=JokemonDriver.class.getResource("Music/maleEncounter.mid");
-		maleEncounter=JApplet.newAudioClip(url);
-		url=JokemonDriver.class.getResource("Music/femaleEncounter.mid");
-		femaleEncounter=JApplet.newAudioClip(url);
-		url=JokemonDriver.class.getResource("Music/evilEncounter.mid");
-		evilEncounter=JApplet.newAudioClip(url);
-		url=JokemonDriver.class.getResource("Music/rivalEncounter.mid");
-		rivalEncounter=JApplet.newAudioClip(url);
-		url=JokemonDriver.class.getResource("Music/leaderEncounter.mid");
-		leaderEncounter=JApplet.newAudioClip(url);
-		url=JokemonDriver.class.getResource("Music/Locations/z_surfing.mid");
-		surfSong=JApplet.newAudioClip(url);
-		url=JokemonDriver.class.getResource("Music/Locations/z_bicycle.mid");
-		bikeSong=JApplet.newAudioClip(url);
+		try
+		{
+			sequencer = MidiSystem.getSequencer();
+			sequencer.open();
+		}
+		catch (Exception ignored){}
+
+		maleEncounter=JokemonDriver.class.getResource("Music/maleEncounter.mid");
+		femaleEncounter=JokemonDriver.class.getResource("Music/femaleEncounter.mid");
+		evilEncounter=JokemonDriver.class.getResource("Music/evilEncounter.mid");
+		rivalEncounter=JokemonDriver.class.getResource("Music/rivalEncounter.mid");
+		leaderEncounter=JokemonDriver.class.getResource("Music/leaderEncounter.mid");
+		surfSong=JokemonDriver.class.getResource("Music/Locations/z_surfing.mid");
+		bikeSong=JokemonDriver.class.getResource("Music/Locations/z_bicycle.mid");
 	}
 
 	//Begins Trainer Battle
@@ -6795,11 +6734,12 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 		jf.toFront();
 
-		evilEncounter.stop();
+		/*evilEncounter.stop();
 		maleEncounter.stop();
 		femaleEncounter.stop();
 		rivalEncounter.stop();
-		leaderEncounter.stop();
+		leaderEncounter.stop();*/
+		stopAudioAsset();
 
 		jf.setVisible(false);
 
@@ -6841,11 +6781,14 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		jf.toFront();
 
 		if(surfing&&!mute)
-			surfSong.loop();
+			//surfSong.loop();
+			loopAudioAsset(surfSong);
 		else if(bicycling&&!forceBike&&!mute)
-			bikeSong.loop();
+			//bikeSong.loop();
+			loopAudioAsset(bikeSong);
 		else if (!mute)
-			bgm.loop();
+			//bgm.loop();
+			loopAudioAsset(bgm);
 
 		int qq = 0;
         for (Pokemon aPartyPokemon : partyPokemon) {
@@ -6964,11 +6907,12 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		{
 			System.out.println("Invoking true minigame...");
 			save();
-			bgm.stop();
+			//bgm.stop();
+			stopAudioAsset();
 			URL url=JokemonDriver.class.getResource("Music/minigame.mid");
-			AudioClip mgm=JApplet.newAudioClip(url);
+			// AudioClip mgm=JApplet.newAudioClip(url);
 			if (!mute)
-			mgm.loop();
+			loopAudioAsset(url);
 
 			jf.setVisible(false);
 
@@ -7116,7 +7060,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 				while(Mechanics.hasRemainingPokemon(partyPokemon,numPo))
 				{
-					bgm.stop();
+					//bgm.stop();
+					stopAudioAsset();
 					Trainer btTrainer=new Trainer(Trainer.TrainerType.PROGRAMMER,"Battle Tower",Pokedex.getSpecies((int)(Math.random()*151+1)),Pokedex.getSpecies((int)(Math.random()*151+1)),Pokedex.getSpecies((int)(Math.random()*151+1)),Pokedex.getSpecies((int)(Math.random()*151+1)),Pokedex.getSpecies((int)(Math.random()*151+1)),Pokedex.getSpecies((int)(Math.random()*151+1)),levels);
 					for(int i=0; i<6; i++)
 					{
@@ -7135,7 +7080,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					jf.setVisible(true);
 					jf.toFront();
 					if(!mute)
-					bgm.loop();
+					//bgm.loop();
+					loopAudioAsset(bgm);
 
 					wins++;
 
@@ -7231,10 +7177,11 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			else if(objectiveComplete[10] && !t.hostile)
 			{
 				objectiveComplete[11]=true;
-				bgm.stop();
+				//bgm.stop();
+				stopAudioAsset();
 				save();
-				if(!mute)
-				title.creditMusic.loop();
+				// if(!mute)
+				// title.creditMusic.loop();
 				showCredits=true;
 			}
 		}
@@ -7318,7 +7265,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		
 		if (t.name.equalsIgnoreCase("Clone 1"))
 		{
-			bgm.stop();
+			//bgm.stop();
+			stopAudioAsset();
 			houseInt++;
 			if (houseInt > 5)
 			houseInt=0;
@@ -7593,22 +7541,25 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					case 0:
 						if(location.x<=trainer[i].location.x+trainer[i].viewRange&&location.x>trainer[i].location.x&&location.y==trainer[i].location.y)
 						{
-							bgm.stop();
+							/*bgm.stop();
 							surfSong.stop();
-							bikeSong.stop();
+							bikeSong.stop();*/
+							stopAudioAsset();
 
+							URL urlToPlay = null;
 							if(trainer[i].type==Trainer.TrainerType.RIVAL && !mute)
-								rivalEncounter.loop();
+								urlToPlay = rivalEncounter;//.loop();
 							else if((trainer[i].type==Trainer.TrainerType.GYM_LEADER||trainer[i].type==Trainer.TrainerType.ELITE
 								||trainer[i].type==Trainer.TrainerType.BABB)&&!mute)
-								leaderEncounter.loop();
+								urlToPlay = leaderEncounter;//.loop();
 							else if((trainer[i].type==Trainer.TrainerType.PROFESSOR||trainer[i].type==Trainer.TrainerType.JAVA)&&!mute)
-								evilEncounter.loop();
+								urlToPlay = evilEncounter;//.loop();
 							else if(trainer[i].gender==1 && !mute)
-								femaleEncounter.loop();
+								urlToPlay = femaleEncounter;//.loop();
 							else if (!mute)
-								maleEncounter.loop();
+								urlToPlay = maleEncounter;//.loop();
 
+							loopAudioAsset(urlToPlay);
 							trainerToFight=i;
 							trainerEnc=true;
 
@@ -7623,22 +7574,25 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					case 90:
 						if(location.y>=trainer[i].location.y-trainer[i].viewRange&&location.y<trainer[i].location.y&&location.x==trainer[i].location.x)
 						{
-							bgm.stop();
+							/*bgm.stop();
 							surfSong.stop();
-							bikeSong.stop();
+							bikeSong.stop();*/
+							stopAudioAsset();
 
+							URL urlToPlay = null;
 							if(trainer[i].type==Trainer.TrainerType.RIVAL&&!mute)
-								rivalEncounter.loop();
+								urlToPlay = rivalEncounter;//.loop();
 							else if((trainer[i].type==Trainer.TrainerType.GYM_LEADER||trainer[i].type==Trainer.TrainerType.ELITE
 								||trainer[i].type==Trainer.TrainerType.BABB)&&!mute)
-								leaderEncounter.loop();
+								urlToPlay = leaderEncounter;//.loop();
 							else if((trainer[i].type==Trainer.TrainerType.PROFESSOR||trainer[i].type==Trainer.TrainerType.JAVA)&&!mute)
-								evilEncounter.loop();
+								urlToPlay = evilEncounter;//.loop();
 							else if(trainer[i].gender==1&&!mute)
-								femaleEncounter.loop();
+								urlToPlay = femaleEncounter;//.loop();
 							else if (!mute)
-								maleEncounter.loop();
+								urlToPlay = maleEncounter;//.loop();
 
+							loopAudioAsset(urlToPlay);
 							trainerToFight=i;
 							trainerEnc=true;
 
@@ -7653,21 +7607,25 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					case 180:
 						if(location.x>=trainer[i].location.x-trainer[i].viewRange&&location.x<trainer[i].location.x&&location.y==trainer[i].location.y)
 						{
-							bgm.stop();
+							/*bgm.stop();
 							surfSong.stop();
-							bikeSong.stop();
+							bikeSong.stop();*/
+							stopAudioAsset();
 
+							URL urlToPlay = null;
 							if(trainer[i].type==Trainer.TrainerType.RIVAL&&!mute)
-								rivalEncounter.loop();
+								urlToPlay = rivalEncounter;//.loop();
 							else if((trainer[i].type==Trainer.TrainerType.GYM_LEADER||trainer[i].type==Trainer.TrainerType.ELITE
-								||trainer[i].type==Trainer.TrainerType.BABB)&&!mute)
-								leaderEncounter.loop();
+									||trainer[i].type==Trainer.TrainerType.BABB)&&!mute)
+								urlToPlay = leaderEncounter;//.loop();
 							else if((trainer[i].type==Trainer.TrainerType.PROFESSOR||trainer[i].type==Trainer.TrainerType.JAVA)&&!mute)
-								evilEncounter.loop();
+								urlToPlay = evilEncounter;//.loop();
 							else if(trainer[i].gender==1&&!mute)
-								femaleEncounter.loop();
+								urlToPlay = femaleEncounter;//.loop();
 							else if (!mute)
-								maleEncounter.loop();
+								urlToPlay = maleEncounter;//.loop();
+
+							loopAudioAsset(urlToPlay);
 
 							trainerToFight=i;
 							trainerEnc=true;
@@ -7683,21 +7641,25 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					case 270:
 						if(location.y<=trainer[i].location.y+trainer[i].viewRange&&location.y>trainer[i].location.y&&location.x==trainer[i].location.x)
 						{
-							bgm.stop();
+							/*bgm.stop();
 							surfSong.stop();
-							bikeSong.stop();
+							bikeSong.stop();*/
+							stopAudioAsset();
 
+							URL urlToPlay = null;
 							if(trainer[i].type==Trainer.TrainerType.RIVAL&&!mute)
-								rivalEncounter.loop();
+								urlToPlay = rivalEncounter;//.loop();
 							else if((trainer[i].type==Trainer.TrainerType.GYM_LEADER||trainer[i].type==Trainer.TrainerType.ELITE
-								||trainer[i].type==Trainer.TrainerType.BABB)&&!mute)
-								leaderEncounter.loop();
+									||trainer[i].type==Trainer.TrainerType.BABB)&&!mute)
+								urlToPlay = leaderEncounter;//.loop();
 							else if((trainer[i].type==Trainer.TrainerType.PROFESSOR||trainer[i].type==Trainer.TrainerType.JAVA)&&!mute)
-								evilEncounter.loop();
+								urlToPlay = evilEncounter;//.loop();
 							else if(trainer[i].gender==1&&!mute)
-								femaleEncounter.loop();
+								urlToPlay = femaleEncounter;//.loop();
 							else if (!mute)
-								maleEncounter.loop();
+								urlToPlay = maleEncounter;//.loop();
+
+							loopAudioAsset(urlToPlay);
 
 							trainerToFight=i;
 							trainerEnc=true;
@@ -7732,11 +7694,13 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			catch(Exception ignored){}
 		}
 
-		bgm.stop();
-		bikeSong.stop();
+		/*bgm.stop();
+		bikeSong.stop();*/
+		stopAudioAsset();
 		bicycling=false;
 		if (!mute)
-		surfSong.loop();
+		//surfSong.loop();
+			loopAudioAsset(surfSong);
 
 		jf.toFront();
 		moving=false;
@@ -7763,8 +7727,10 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 
 		if(!forceBike && !mute)
 		{
-			bgm.stop();
-			bikeSong.loop();
+			//bgm.stop();
+			stopAudioAsset();
+			//bikeSong.loop();
+			loopAudioAsset(bikeSong);
 		}
 
 		jf.toFront();
@@ -7783,7 +7749,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	public void useFly()
 	{
 		flyMenu=false;
-		bgm.stop();
+		//bgm.stop();
+		stopAudioAsset();
 		transition=true;
 		direction=270;
 		area=flyAreas[flyMenuInt];
@@ -8614,10 +8581,11 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if(enemy[0].nickname.equals("Mewtrix") && area != Area.Pokecenter)
 				{
 					Pokedex.seen[149]=false;
-					bgm.stop();
+					//bgm.stop();
+					stopAudioAsset();
 					save();
-					if(!mute)
-					title.creditMusic.loop();
+					// if(!mute)
+					// title.creditMusic.loop();
 					showCredits=true;
 				}
 				else
@@ -9850,7 +9818,8 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		System.out.println("Creating area...");
 		createCurrentArea();
 		if (!mute)
-		bgm.loop();
+		//bgm.loop();
+			loopAudioAsset(bgm);
 	}
 
 	//Method that loads Pokemon data and tests it for errors or cheats
@@ -10310,8 +10279,10 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				case 161:
 					if(surfing && !mute)
 					{
-						surfSong.stop();
-						bgm.loop();
+						//surfSong.stop();
+						stopAudioAsset();
+						//bgm.loop();
+						loopAudioAsset(bgm);
 					}
 					surfing=false;
 					return true;
@@ -10493,8 +10464,10 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				case 253:
 					if(surfing && !mute)
 					{
-						surfSong.stop();
-						bgm.loop();
+						//surfSong.stop();
+						stopAudioAsset();
+						//bgm.loop();
+						loopAudioAsset(bgm);
 					}
 					surfing=false;
 					return true;
@@ -10657,7 +10630,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if(location.x==10)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_1;
 						location.x=18;
 						location.y=59;
@@ -10666,7 +10638,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if(location.x==11)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_1;
 						location.x=19;
 						location.y=59;
@@ -10678,7 +10649,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if(location.y==14||location.y==15)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_0;
 						location.x=0;
 						if(location.y==14)
@@ -10690,7 +10660,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 27 && location.y <= 44 && surfing)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_0;
 						location.x=0;
 						location.y-=2;
@@ -10708,7 +10677,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 15 && location.y == 11)
 				{
 					transition=false;
-					bgm.stop();
 					area=Area.YourHouse;
 					location.x=5;
 					location.y=8;
@@ -10717,7 +10685,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 27 && location.y == 17)
 				{
 					transition=false;
-					bgm.stop();
 					area=Area.Rival_House;
 					location.x=5;
 					location.y=8;
@@ -10729,7 +10696,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					area=Area.Babbs_Lab;
 					location.x=4;
 					location.y=12;
-					bgm.stop();
 					createCurrentArea();
 				}
 				if ((location.x == 23 && location.y == 7) || (location.x == 35 && location.y == 17))
@@ -10739,7 +10705,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					else
 					houseInt=1;
 					transition=false;
-					bgm.stop();
 					returnArea = Area.Stringville;
 					returnPoint.x = location.x;
 					returnPoint.y = location.y+1;
@@ -10760,7 +10725,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if(location.y==28)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_0;
 						location.x=59;
 						location.y=12;
@@ -10769,7 +10733,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if(location.y==29)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_0;
 						location.x=59;
 						location.y=13;
@@ -10780,7 +10743,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 41 && location.y <= 64 && surfing)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_0;
 						location.x=59;
 						location.y-=16;
@@ -10801,7 +10763,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x >= 3 && location.x <= 48 && surfing)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_8;
 						location.y=63;
 						createCurrentArea();
@@ -10817,7 +10778,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 16 || location.y == 17)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_14;
 						location.x=0;
 						location.y-=2;
@@ -10851,7 +10811,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 50 && location.y == 57)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Challenge_Cave;
 					location.x=112;
 					location.y=115;
@@ -10864,7 +10823,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if(location.y==12)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Stringville;
 						location.x=49;
 						location.y=14;
@@ -10873,7 +10831,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					else if(location.y==13)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Stringville;
 						location.x=49;
 						location.y=15;
@@ -10883,7 +10840,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 25 && location.y <= 42 && surfing)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Stringville;
 						location.x=49;
 						location.y+=2;
@@ -10895,7 +10851,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if(location.y==12)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Args_Harbor;
 						location.x=0;
 						location.y=28;
@@ -10904,7 +10859,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					else if(location.y==13)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Args_Harbor;
 						location.x=0;
 						location.y=29;
@@ -10914,7 +10868,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 25 && location.y <= 48 && surfing)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Args_Harbor;
 						location.x=0;
 						location.y+=16;
@@ -10928,7 +10881,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if(location.x==18)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Stringville;
 						location.x=10;
 						location.y=0;
@@ -10937,7 +10889,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					else if(location.x==19)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Stringville;
 						location.x=11;
 						location.y=0;
@@ -10949,7 +10900,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 8 || location.y == 9)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_2;
 						location.x=0;
 						if(location.y==8)
@@ -10964,7 +10914,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 20 || location.y == 21)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.H_Border;
 						houseInt=0;
 						location.x=9;
@@ -10984,7 +10933,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 28 || location.y == 29)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_1;
 						location.x=39;
 						if(location.y==28)
@@ -10999,7 +10947,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x >= 24 && location.x <= 27)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Nested_Village;
 						location.y=45;
 						createCurrentArea();
@@ -11007,7 +10954,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x >= 5 && location.x <= 22 && surfing)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Nested_Village;
 						location.y=45;
 						createCurrentArea();
@@ -11015,7 +10961,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x >= 29 && location.x <= 42 && surfing)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Nested_Village;
 						location.y=45;
 						createCurrentArea();
@@ -11024,7 +10969,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 25 && location.y == 29)
 				{
 					transition=false;
-					bgm.stop();
 					area=Area.V_Border;
 					houseInt=2;
 					location.x=4;
@@ -11036,7 +10980,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 25 || location.x == 26)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.V_Border;
 						houseInt = 3;
 						location.y=1;
@@ -11056,7 +10999,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 6 || location.x == 7)
 					{
 						transition=false;
-						bgm.stop();
 						area=returnArea2;
 						location.x=returnPoint2.x;
 						location.y=returnPoint2.y;
@@ -11070,7 +11012,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x >= 24 && location.x <= 27)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_2;
 						location.y=0;
 						createCurrentArea();
@@ -11078,7 +11019,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x >= 5 && location.x <= 22 && surfing)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_2;
 						location.y=0;
 						createCurrentArea();
@@ -11086,7 +11026,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x >= 29 && location.x <= 42 && surfing)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_2;
 						location.y=0;
 						createCurrentArea();
@@ -11105,7 +11044,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 22 && location.y <= 27)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_3;
 						location.x=49;
 						location.y+=10;
@@ -11117,7 +11055,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 37 && location.y <= 43)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_ARRAYINDEXOUTOFBOUNDSEXCEPTION;
 						location.x=0;
 						location.y-=18;
@@ -11146,7 +11083,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 2 || location.x == 3)
 					{
 						transition=false;
-						bgm.stop();
 						area=returnArea;
 						location.x=returnPoint.x;
 						location.y=returnPoint.y;
@@ -11160,7 +11096,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 32 && location.y <= 37)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Nested_Village;
 						location.x=0;
 						location.y-=10;
@@ -11172,7 +11107,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 8 && location.y <= 9)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Villa_Del_Joe;
 						location.x=75;
 						location.y+=44;
@@ -11181,7 +11115,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 34 && location.y <= 37)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_11;
 						location.x=69;
 						location.y-=28;
@@ -11191,7 +11124,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 22 && location.y == 9)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Public_Cave;
 					location.x=8;
 					location.y=90;
@@ -11200,7 +11132,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 37 && location.y == 5)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Public_Cave;
 					location.x=25;
 					location.y=87;
@@ -11211,7 +11142,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 8 && location.y == 91)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Route_3;
 					location.x=22;
 					location.y=10;
@@ -11220,7 +11150,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 25 && location.y == 88)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Route_3;
 					location.x=37;
 					location.y=6;
@@ -11229,7 +11158,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 78 && location.y == 83)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Route_6;
 					location.x=8;
 					location.y=10;
@@ -11238,7 +11166,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 50 && location.y == 64)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Route_10;
 					location.x=8;
 					location.y=34;
@@ -11259,7 +11186,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 52 || location.y == 53)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_3;
 						location.x=0;
 						location.y-=44;
@@ -11268,7 +11194,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 10 || location.y == 11)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_4;
 						location.x=0;
 						location.y+=78;
@@ -11359,7 +11284,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 							location.y=18;
 						}
 						area=Area.Stringville;
-						bgm.stop();
 						createCurrentArea();
 					}
 				}
@@ -11370,7 +11294,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 88 || location.y == 89)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Villa_Del_Joe;
 						location.x=75;
 						location.y-=78;
@@ -11383,7 +11306,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x >= 18 && location.x <= 21)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_5;
 						location.y=39;
 						location.x+=4;
@@ -11393,7 +11315,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 18 && location.y == 77)
 				{
 					transition=false;
-					bgm.stop();
 					area=Area.V_Border;
 					houseInt=0;
 					location.x=4;
@@ -11405,7 +11326,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 18 || location.x == 19)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.V_Border;
 						houseInt=0;
 						location.x-=14;
@@ -11420,7 +11340,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x >= 22 && location.x <= 25)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_4;
 						location.x-=4;
 						location.y=0;
@@ -11432,7 +11351,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x >= 60 && location.x <= 65)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Mount_Java;
 						location.x-=50;
 						location.y=49;
@@ -11442,7 +11360,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 62 && location.y == 5)
 				{
 					transition=false;
-					bgm.stop();
 					area=Area.V_Border;
 					houseInt=1;
 					location.x=4;
@@ -11454,7 +11371,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 62 || location.x == 63)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.V_Border;
 						houseInt=1;
 						location.x-=58;
@@ -11465,7 +11381,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 10 && location.y == 5)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Class_Cave;
 					location.x=9;
 					location.y=22;
@@ -11474,7 +11389,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 32 && location.y == 3)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Class_Cave;
 					location.x=22;
 					location.y=24;
@@ -11485,7 +11399,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 9 && location.y == 23)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Route_5;
 					location.x=10;
 					location.y=6;
@@ -11494,7 +11407,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 22 && location.y == 25)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Route_5;
 					location.x=32;
 					location.y=4;
@@ -11507,7 +11419,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x >= 10 && location.x <= 18)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_5;
 						location.x+=50;
 						location.y=0;
@@ -11519,7 +11430,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 20 || location.y == 21)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_9;
 						location.x=0;
 						location.y-=2;
@@ -11539,7 +11449,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 20 || location.y == 21)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.H_Border;
 						houseInt=1;
 						location.x=9;
@@ -11552,7 +11461,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 20 || location.y == 21)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.H_Border;
 						houseInt=1;
 						location.x=0;
@@ -11583,7 +11491,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 6 && location.y == 7)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Java_Cave;
 					location.x=15;
 					location.y=22;
@@ -11592,7 +11499,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 16 && location.y == 11)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Java_Cave;
 					location.x=25;
 					location.y=21;
@@ -11603,7 +11509,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 15 && location.y == 23)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Mount_Java;
 					location.x=6;
 					location.y=8;
@@ -11612,7 +11517,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 25 && location.y == 22)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Mount_Java;
 					location.x=16;
 					location.y=12;
@@ -11621,7 +11525,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 6 && location.y == 16)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Route_7;
 					location.x=36;
 					location.y=4;
@@ -11634,7 +11537,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if ((location.y >= 12 && location.y <= 15) || (location.y >= 33 && location.y <= 39))
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Streamreader_Hotel;
 						location.x=0;
 						createCurrentArea();
@@ -11645,7 +11547,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x >= 26 && location.x <= 29)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_8;
 						location.x+=22;
 						location.y = 0;
@@ -11657,7 +11558,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 33 && location.y <= 39)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_ARRAYINDEXOUTOFBOUNDSEXCEPTION;
 						location.x=49;
 						location.y-=14;
@@ -11671,7 +11571,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 8 && location.y == 9)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Public_Cave;
 					location.x=78;
 					location.y=82;
@@ -11684,7 +11583,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if ((location.y >= 12 && location.y <= 15) || (location.y >= 33 && location.y <= 39))
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_6;
 						location.x=59;
 						createCurrentArea();
@@ -11733,7 +11631,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x >= 48 && location.x <= 51)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_6;
 						location.x-=22;
 						location.y = 43;
@@ -11745,7 +11642,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x >= 3 && location.x <= 63 && surfing)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Args_Harbor;
 						location.y=0;
 						createCurrentArea();
@@ -11768,7 +11664,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 19 && location.y <= 25)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Nested_Village;
 						location.x=49;
 						location.y+=18;
@@ -11780,7 +11675,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 19 && location.y <= 25)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_6;
 						location.x=0;
 						location.y+=14;
@@ -11790,7 +11684,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 24 && location.y == 13)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Articuno_Cave;
 					location.x=10;
 					location.y=16;
@@ -11801,7 +11694,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 10 && location.y == 17)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Route_ARRAYINDEXOUTOFBOUNDSEXCEPTION;
 					location.x=24;
 					location.y=14;
@@ -11814,7 +11706,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 18 || location.y == 19)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Mount_Java;
 						location.x=49;
 						location.y+=2;
@@ -11826,7 +11717,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 14 || location.x == 15)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Recursive_Hot_Springs;
 						location.y=0;
 						createCurrentArea();
@@ -11849,7 +11739,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 14 || location.x == 15)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_9;
 						location.y=89;
 						createCurrentArea();
@@ -11860,7 +11749,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x >= 16 && location.x <= 21)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_10;
 						location.y=0;
 						createCurrentArea();
@@ -11875,7 +11763,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 50 || location.y == 51)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.H_Border;
 						houseInt=2;
 						location.x=0;
@@ -11888,7 +11775,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 50 || location.y == 51)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.H_Border;
 						houseInt=2;
 						location.x=9;
@@ -11901,7 +11787,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 50 || location.y == 51)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.H_Border;
 						houseInt=3;
 						location.x=0;
@@ -11914,7 +11799,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 50 || location.y == 51)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.H_Border;
 						houseInt=3;
 						location.x=9;
@@ -11949,7 +11833,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x >= 16 && location.x <= 21)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Recursive_Hot_Springs;
 						location.y=59;
 						createCurrentArea();
@@ -11958,7 +11841,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 8 && location.y == 33)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Public_Cave;
 					location.x=50;
 					location.y=63;
@@ -11971,7 +11853,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 6 && location.y <= 9)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_3;
 						location.x=0;
 						location.y+=28;
@@ -11983,7 +11864,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 2 && location.y <= 5)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Enumville;
 						location.x=49;
 						createCurrentArea();
@@ -11996,7 +11876,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 2 && location.y <= 5)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_11;
 						location.x=0;
 						createCurrentArea();
@@ -12007,7 +11886,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 18 || location.y == 19)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_12;
 						location.y+=42;
 						location.x=49;
@@ -12039,7 +11917,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 60 || location.y == 61)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Enumville;
 						location.y-=42;
 						location.x=0;
@@ -12051,7 +11928,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 22 || location.x == 23)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Polymorph_Town;
 						location.y=59;
 						createCurrentArea();
@@ -12062,7 +11938,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 19 && location.y <= 30)
 					{
 						transition=true;
-						bgm.stop();
 						if (VERSION.equalsIgnoreCase("Peaches"))
 						area=Area.Peach_City;
 						else
@@ -12075,7 +11950,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					{
 						surfing=false;
 						transition=true;
-						bgm.stop();
 						area=Area.Slipspace;
 						location.y-=25;
 						location.x=19;
@@ -12085,7 +11959,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 12 && location.y == 26)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Primal_Cave;
 					location.x=10;
 					location.y=16;
@@ -12096,7 +11969,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 10 && location.y == 17)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Route_12;
 					location.x=12;
 					location.y=27;
@@ -12109,7 +11981,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 22 || location.x == 23)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_12;
 						location.y=0;
 						createCurrentArea();
@@ -12146,7 +12017,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 27 && location.y == 53)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Diglett_Cave;
 					location.x=8;
 					location.y=11;
@@ -12157,7 +12027,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 8 && location.y == 12)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Polymorph_Town;
 					location.x=27;
 					location.y=54;
@@ -12166,7 +12035,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 20 && location.y == 49)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Route_13;
 					location.x=18;
 					location.y=8;
@@ -12179,7 +12047,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 20 || location.y == 21)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_13;
 						location.x=59;
 						createCurrentArea();
@@ -12198,7 +12065,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 20 || location.y == 21)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.H_Border;
 						houseInt=0;
 						location.x=0;
@@ -12238,7 +12104,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 20 || location.y == 21)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Binary_City;
 						location.x=0;
 						createCurrentArea();
@@ -12248,7 +12113,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				{
 					direction=0;
 					transition=true;
-					bgm.stop();
 					area=Area.Intville;
 					location.x=0;
 					location.y=10;
@@ -12257,7 +12121,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 18 && location.y == 7)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Diglett_Cave;
 					location.x=20;
 					location.y=48;
@@ -12270,7 +12133,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 14 || location.y == 15)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Args_Harbor;
 						location.x=59;
 						location.y+=2;
@@ -12297,7 +12159,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 10 || location.y == 11)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Null_Zone;
 						location.x=0;
 						location.y+=2;
@@ -12309,7 +12170,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 44 || location.y == 45)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Champions_Walk;
 						location.x=99;
 						location.y-=10;
@@ -12319,7 +12179,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 36 && location.y == 3)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Java_Cave;
 					location.x=6;
 					location.y=15;
@@ -12330,7 +12189,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 8 || location.y == 9)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.Rocket_Right_Tower;
 						location.x=18;
 						location.y-=3;
@@ -12340,7 +12198,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 29 && location.y == 15)
 				{
 					transition=false;
-					bgm.stop();
 					area=Area.Rocket_Right_Tower;
 					location.x=9;
 					location.y=14;
@@ -12351,7 +12208,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 18 || location.y == 19)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.Rocket_Left_Tower;
 						location.x=14;
 						location.y-=11;
@@ -12361,7 +12217,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 15 && location.y == 21)
 				{
 					transition=false;
-					bgm.stop();
 					area=Area.Rocket_Left_Tower;
 					location.x=8;
 					location.y=15;
@@ -12370,7 +12225,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 24 && location.y == 19)
 				{
 					transition=false;
-					bgm.stop();
 					area=Area.Rocket_Central_Tower;
 					location.x=12;
 					location.y=20;
@@ -12383,7 +12237,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 5 || location.y == 6)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.Route_7;
 						location.x=32;
 						location.y+=3;
@@ -12395,7 +12248,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 9 || location.x == 10)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.Route_7;
 						location.x=29;
 						location.y=16;
@@ -12417,7 +12269,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 7 || location.y == 8)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.Route_7;
 						location.x=18;
 						location.y+=11;
@@ -12429,7 +12280,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 8 || location.x == 9)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.Route_7;
 						location.x=15;
 						location.y=22;
@@ -12467,7 +12317,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 12 || location.x == 13)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.Route_7;
 						location.x=24;
 						location.y=20;
@@ -12481,7 +12330,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 12 || location.y == 13)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_7;
 						location.x=3;
 						location.y-=2;
@@ -12499,7 +12347,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 34 || location.y == 35)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_7;
 						location.x=0;
 						location.y+=10;
@@ -12511,7 +12358,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 12 || location.x == 13)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Victory_Road;
 						location.x+=4;
 						location.y=59;
@@ -12521,7 +12367,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 50 && location.y == 19)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Moltres_Cave;
 					location.x=10;
 					location.y=16;
@@ -12538,7 +12383,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 91 && location.y == 33)
 				{
 					transition=false;
-					bgm.stop();
 					area=Area.V_Border;
 					houseInt=4;
 					location.x=4;
@@ -12550,7 +12394,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 91 || location.x == 92)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.V_Border;
 						houseInt=4;
 						location.x-=87;
@@ -12563,7 +12406,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 10 && location.y == 17)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Champions_Walk;
 					location.x=50;
 					location.y=20;
@@ -12576,7 +12418,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 16 || location.x == 17)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Champions_Walk;
 						location.x-=4;
 						location.y=0;
@@ -12588,7 +12429,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 15 || location.x == 16)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.Victory_Road_Cave;
 						location.x=35;
 						location.y=16;
@@ -12598,7 +12438,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 16 && location.y == 47)
 				{
 					transition=false;
-					bgm.stop();
 					area=Area.Victory_Road_Cave;
 					location.x=15;
 					location.y=82;
@@ -12609,7 +12448,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 15 || location.x == 16)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.Elite_4;
 						location.x+=13;
 						location.y=116;
@@ -12624,7 +12462,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 28 || location.x == 29)
 					{
 						transition=false;
-						bgm.stop();
 						area=Area.Victory_Road;
 						location.x-=13;
 						location.y=20;
@@ -12667,7 +12504,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 49 || location.x == 50)
 					{
 						transition=false;
-						bgm.stop();
 						if (VERSION.equalsIgnoreCase("Peaches"))
 						area=Area.Peach_City;
 						else
@@ -12685,7 +12521,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y >= 17 && location.y <= 28)
 					{
 						transition=true;
-						bgm.stop();
 						area=Area.Route_12;
 						location.y+=2;
 						location.x=0;
@@ -12785,7 +12620,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 						area=Area.Stringville;
 						location.x=32;
 						location.y=10;
-						bgm.stop();
 						createCurrentArea();
 					}
 				}
@@ -12796,7 +12630,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 2 || location.x == 3)
 					{
 						transition=false;
-						bgm.stop();
 						area=returnArea;
 						location.x=returnPoint.x;
 						location.y=returnPoint.y;
@@ -12840,7 +12673,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					{
 						direction=0;
 						transition=true;
-						bgm.stop();
 						area=Area.Route_13;
 						location.x=2;
 						location.y=2;
@@ -12859,7 +12691,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 4 || location.y == 5)
 					{
 						transition=true;
-						bgm.stop();
 						if (houseInt == 0)
 						{
 							area=Area.Route_1;
@@ -12895,7 +12726,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.y == 4 || location.y == 5)
 					{
 						transition=true;
-						bgm.stop();
 						if (houseInt == 0)
 						{
 							area=Area.Binary_City;
@@ -12933,7 +12763,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 4 || location.x == 5)
 					{
 						transition=true;
-						bgm.stop();
 						if (houseInt == 0)
 						{
 							if(Inventory.hasItem(new Item(Item.Type.BICYCLE,1)))
@@ -12987,7 +12816,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					if (location.x == 4 || location.x == 5)
 					{
 						transition=true;
-						bgm.stop();
 						if (houseInt == 0)
 						{
 							transition=false;
@@ -13034,7 +12862,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					{
 						surfing=true;
 						transition=true;
-						bgm.stop();
 						area=Area.Route_12;
 						location.y+=25;
 						location.x=0;
@@ -13049,7 +12876,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					{
 						transition=false;
 						houseInt=2;
-						bgm.stop();
 						area=Area.V_Border;
 						location.y=1;
 						location.x-=12;
@@ -13062,7 +12888,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 					{
 						transition=false;
 						houseInt=3;
-						bgm.stop();
 						area=Area.V_Border;
 						location.y=7;
 						location.x-=16;
@@ -13136,7 +12961,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 89 && location.y == 59)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Mountain_Dew_Paradise;
 					location.x=0;
 					location.y=9;
@@ -13145,7 +12969,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 15 && location.y == 83)
 				{
 					transition=false;
-					bgm.stop();
 					area=Area.Victory_Road;
 					location.x=16;
 					location.y=48;
@@ -13154,7 +12977,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 35 && location.y == 15)
 				{
 					transition=false;
-					bgm.stop();
 					area=Area.Victory_Road;
 					location.x=15;
 					location.y=33;
@@ -13165,7 +12987,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 0 && location.y == 9)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Victory_Road_Cave;
 					location.x=89;
 					location.y=59;
@@ -13212,7 +13033,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			case Lighthouse:
 				if (location.y == 11 && direction == 270)
 				{
-					bgm.stop();
 					if (location.x == 5 || location.x == 6)
 					{
 						genericReturn();
@@ -13221,7 +13041,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 			case Lighthouse_F2:
 				if (location.x == 10 && location.y == 2)
 				{
-					bgm.stop();
 					if (area == Area.Lighthouse)
 						area = Area.Lighthouse_F2;
 					else
@@ -13284,7 +13103,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 				if (location.x == 112 && location.y == 116)
 				{
 					transition=true;
-					bgm.stop();
 					area=Area.Args_Harbor;
 					location.x=50;
 					location.y=58;
@@ -13312,7 +13130,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	public void pokeCenterTransfer()
 	{
 		transition=false;
-		bgm.stop();
 		returnArea2 = area;
 		returnPoint2.x = location.x;
 		returnPoint2.y = location.y+1;
@@ -13324,7 +13141,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	public void pokeMartTransfer()
 	{
 		transition=false;
-		bgm.stop();
 		returnArea = area;
 		returnPoint.x = location.x;
 		returnPoint.y = location.y+1;
@@ -13336,7 +13152,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	public void genericTransfer(Area newArea, int x, int y)
 	{
 		transition=false;
-		bgm.stop();
 		returnArea = area;
 		returnPoint.x = location.x;
 		returnPoint.y = location.y+1;
@@ -13348,7 +13163,6 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 	public void genericReturn()
 	{
 		transition=false;
-		bgm.stop();
 		area=returnArea;
 		location.x=returnPoint.x;
 		location.y=returnPoint.y;
@@ -13632,5 +13446,25 @@ public class JokemonDriver extends JPanel implements Runnable,KeyListener
 		URL iconU=JokemonDriver.class.getResource("Sprites/item.png");
     	icon=Toolkit.getDefaultToolkit().getImage(iconU);
 		return icon;
+	}
+
+	public void loopAudioAsset(URL url)
+	{
+		try
+		{
+			sequencer.open();
+			sequencer.setSequence(MidiSystem.getSequence(url));
+			sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+			sequencer.start();
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error while trying to play asset!");
+		}
+	}
+
+	public void stopAudioAsset()
+	{
+		sequencer.stop();
 	}
 }

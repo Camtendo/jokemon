@@ -29,7 +29,7 @@ public class TitleScreen_Peaches extends JPanel implements Runnable, KeyListener
 {
 	Thread thread;
 	private Sequencer sequencer;
-	AudioClip titleMusic, creditMusic;
+	URL titleMusic, creditMusic;
 	Image icon,logo,mascot;
 	String fps="1";
 	long lastFPS;
@@ -58,11 +58,9 @@ public class TitleScreen_Peaches extends JPanel implements Runnable, KeyListener
 		}
 		catch (Exception ignored){}
 
-		URL introU=TitleScreen_Peaches.class.getResource("Music/JokemonTitleMusic.mid");
-    	titleMusic=JApplet.newAudioClip(introU);
+		titleMusic=TitleScreen_Peaches.class.getResource("Music/JokemonTitleMusic.mid");
     	
-    	URL url=TitleScreen_Peaches.class.getResource("Music/credits.mid");
-    	creditMusic=JApplet.newAudioClip(url);
+    	creditMusic=TitleScreen_Peaches.class.getResource("Music/credits.mid");
 
 		URL iconU=TitleScreen_Peaches.class.getResource("icon.png");
     	icon=Toolkit.getDefaultToolkit().getImage(iconU);
@@ -147,12 +145,6 @@ public class TitleScreen_Peaches extends JPanel implements Runnable, KeyListener
 
 	public void setupGUI()
 	{
-		URL introU=TitleScreen_Peaches.class.getResource("titlemusic.mid");
-    	titleMusic=JApplet.newAudioClip(introU);
-    	
-    	URL url=TitleScreen_Peaches.class.getResource("Music/credits.mid");
-    	creditMusic=JApplet.newAudioClip(url);
-
 		URL iconU=TitleScreen_Peaches.class.getResource("icon.png");
     	icon=Toolkit.getDefaultToolkit().getImage(iconU);
 
@@ -186,11 +178,11 @@ public class TitleScreen_Peaches extends JPanel implements Runnable, KeyListener
 	
 	public void run()
 	{
+		stopAudioAsset();
 		while(Integer.parseInt(fps)<80||Integer.parseInt(fps)>110)
 		{
 			frames++;
 			frameRateManager();
-			creditMusic.stop();
 			try
 			{
 				Thread.sleep(slp);
@@ -198,7 +190,7 @@ public class TitleScreen_Peaches extends JPanel implements Runnable, KeyListener
 			catch(Exception ignored){}
 		}
 		
-		creditMusic.loop();
+		loopAudioAsset(creditMusic);
 		while(true)
 		{
 			repaint();
@@ -283,6 +275,40 @@ public class TitleScreen_Peaches extends JPanel implements Runnable, KeyListener
 	}
 
 	public void stopTitleMusic()
+	{
+		sequencer.stop();
+	}
+
+	public void loopAudioAsset(URL url)
+	{
+		try
+		{
+			sequencer.open();
+			sequencer.setSequence(MidiSystem.getSequence(url));
+			sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+			sequencer.start();
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error while trying to play asset!");
+		}
+	}
+
+	public void playAudioAsset(URL url)
+	{
+		try
+		{
+			sequencer.open();
+			sequencer.setSequence(MidiSystem.getSequence(url));
+			sequencer.start();
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error while trying to play asset!");
+		}
+	}
+
+	public void stopAudioAsset()
 	{
 		sequencer.stop();
 	}
